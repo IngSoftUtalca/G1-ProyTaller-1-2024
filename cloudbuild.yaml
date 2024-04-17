@@ -1,0 +1,124 @@
+  steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/still-mapper-349903/repo2/bff-asistencia:bff-asistencia', './bff-asistencia'] 
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'us-central1-docker.pkg.dev/still-mapper-349903/repo2/bff-asistencia:bff-asistencia'] 
+
+
+  ##############################################################################################################################
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/still-mapper-349903/repo2/bff-datosadministradores:bff-datosadministradores', './bff-datosadministradores'] 
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'us-central1-docker.pkg.dev/still-mapper-349903/repo2/bff-datosadministradores:bff-datosadministradores'] 
+
+
+  ##############################################################################################################################
+
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/still-mapper-349903/repo2/bff-datosasistencia:bff-datosasistencia', './bff-datosasistencia'] 
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'us-central1-docker.pkg.dev/still-mapper-349903/repo2/bff-datosasistencia:bff-datosasistencia'] 
+  ##############################################################################################################################
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/still-mapper-349903/repo2/bff-datosdocente:bff-datosdocente', './bff-datosdocente'] 
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'us-central1-docker.pkg.dev/still-mapper-349903/repo2/bff-datosdocente:bff-datosdocente'] 
+  ##############################################################################################################################
+
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/still-mapper-349903/repo2/bff-horarios:bff-horarios', './bff-horarios'] 
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'us-central1-docker.pkg.dev/still-mapper-349903/repo2/bff-horarios:bff-horarios'] 
+  ##############################################################################################################################
+
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/still-mapper-349903/repo2/ms-erroresasistencia:ms-erroresasistencia', './ms-erroresasistencia'] 
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'us-central1-docker.pkg.dev/still-mapper-349903/repo2/ms-erroresasistencia:ms-erroresasistencia'] 
+  ##############################################################################################################################
+
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/still-mapper-349903/repo2/ms-gestoradmin:ms-gestoradmin', './ms-gestoradmin'] 
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'us-central1-docker.pkg.dev/still-mapper-349903/repo2/ms-gestoradmin:ms-gestoradmin'] 
+  ##############################################################################################################################
+
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/still-mapper-349903/repo2/ms-gestorasistencia:ms-gestorasistencia', './ms-gestorasistencia'] 
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'us-central1-docker.pkg.dev/still-mapper-349903/repo2/ms-gestorasistencia:ms-gestorasistencia'] 
+  ##############################################################################################################################
+
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/still-mapper-349903/repo2/ms-gestordocente:ms-gestordocente', './ms-gestordocente'] 
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'us-central1-docker.pkg.dev/still-mapper-349903/repo2/ms-gestordocente:ms-gestordocente'] 
+  ##############################################################################################################################
+
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/still-mapper-349903/repo2/ms-registroasistencia:ms-registroasistencia', './ms-registroasistencia'] 
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'us-central1-docker.pkg.dev/still-mapper-349903/repo2/ms-registroasistencia:ms-registroasistencia'] 
+  ##############################################################################################################################
+
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/still-mapper-349903/repo2/ms-registrohorarios:ms-registrohorarios', './ms-registrohorarios'] 
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'us-central1-docker.pkg.dev/still-mapper-349903/repo2/ms-registrohorarios:ms-registrohorarios'] 
+  ##############################################################################################################################
+
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/still-mapper-349903/repo2/ms-validacionrol:ms-validacionrol', './ms-validacionrol'] 
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'us-central1-docker.pkg.dev/still-mapper-349903/repo2/ms-validacionrol:ms-validacionrol'] 
+  ##############################################################################################################################
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/still-mapper-349903/repo2/ms-verificaciongps:ms-verificaciongps', './ms-verificaciongps'] 
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'us-central1-docker.pkg.dev/still-mapper-349903/repo2/ms-verificaciongps:ms-verificaciongps'] 
+  ##############################################################################################################################
+
+
+
+
+
+images:
+  - us-central1-docker.pkg.dev/still-mapper-349903/repo2/bff-asistencia:bff-asistencia
+  - us-central1-docker.pkg.dev/still-mapper-349903/repo2/bff-datosadministradores:bff-datosadministradores
+  - us-central1-docker.pkg.dev/still-mapper-349903/repo2/bff-datosasistencia:bff-datosasistencia
+  - us-central1-docker.pkg.dev/still-mapper-349903/repo2/bff-datosdocente:bff-datosdocente
+  - us-central1-docker.pkg.dev/still-mapper-349903/repo2/bff-horarios:bff-horarios
+  - us-central1-docker.pkg.dev/still-mapper-349903/repo2/ms-erroresasistencia:ms-erroresasistencia
+  - us-central1-docker.pkg.dev/still-mapper-349903/repo2/ms-gestoradmin:ms-gestoradmin
+  - us-central1-docker.pkg.dev/still-mapper-349903/repo2/ms-gestorasistencia:ms-gestorasistencia
+  - us-central1-docker.pkg.dev/still-mapper-349903/repo2/ms-gestordocente:ms-gestordocente
+  - us-central1-docker.pkg.dev/still-mapper-349903/repo2/ms-registroasistencia:ms-registroasistencia
+  - us-central1-docker.pkg.dev/still-mapper-349903/repo2/ms-registrohorarios:ms-registrohorarios
+  - us-central1-docker.pkg.dev/still-mapper-349903/repo2/ms-validacionrol:ms-validacionrol
+  - us-central1-docker.pkg.dev/still-mapper-349903/repo2/ms-verificaciongps:ms-verificaciongps
+
+
+  

@@ -1,0 +1,116 @@
+version: "2"
+
+services:
+  bff-asistencia:
+    build: ./bff-asistencia
+    networks:
+      universidad:
+        aliases: 
+          - bff-asistencia
+    ports:
+      - 3000:3000
+  bff-datosadministradores:
+    build: ./bff-datosadministradores
+    networks:
+      universidad:
+        aliases: 
+          - bff-datosadministradores
+    ports:
+      - 3001:3001
+  bff-datosasistencia:
+    build: ./bff-datosasistencia
+    networks:
+      universidad:
+        aliases: 
+          - bff-datosasistencia
+    ports:
+      - 3002:3002
+  bff-datosdocente:
+    build: ./bff-datosdocente
+    networks:
+      universidad:
+        aliases: 
+          - bff-datosdocente
+    ports:
+      - 3003:3003
+  bff-horarios:
+    build: ./bff-horarios
+    networks:
+      universidad:
+        aliases: 
+          - bff-horarios
+    ports:
+      - 3004:3004
+  ms-erroresasistencia:
+    build: ./ms-erroresasistencia
+    networks:
+      universidad:
+        aliases: 
+          - ms-erroresasistencia
+    ports:
+      - 3005:3005
+  ms-gestoradmin:
+    build: ./ms-gestoradmin
+    networks:
+      universidad:
+        aliases: 
+          - ms-gestoradmin
+    ports:
+      - 3006:3006
+  ms-gestorasistencia:
+    build: ./ms-gestorasistencia
+    networks:
+      universidad:
+        aliases: 
+          - ms-gestorasistencia
+    ports:
+      - 3007:3007
+
+  ms-gestordocente:
+    build: ./ms-gestordocente
+    networks:
+      universidad:
+        aliases: 
+          - ms-gestordocente
+    ports:
+      - 3008:3008
+
+  ms-registroasistencia:
+    build: ./ms-registroasistencia
+    networks:
+      universidad:
+        aliases: 
+          - ms-registroasistencia
+    ports:
+      - 3009:3009
+  ms-registrohorarios:
+    build: ./ms-registrohorarios
+    networks:
+      universidad:
+        aliases: 
+          - ms-registrohorarios
+    ports:
+      - 3010:3010
+
+  ms-validacionrol:
+    build: ./ms-validacionrol
+    networks:
+      universidad:
+        aliases: 
+          - ms-validacionrol
+    ports:
+      - 3011:3011
+  ms-verificaciongps:
+    build: ./ms-verificaciongps
+    networks:
+      universidad:
+        aliases: 
+          - ms-verificaciongps
+    ports:
+      - 3012:3012
+
+networks:
+  universidad:
+
+
+
