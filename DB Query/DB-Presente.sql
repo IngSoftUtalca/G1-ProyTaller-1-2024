@@ -17,38 +17,38 @@ DROP TABLE IF EXISTS `Horario`;
 SET FOREIGN_KEY_CHECKS = 1;
 
 CREATE TABLE `Docente` (
-    `RUT` text NOT NULL,
-    `Nombre` text NOT NULL,
-    `Campus` text NOT NULL,
-    `Facultad` text NOT NULL,
-    `Horario` Integer NOT NULL,
+    `RUT` VARCHAR(255) NOT NULL,
+    `Nombre` VARCHAR(255) NOT NULL,
+    `Campus` VARCHAR(255) NOT NULL,
+    `Facultad` VARCHAR(255) NOT NULL,
+    `Horario` INTEGER NOT NULL,
     PRIMARY KEY (`RUT`)
 );
 
 CREATE TABLE `Administrador` (
-    `RUT` text NOT NULL,
-    `Nombre` text NOT NULL,
-    `Campus` text NOT NULL,
-    `Facultad` text NOT NULL,
+    `RUT` VARCHAR(255) NOT NULL,
+    `Nombre` VARCHAR(255) NOT NULL,
+    `Campus` VARCHAR(255) NOT NULL,
+    `Facultad` VARCHAR(255) NOT NULL,
     PRIMARY KEY (`RUT`)
 );
 
 CREATE TABLE `Cargo` (
-    `WebMaster` text NOT NULL,
-    `Administrador` text NOT NULL,
-    `Docente` text NOT NULL,
+    `WebMaster` VARCHAR(255) NOT NULL,
+    `Administrador` VARCHAR(255) NOT NULL,
+    `Docente` VARCHAR(255) NOT NULL,
     PRIMARY KEY (`WebMaster`, `Administrador`, `Docente`)
 );
 
 CREATE TABLE `WebMaster` (
-    `RUT` text NOT NULL,
-    `Nombre` text NOT NULL,
-    `Facultad` text NOT NULL,
+    `RUT` VARCHAR(255) NOT NULL,
+    `Nombre` VARCHAR(255) NOT NULL,
+    `Facultad` VARCHAR(255) NOT NULL,
     PRIMARY KEY (`RUT`)
 );
 
 CREATE TABLE `Periodo` (
-    `ID` text NOT NULL,
+    `ID` INTEGER NOT NULL,
     `FechaInicio` date NOT NULL,
     `FechaTermino` date NOT NULL,
     `IDFeriados` INTEGER NOT NULL,
@@ -57,72 +57,72 @@ CREATE TABLE `Periodo` (
 
 CREATE TABLE `Dia_Libre` (
     `Dia` date NOT NULL,
-    `ID_periodo` text NOT NULL,
+    `ID_periodo` INTEGER NOT NULL,
     PRIMARY KEY (`Dia`)
 );
 
 CREATE TABLE `Ramo` (
-    `Nombre` text NOT NULL,
-    `Periodo` text NOT NULL,
+    `Nombre` VARCHAR(255) NOT NULL,
+    `Periodo` INTEGER NOT NULL,
     PRIMARY KEY (`Nombre`, `Periodo`)
 );
 
 CREATE TABLE `Bloque` (
     `ID` integer NOT NULL,
-    `Inicio` text NOT NULL,
-    `Termino` text NOT NULL,
+    `Inicio` VARCHAR(255) NOT NULL,
+    `Termino` VARCHAR(255) NOT NULL,
     PRIMARY KEY (`ID`)
 );
 
 CREATE TABLE `Sala` (
-    `ID` text NOT NULL,
-    `Latitud` text NOT NULL,
-    `Longitud` text NOT NULL,
+    `ID` VARCHAR(255) NOT NULL,
+    `Latitud` VARCHAR(255) NOT NULL,
+    `Longitud` VARCHAR(255) NOT NULL,
     PRIMARY KEY (`ID`)
 );
 
 CREATE TABLE `Clase` (
     `Dia` date NOT NULL,
-    `Hora_inicio` text NOT NULL,
-    `Hora_termino` text NOT NULL,
-    `IP` text NOT NULL,
-    `Estado` text NOT NULL,
+    `Hora_inicio` VARCHAR(255) NOT NULL,
+    `Hora_termino` VARCHAR(255) NOT NULL,
+    `IP` VARCHAR(255) NOT NULL,
+    `Estado` VARCHAR(255) NOT NULL,
     `Fecha_Justificacion` date NOT NULL,
-    `Hora_Justificacion` text NOT NULL,
+    `Hora_Justificacion` VARCHAR(255) NOT NULL,
     PRIMARY KEY (`Dia`, `Hora_inicio`, `Hora_termino`)
 );
 
 CREATE TABLE `Justificacion` (
     `Fecha` date NOT NULL,
-    `Hora` text NOT NULL,
-    `Detalle` text NOT NULL,
+    `Hora` VARCHAR(255) NOT NULL,
+    `Detalle` VARCHAR(255) NOT NULL,
     PRIMARY KEY (`Fecha`, `Hora`)
 );
 
 CREATE TABLE `Error` (
-    `ID` integer NOT NULL,
-    `Razon` text NOT NULL,
+    `ID` integer NOT NULL AUTO_INCREMENT,
+    `Razon` VARCHAR(255) NOT NULL,
     PRIMARY KEY (`ID`)
 );
 
 CREATE TABLE `Asignacion` (
-    `RUT_Docente` text NOT NULL,
-    `Nombre_Ramo` text NOT NULL,
-    `Periodo_Ramo` text NOT NULL,
+    `RUT_Docente` VARCHAR(255) NOT NULL,
+    `Nombre_Ramo` VARCHAR(255) NOT NULL,
+    `Periodo_Ramo` INTEGER NOT NULL,
     PRIMARY KEY (`RUT_Docente`, `Nombre_Ramo`, `Periodo_Ramo`)
 );
 
 CREATE TABLE `Instancia` (
-    `Sala` text NOT NULL,
+    `Sala` VARCHAR(255) NOT NULL,
     `Bloque` integer NOT NULL,
-    `Dia_Semana` text NOT NULL,
-    `Ramo` text NOT NULL,
+    `Dia_Semana` VARCHAR(255) NOT NULL,
+    `Ramo` VARCHAR(255) NOT NULL,
     PRIMARY KEY (`Sala`, `Bloque`, `Dia_Semana`)
 );
 
 CREATE TABLE `Horario` (
-    `ID` integer NOT NULL,
-    `Estado` text NOT NULL,
+    `ID` integer NOT NULL AUTO_INCREMENT,
+    `Estado` VARCHAR(255) NOT NULL,
     PRIMARY KEY (`ID`)
 );
 
