@@ -7,3 +7,13 @@ app.get('/', (req, res) => {
 app.listen(PORT, () => {
   console.log('Servidor corriendo en http://localhost:' + PORT);
 });
+
+app.use(express.json());
+
+app.post('/', (req, res) => {
+  console.log(req.body);
+  console.log(req.url);
+  console.log(req.method);
+  res.json(req.body);
+
+});
