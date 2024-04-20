@@ -1,6 +1,7 @@
 const express = require('express');
 const mysql = require('mysql');
 const app = express();
+app.use(express.json({ limit: '50mb' }));
 app.use(express.json());
 
 const dbData = require('../ENPOINTS.json').DB;
@@ -17,6 +18,8 @@ app.post('/nuevo', (req, res) => {
     // Get data from request body
     const fechaInicio = req.body.fechaInicio;
     const fechaTermino = req.body.fechaTermino;
+    const feriados = req.body.feriados;
+    const horario_periodo = req.body.horario_periodo;
 
     // Split fechaInicio and fechaTermino into components
     const [yearInicio, monthInicio, dayInicio] = fechaInicio.split('-').map(Number);
@@ -38,16 +41,24 @@ app.post('/nuevo', (req, res) => {
     // Construct the constant
     const semestre = 'Semestre.' + semesterInicio + '-' + yearInicio;
 
-    const query = `INSERT INTO \`Periodo\` (ID, fechaInicio, fechaTermino) VALUES ('${semestre}', '${fechaInicio}', '${fechaTermino}')`;
-
-    // Execute SQL query
-    connection.query(query, [semestre, fechaInicio, fechaTermino], (error, results) => {
-      connection.end(); // End the connection after executing the query
-
+    const query1 = `INSERT INTO \`Periodo\` (ID, fechaInicio, fechaTermino) VALUES (?, ?, ?);`;
+    connection.query(query1, [semestre, fechaInicio, fechaTermino], (error, results) => {
       if (error) {
         console.error('Error ejecutando la query: ', error);
-        return res.status(500).json({ error: 'Error ejecutando la query' });
+        return res.status(500).json({ error: 'Error ejecutando la query dentro de Periodo' });
       }
+
+      const query2 = `INSERT INTO \`Dia_Libre\` (Dia, ID_periodo ) VALUES (?, ?);`;
+      for (let feriado of feriados) {
+        connection.query(query2, [feriado, semestre], (error, results) => {
+          if (error) {
+            console.error('Error ejecutando la query: ', error);
+            return res.status(500).json({ error: 'Error ejecutando la query dentro de Dia_Libre' });
+          }
+        });
+      }
+
+      connection.end();
 
       res.json({ message: 'Operación terminada con exito' });
     });
