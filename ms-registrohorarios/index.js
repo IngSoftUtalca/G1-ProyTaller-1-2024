@@ -15,12 +15,44 @@ app.post('/nuevo', (req, res) => {
       return res.status(500).json({ error: 'No se ha podido conectar la base de datos' });
     }
 
+    const XLSX = require('xlsx');
+    const fs = require('fs');
+    const FileSaver = require('file-saver');
+
     // Get data from request body
     const fechaInicio = req.body.fechaInicio;
     const fechaTermino = req.body.fechaTermino;
     const feriados = req.body.feriados;
     const horario_periodo = req.body.horario_periodo;
 
+    const buffer = Buffer.from(horario_periodo, 'base64');
+
+    // Guardar el archivo .xlsx
+    fs.writeFileSync('archivo.xlsx', buffer);
+
+    // Leer el archivo
+    const workbook = XLSX.readFile('archivo.xlsx');
+
+    // Obtener el nombre de la primera hoja
+    const sheetName = workbook.SheetNames[0];
+
+    // Convertir la hoja a JSON
+    const worksheet = workbook.Sheets[sheetName];
+    const jsonData = XLSX.utils.sheet_to_json(worksheet);
+/*  
+    const nombresramos = jsonData.map(obj => ({
+      NOMBRE: obj.NOMBRE,
+      LIGA: obj.LIGA
+    }));
+    */
+    const nombresSecciones = [...new Set(jsonData.map(obj => {
+      const seccion = obj.LIGA.split("-")[1];
+      const nombre = obj.NOMBRE.replace('(CURICO)', '').trim();
+      return `${nombre} Seccion ${seccion}`;
+    }))];
+
+
+    // return res.json({ message: 'Trabajando en parseo' });
     // Split fechaInicio and fechaTermino into components
     const [yearInicio, monthInicio, dayInicio] = fechaInicio.split('-').map(Number);
     const [yearTermino, monthTermino, dayTermino] = fechaTermino.split('-').map(Number);
@@ -58,6 +90,15 @@ app.post('/nuevo', (req, res) => {
         });
       }
 
+      const query3 = `INSERT INTO \`Ramo\` (Nombre, Periodo) VALUES (?, ?);`;
+      for (let nombre of nombresSecciones) {
+        connection.query(query3, [nombre, semestre], (error, results) => {
+          if (error) {
+            console.error('Error ejecutando la query: ', error);
+            return res.status(500).json({ error: 'Error ejecutando la query dentro de Ramo' });
+          }
+        });
+      }
       connection.end();
 
       res.json({ message: 'Operación terminada con exito' });
