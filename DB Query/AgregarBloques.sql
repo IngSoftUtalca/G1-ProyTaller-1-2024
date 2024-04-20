@@ -1,3 +1,4 @@
+DELETE FROM `Bloque`;
 INSERT INTO `Bloque` (`ID`, `Inicio`, `Termino`) VALUES
 (1, '08:30:00', '09:30:00'),
 (2, '09:40:00', '10:40:00'),

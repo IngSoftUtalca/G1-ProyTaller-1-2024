@@ -51,8 +51,17 @@ app.post('/nuevo', (req, res) => {
       return `${nombre} Seccion ${seccion}`;
     }))];
 
-
-    // return res.json({ message: 'Trabajando en parseo' });
+    // Extraer las salas
+    const salas = [...new Set(jsonData.map(obj => {
+      let sala = obj.SALA;
+      let edificio = obj.EDIFICIO;
+      if (!sala && !edificio) {
+        return 'SIN SALA';
+      }
+      return `${edificio}-${sala}`;
+    }))];
+    
+    return res.json({ message: 'Trabajando en parseo' });
     // Split fechaInicio and fechaTermino into components
     const [yearInicio, monthInicio, dayInicio] = fechaInicio.split('-').map(Number);
     const [yearTermino, monthTermino, dayTermino] = fechaTermino.split('-').map(Number);
