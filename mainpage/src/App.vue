@@ -4,36 +4,27 @@
   <div id="app" class="fondo" >
     <!-- Imagen en la parte superior -->
     <div class="row justify-content-center">
-      <img src="https://cdn.utalca.cl/img_utal/ins/utal.png" alt="Logo" class="img-fluid" style="max-width: 200px; max-height: 200px;">
+      <img src="https://cdn-icons-png.flaticon.com/512/845/845648.png" alt="Logo" class="img-fluid" style="max-width: 200px; max-height: 200px;">
     </div>
     <!-- Contenido principal -->
     <div class="row justify-content-center">
-          <div class="card-body">
-            <h3 class="ramos"> Taller de software B1 8:30-9:30</h3>
-          </div>
+      <h3 class="texto"> Revisa tu horario, no se ha logrado marcar la asistencia</h3>
     </div>
-    <!-- Botón de asistencia -->
-    <div>
-      <button type="button" class="btn btn-outline-warning">Confirmar</button>
+
+    <!-- Botones -->
+    <div class="partebaja">
+        <div class="button">
+          <a href="ruta" class="botonasistencia">Reportar Error</a>
+        </div>
+        <div class="button">
+          <a href="ruta" class="botonasistencia">Salir</a>
+        </div>
+      </div>
     </div>
-  </div>
 </center>
 </template>
 
 <script>
-export default {
-  data() {
-    return {
-      texto: ''
-    };
-  },
-  methods: {
-    marcarAsistencia() {
-      // Aquí puedes agregar la lógica para marcar la asistencia
-      console.log('Asistencia marcada');
-    }
-  }
-};
 </script>
 
 <style>
@@ -65,31 +56,51 @@ export default {
   text-align: center;
   color: #fff;
 }
-
-
-.card-body {
-
-  width: 300px;
-  height: 300px;
+.texto{
+  width: 254px;
+  height: 30px;
   flex-grow: 0;
-  margin: 5px 0;
-  padding: 113px 23px;
-  border-radius: 16px;
-  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
-  background-color: #60cdcd;
-
-
+  margin: 100px 0 0;
+  font-size: 32px;
+  font-weight: 0.5px;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  text-align: center;
+  color: #000000;
 }
 
-.btn-outline-warning {
+
+
+.botonasistencia {
   width: 185px;
   height: 46px;
-  margin: 90px 58px 0 57px;
-  padding: 11px 32px 12px 33px;
-  border-radius: 16px;
-  color: orange;
+   /* Ajusta el margen del botón */
+  border-radius: 8px;
+  font-size: 20px;
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #ffffff;
+  background-color: #55C8C8;
+  border: none; /* Elimina el borde */
   
 }
+.botonasistencia:active {
+  background-color: #F89D1E; /* Cambia el color al hacer clic */
+}
+.partebaja{
+  margin: 150px 0px ;
+  
+}
+.button {
+  margin-top: 40px; /* Espacio entre el texto y el botón */
+}
+
+
 
 .img-fluid {
   width: 213px;
