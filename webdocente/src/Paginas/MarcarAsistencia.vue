@@ -90,13 +90,11 @@ export default {
   
   setup() {
     const route = useRoute()
-    const idSala = ref(route.params.idSala)
-
+    let idSala = ref(route.params.idSala)
     onMounted(() => {
-      console.log('Fetching data for sala', idSala.value)
-      idSalas.value = "Taller de Software"
-
       // Fetch data for this sala here
+      console.log('Fetching data for sala', idSala)
+      idSala = "Taller de Software"
     })
 
     return {
