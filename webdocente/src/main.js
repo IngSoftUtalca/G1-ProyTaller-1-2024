@@ -1,10 +1,22 @@
+import 'jquery'
+import 'popper.js'
+import 'bootstrap'
+import 'bootstrap/dist/css/bootstrap.min.css'
+
 import { createApp } from 'vue'
-import App from './App.vue'
-import vuetify from './plugins/vuetify'
-import { loadFonts } from './plugins/webfontloader'
+import { createRouter, createWebHistory } from 'vue-router'
+import MarcarAsistencia from './Paginas/MarcarAsistencia.vue'
+import App from './App.vue' // Asegúrate de que la ruta a App.vue es correcta
 
-loadFonts()
+const router = createRouter({
+  history: createWebHistory(),
+  routes: [
+    {
+      path: '/sala:idSala',
+      name: 'MarcarAsistencia',
+      component: MarcarAsistencia
+    }
+  ]
+})
 
-createApp(App)
-  .use(vuetify)
-  .mount('#app')
+createApp(App).use(router).mount('#app')
