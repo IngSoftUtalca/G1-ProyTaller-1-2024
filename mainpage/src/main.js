@@ -1,10 +1,25 @@
-import Vue from 'vue'
-import App from './App.vue'
-import 'bootstrap/dist/css/bootstrap.min.css';
+import App from './App.vue';
+import Vue from 'vue';
+import Router from 'vue-router';
+import Sala from '@/components/Marcar_asistencia.vue';
+import { createApp } from 'vue' ;
+import { createRouter, createWebHistory } from 'vue-router';
 
-Vue.config.productionTip = false
 
-new Vue({
-  render: h => h(App),
-}).$mount('#app')
 
+Vue.use(Router);
+
+
+export default new Router({
+  routes: [
+    {
+      path: '/sala/:id',
+      name: 'Sala',
+      component: Sala,
+      props: true
+    }
+  ],
+  mode: 'history'
+});
+
+createApp(App).use(router).mount('#app')
