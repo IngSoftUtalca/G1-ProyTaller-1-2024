@@ -2,6 +2,6 @@
 
 <template>
   <div id="app">
-    <router-view>Marcar_Asistencia</router-view>
+    <router-view></router-view>
   </div>
 </template>

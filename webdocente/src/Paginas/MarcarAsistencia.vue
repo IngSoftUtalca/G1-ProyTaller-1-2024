@@ -8,12 +8,12 @@
     <!-- Contenido principal -->
     <div class="row justify-content-center">
           <div class="card-body">
-            <h3 class="ramos"> {{ramo}} B1 8:30-9:30</h3>
+            <h3 class="ramos"> {{ramo}}Taller de Software B1 8:30-9:30</h3>
           </div>
     </div>
     <!-- Botón de asistencia -->
     <div>
-      <button type="button" class="btn btn-outline-warning">Confirmar</button>
+      <button type="button" class="btn boton">Confirmar</button>
     </div>
   </div>
 </center>
@@ -56,7 +56,6 @@
     height: 300px;
     flex-grow: 0;
     margin: 5px 0;
-    padding: 113px 23px;
     border-radius: 16px;
     box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
     background-color: #60cdcd;
@@ -64,19 +63,20 @@
   
   }
   
-  .btn-outline-warning {
+  .boton {
     width: 185px;
-    height: 46px;
-    margin: 90px 58px 0 57px;
-    padding: 11px 32px 12px 33px;
-    border-radius: 16px;
-    color: orange;
+  height: 46px;
+  flex-grow: 0;
+  margin: 90px 58px 0 57px;
+  padding: 11px 32px 12px 33px;
+  border-radius: 16px;
+  background-color: #a2a09f;
     
   }
   
   .img-fluid {
-    width: 213px;
-    height: 48px;
+    width: 150px;
+    height: 100px8px;
     margin: 56px 44px 90px 43px;
     padding: 0 0.4px 0 0;
   }
