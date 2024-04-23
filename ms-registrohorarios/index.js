@@ -13,7 +13,7 @@ app.use(express.json({ limit: '50mb' }));
 
 const dbData = require('../ENPOINTS.json').DB;
 
-app.post('/', async (req, res) => {
+app.post('/new', async (req, res) => {
   const connection = mysql.createConnection(dbData);
 
   connection.connect(error => {
@@ -24,39 +24,53 @@ app.post('/', async (req, res) => {
   });
 
   const XLSX = require('xlsx');
-const fs = require('fs');
+  const fs = require('fs');
 
-let fechaInicioDate, fechaTerminoDate;
-// Get data from request body
-let fechaInicio = req.body.fechaInicio;
-let fechaTermino = req.body.fechaTermino;
-const feriados = req.body.feriados;
-const horario_periodo = req.body.horario_periodo;
+  let fechaInicioDate, fechaTerminoDate;
+  // Get data from request body
+  let fechaInicio = req.body.fechaInicio;
+  let fechaTermino = req.body.fechaTermino;
+  let feriados = req.body.feriados;
+  const horario_periodo = req.body.horario_periodo;
 
-const buffer = Buffer.from(horario_periodo, 'base64');
+  const buffer = Buffer.from(horario_periodo, 'base64');
 
-// Convert fechaInicio and fechaTermino to Date objects
-fechaInicioDate = new Date(fechaInicio);
-fechaTerminoDate = new Date(fechaTermino);
+  // Convert fechaInicio and fechaTermino to Date objects
+  fechaInicioDate = new Date(fechaInicio);
+  fechaTerminoDate = new Date(fechaTermino);
 
-// Get all the dates between fechaInicio and fechaTermino
-const datesInRange = [];
-const currentDate = new Date(fechaInicioDate);
-while (currentDate <= fechaTerminoDate) {
-  datesInRange.push(new Date(currentDate));
-  currentDate.setDate(currentDate.getDate() + 1);
-}
+  // Get all the dates between fechaInicio and fechaTermino
+  const datesInRange = [];
+  const currentDate = new Date(fechaInicioDate);
+  while (currentDate <= fechaTerminoDate) {
+    datesInRange.push(new Date(currentDate));
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
 
-// Filter out the weekends (Saturday and Sunday)
-const filteredDates = datesInRange.filter(date => date.getDay() !== 0 && date.getDay() !== 6);
+  const Holidays = require('date-holidays');
+  const hd = new Holidays();
 
-// Filter out the dates that are already in feriados
-const newFeriados = filteredDates.filter(date => !feriados.includes(date.toISOString().split('T')[0]));
+  hd.init('CL');  // Initialize with Chile
 
-// Add the new feriados to the existing feriados array
-feriados.push(...newFeriados);
-// Guardar el archivo .xlsx
-fs.writeFileSync('archivo.xlsx', buffer);
+  // Filter to keep only the weekends and holidays
+  const newFeriados = datesInRange.filter(date => {
+    const isWeekend = date.getDay() === 0 || date.getDay() === 6;
+    const isHoliday = hd.isHoliday(date);
+    return isWeekend || isHoliday;
+  });
+
+  /// Convert feriados and newFeriados to Sets
+  const feriadosSet = new Set(feriados.filter(date => date instanceof Date).map(date => date.toISOString()));
+  const newFeriadosSet = new Set(newFeriados.filter(date => date instanceof Date).map(date => date.toISOString()));
+
+  // Create a new Set that is the union of feriadosSet and newFeriadosSet
+  const unionSet = new Set([...feriadosSet, ...newFeriadosSet]);
+
+// Convert the union Set back to an array
+  feriados = Array.from(unionSet).map(dateString => new Date(dateString));
+  
+  // Guardar el archivo .xlsx
+  fs.writeFileSync('archivo.xlsx', buffer);
 
   // Leer el archivo
   const workbook = XLSX.readFile('archivo.xlsx');
@@ -100,6 +114,7 @@ fs.writeFileSync('archivo.xlsx', buffer);
   const queryLimpieza = `DELETE FROM \`Periodo\` WHERE ID = ?;`;
   try{
     await runQuery(connection, queryLimpieza, [semestre]);
+    console.log("Periodo eliminado con ON DELETE CASCADE");
   }catch(error){
     console.log("no se pudo borrar semestre: ", error.message);
   }
@@ -138,7 +153,12 @@ fs.writeFileSync('archivo.xlsx', buffer);
   }
   
   console.log("Ramos agregados");
-  
+  try{
+    await runQuery(connection, `DELETE FROM \`Instancia\`;`, '');
+    console.log("Instancias borradas");
+  }catch(error){
+    console.log("no se pudo borrar instancias: ", error.message);
+  }
   const query4 = `INSERT INTO \`Instancia\` (Sala, Bloque, Dia_Semana, Ramo) VALUES (?, ?, ?, ?);`;
   const bar2 = new ProgressBar('Agregando instancias [:bar] :percent', { total: instancia.length });
   for (let ins of instancia){
@@ -157,6 +177,133 @@ fs.writeFileSync('archivo.xlsx', buffer);
   }
   
   console.log("Instancias agregadas");
+
+  connection.end();
+
+  res.json({ message: 'Operación terminada con exito' });
+});
+
+app.post('/editfull', async (req, res) => {
+  const connection = mysql.createConnection(dbData);
+
+  connection.connect(error => {
+    if (error) {
+      console.error('No se a podido conectar la base de datos: ', error);
+      return res.status(500).json({ error: 'No se ha podido conectar la base de datos' });
+    }
+  });
+
+  const XLSX = require('xlsx');
+  const fs = require('fs');
+
+  let fechaInicioDate, fechaTerminoDate;
+  // Get data from request body
+  const semestre = req.body.semestre
+  let fechaInicio = req.body.fechaInicio;
+  let fechaTermino = req.body.fechaTermino;
+  let feriados = req.body.feriados;
+  const horario_periodo = req.body.horario_periodo;
+
+  const buffer = Buffer.from(horario_periodo, 'base64');
+
+  // Convert fechaInicio and fechaTermino to Date objects
+  fechaInicioDate = new Date(fechaInicio);
+  fechaTerminoDate = new Date(fechaTermino);
+
+  // Get all the dates between fechaInicio and fechaTermino
+  const datesInRange = [];
+  const currentDate = new Date(fechaInicioDate);
+  while (currentDate <= fechaTerminoDate) {
+    datesInRange.push(new Date(currentDate));
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+
+  const Holidays = require('date-holidays');
+  const hd = new Holidays();
+
+  hd.init('CL');  // Initialize with Chile
+
+  // Filter to keep only the weekends and holidays
+  const newFeriados = datesInRange.filter(date => {
+    const isWeekend = date.getDay() === 0 || date.getDay() === 6;
+    const isHoliday = hd.isHoliday(date);
+    return isWeekend || isHoliday;
+  });
+
+  /// Convert feriados and newFeriados to Sets
+  const feriadosSet = new Set(feriados.filter(date => date instanceof Date).map(date => date.toISOString()));
+  const newFeriadosSet = new Set(newFeriados.filter(date => date instanceof Date).map(date => date.toISOString()));
+
+  // Create a new Set that is the union of feriadosSet and newFeriadosSet
+  const unionSet = new Set([...feriadosSet, ...newFeriadosSet]);
+
+// Convert the union Set back to an array
+  feriados = Array.from(unionSet).map(dateString => new Date(dateString));
+
+  // Guardar el archivo .xlsx
+  fs.writeFileSync('archivo.xlsx', buffer);
+
+  // Leer el archivo
+  const workbook = XLSX.readFile('archivo.xlsx');
+
+  // Obtener el nombre de la primera hoja
+  const sheetName = workbook.SheetNames[0];
+
+  // Convertir la hoja a JSON
+  const worksheet = workbook.Sheets[sheetName];
+  const jsonData = XLSX.utils.sheet_to_json(worksheet);
+  
+  const nombresSecciones = [...new Set(jsonData.map(obj => {
+    const seccion = obj.LIGA.split("-")[1];
+    const nombre = obj.NOMBRE.replace('(CURICO)', '').trim();
+    return `${nombre} Seccion ${seccion}`;
+  }))];
+  
+
+  const queryLimpieza = `DELETE FROM \`Periodo\` WHERE ID = ?;`;
+  const queryLimpieza2 = `DELETE FROM \`Dia_Libre\`WHERE ID_periodo = ?;`;
+  try{
+    await runQuery(connection, queryLimpieza, [semestre]);
+    await runQuery(connection, queryLimpieza2, [semestre]);
+    console.log("Periodo eliminado con ON DELETE CASCADE");
+  }catch(error){
+    console.log("no se pudo borrar semestre: ", error.message);
+  }
+
+  const query1 = `INSERT INTO \`Periodo\` (ID, fechaInicio, fechaTermino) VALUES (?, ?, ?);`;
+  try {
+    await funciones.runQuery(connection, query1, [semestre, fechaInicioDate, fechaTerminoDate]);
+  } catch (error) {
+    return res.status(500).json({ error: 'Error ejecutando la query dentro de Periodo: '+error.message });
+  }
+
+  console.log("Periodo creado");
+
+  const query2 = `INSERT INTO \`Dia_Libre\` (Dia, ID_periodo ) VALUES (?, ?);`;
+  const bar = new ProgressBar('Agregando feriados [:bar] :percent', { total: feriados.length });
+  for (let feriado of feriados) {
+    try {
+      await runQuery(connection, query2, [feriado, semestre]);
+      bar.tick();
+    } catch (error) {
+      return res.status(500).json({ error: 'Error ejecutando la query dentro de Dia_Libre' });
+    }
+  }
+
+  console.log("Feriados agregados");
+
+  const query3 = `INSERT INTO \`Ramo\` (Nombre, Periodo) VALUES (?, ?);`;
+  const bar1 = new ProgressBar('Agregando ramos [:bar] :percent', { total: nombresSecciones.length });
+  for (let nombre of nombresSecciones) {
+    try {
+      await runQuery(connection, query3, [nombre, semestre]);
+      bar1.tick();
+    } catch (error) {
+      return res.status(500).json({ error: 'Error ejecutando la query dentro de Ramo' });
+    }
+  }
+  
+  console.log("Ramos agregados");
 
   connection.end();
 
