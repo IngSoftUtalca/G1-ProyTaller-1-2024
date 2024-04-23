@@ -7,12 +7,55 @@ const dbData = require('../ENPOINTS.json').DB;
 
 process.env.TZ = 'America/Santiago'; // se define la zona horaria en chile
 
+var cola = [];
+
+; // día lunes
+
+
+
+var semestreActual;
+CalcularSemestre();
+
+function CalcularSemestre(){
+    const fechaActual = new Date();
+
+    const formatofecha = fechaActual.getFullYear()+"-"+fechaActual.getMonth()+"-"+fechaActual.getDay();
+    console.log(formatofecha);
+    const conection = mysql.createConnection(dbData);
+    conection.connect((error)=>{
+        if(error){
+            console.log(error);
+            res.end(error);
+        }
+
+        const query = `SELECT ID, FechaInicio, FechaTermino FROM Periodo ORDER BY FechaTermino DESC LIMIT 1;`
+
+        
+        conection.query(query,(error,results)=>{
+            conection.end();
+            console.log(results[0].ID);
+
+            if(error){
+
+            }else{
+                
+            }
+            semestreActual = results[0].ID;
+
+        });
+        
+    });
+    
+
+}
+
+
 
 
 const PORT = 3009;
 
 
-
+const cursolocal = [];
 
 app.get('/', (req, res) => {
   res.json({ message: 'Micro servicio para registro asistencia' });
@@ -25,7 +68,8 @@ app.listen(PORT, () => {
 app.post('/consultarhorario', (req, res) => {
     const tiempoActual = new Date();
     const horaactual = tiempoActual.getHours()+":"+tiempoActual.getMinutes()+":"+tiempoActual.getSeconds();
-
+    const disS = tiempoActual.getDay(); 
+    
     //como deberia venir el req
     /** 
     {
@@ -33,13 +77,29 @@ app.post('/consultarhorario', (req, res) => {
         "Rut": '2222222222'
     }
 */
+
     // como body sera  identificaion profe | id sala | 
     //SELECT `Bloque`,`Inicio`,`Termino`,`Ramo` FROM `Sala`  INNER JOIN `Instancia` ON `Sala` = Sala.ID INNER JOIN `Bloque` ON Bloque.ID = Instancia.Bloque INNER JOIN `Ramo` ON `Nombre` = `Ramo` INNER JOIN `Asignacion` ON `Nombre` = `Nombre_Ramo` WHERE RUT_Docente = '100' AND `Latitud` = '10' AND `Longitud` = '10' AND `Inicio` < '03:00:00' AND `Termino` > '03:00:00';
     //const query = `SELECT Bloque,Sala,Ramo,Nombre,RUT_Docente FROM Sala INNER JOIN Instancia ON Sala = ID INNER JOIN Ramo ON Nombre = Ramo INNER JOIN Asignacion ON Nombre = Nombre_Ramo WHERE RUT_Docente = '${req.body.RUT_Docente}' AND Latitud = '${req.body.Latitud}' AND Longitud = '${req.body.Longitud}'`;
-    
+    //SELECT * FROM `Sala`  INNER JOIN `Instancia` ON `Sala` = Sala.ID INNER JOIN `Bloque` ON Bloque.ID = Instancia.Bloque INNER JOIN `Ramo` ON `Nombre` = `Ramo` WHERE  `Inicio` < '10:00:00' AND `Termino` > '10:00:00' AND `Latitud` = -35.0025 AND `Longitud` = -71.2303 AND `Periodo` = 'Semestre.1-2024';
+    //const query = `SELECT Bloque,Inicio,Termino,Ramo FROM Sala  INNER JOIN Instancia ON Sala = Sala.ID INNER JOIN Bloque ON Bloque.ID = Instancia.Bloque INNER JOIN Ramo ON Nombre = Ramo WHERE  Inicio < '${horaactual}' AND Termino > '${horaactual}' AND Latitud = '${req.body.Latitud}' AND Longitud = '${req.body.Longitud}' AND Dia_Semana = ${disS} AND Periodo = '${semestreActual}' LIMIT 1`;
+    const query = `SELECT Bloque,Inicio,Termino,Ramo FROM Sala  INNER JOIN Instancia ON Sala = Sala.ID INNER JOIN Bloque ON Bloque.ID = Instancia.Bloque INNER JOIN Ramo ON Nombre = Ramo WHERE  Inicio < '10:00:00' AND Termino > '10:00:00' AND Latitud = ${req.body.Latitud} AND Longitud = ${req.body.Longitud}  AND Dia_Semana = ${disS} AND Periodo = '${semestreActual}' LIMIT 1`;
+    //SELECT * FROM `Sala`  INNER JOIN `Instancia` ON `Sala` = Sala.ID INNER JOIN `Bloque` ON Bloque.ID = Instancia.Bloque INNER JOIN `Ramo` ON `Nombre` = `Ramo` WHERE  `Inicio` < '10:00:00' AND `Termino` > '10:00:00' AND `Latitud` = -35.0025 AND `Longitud` = -71.2303  LIMIT 1
     //const query = `SELECT Bloque,Sala.ID,Inicio,Termino,Ramo,Dia_Semana FROM Sala  INNER JOIN Instancia ON Sala = Sala.ID INNER JOIN Bloque ON Bloque.ID = Instancia.Bloque INNER JOIN Ramo ON Nombre = Ramo INNER JOIN Asignacion ON Nombre = Nombre_Ramo WHERE RUT_Docente = ${req.body.Rut} AND Inicio < ${horaactual} AND Termino > ${horaactual}`;
-    const query = `SELECT * FROM Bloque WHERE '${horaactual}' < Termino AND '${horaactual}' > Inicio`; // se uso la tabla de bloque por simple hecho de demostracion 
+    //const query = `SELECT * FROM Bloque WHERE '${horaactual}' < Termino AND '${horaactual}' > Inicio`; // se uso la tabla de bloque por simple hecho de demostracion 
     const conection = mysql.createConnection(dbData);
+
+    // esto es una version de prueba que envia este json 
+    let envioestatico = {
+        'Bloque': 'B1',
+        'Sala': 'E2',
+        'Inicio': '8:30:00',
+        'Termino': '9:40:00',
+        'Ramo': "Taller de Software",
+        'Dia_Semana': '1' ,
+        'Iniciada': false
+    }
+
     conection.connect((error)=>{
         if(error){
             console.log(error);
@@ -47,13 +107,15 @@ app.post('/consultarhorario', (req, res) => {
         }
         conection.query(query,(error,results)=>{
             conection.end();
-
-            if(query.length != 0){
-                results[0].iniciado = false;  // aca nos definiriamos si la clase ya esta iniciada
+            if(error){
+                res.end(error);
+            }
+            if(results.length != 0){
+                console.log(results);
                 res.end(JSON.stringify(results));
 
             }else{
-                res.end("no hay datos");
+                res.end("no hay clase");
             }
 
         });
@@ -64,6 +126,23 @@ app.post('/consultarhorario', (req, res) => {
 
 
 app.post('/registrarinicio', (req, res) => {
+    let hola = {
+        "titulo":  "aprendiedo React.js",
+        "numeroVistas": 567834,
+        "numLikes": 4523456,
+        "temas":[
+            "Javascript",
+            "Node.js"
+        ],
+        "publico":true
+    }
+
+    cursolocal.push(req.body);
+
+    cursolocal.forEach(element => {
+        console.log(element);
+    });
+
     // insert
 
         /** 
@@ -72,22 +151,34 @@ app.post('/registrarinicio', (req, res) => {
             "Sala": 'E2',
             "Bloque": 'B1',
             "IP": '192.168.0,50'
-            "hora_iniciada": '11:00:00'
 
         }// sacado de la  consulta 
         */
 
+        
+        // obtiene la hora actual 
 
         //const tiempoActual = new Date();
-        // obtiene la hora actual 
         //const diaactual = tiempoActual.getDay()+"/"+tiempoActual.getMonth()+"/"+tiempoActual.getFullYear();
-        //const query = `INSERT INTO Clase (Dia, Hora_Inicio, IP, Estado) VALUES ('${diaactual}','${req.body.hora_iniciada}','${req.body.IP}','Pendiente')`
+        //const horaactual = tiempoActual.getHours()+":"+tiempoActual.getMinutes()+":"+tiempoActual.getSeconds();
+        //const query = `INSERT INTO Clase (Dia, Hora_Inicio, IP, Estado) VALUES ('${diaactual}','${horaactual}','${req.body.IP}','Pendiente')`
+
         res.end("registar inicio de clases")
 
 });
 
 
 app.post('/registrarfinal', (req, res) => {
+
+    var desc = cursolocal.find(function(e) {
+        return e.Dia_Semana == req.body.Dia_Semana;
+      })
+
+      if(cursolocal.length != 0){
+        cursolocal.pop();
+      }
+      
+      console.log(cursolocal);
     // selection y modificar las columnas de la tabla clase para definir la columna de termino y estado
     res.end("registar fin de clases")
 });
@@ -109,7 +200,7 @@ async function monitorearHorario(){
   
         try{
 
-
+            
             esperaMin = await procesarHora(esperaMin == 0? 10000:esperaMin*60*1000);
             console.log('la siguiente revision de salas no cerradas es en '+esperaMin+" minutos");
 
@@ -140,45 +231,57 @@ function procesarHora(espera){
                 if(error){
                     console.log("no hay conexion");
                     reject('no se puede conectar a la BD');
-                }
-                const tiempoActual = new Date();
-                // obtiene la hora actual 
-                const horaactual = tiempoActual.getHours()+":"+tiempoActual.getMinutes()+":"+tiempoActual.getSeconds();
-                
-      
-                
-                //console.log(horaactual);
-                //const horaactual = "11:00:00";
-
-                // se busca si esta dentro de algun bloque la hora actual
-                const query = `SELECT (Termino) FROM Bloque WHERE '${horaactual}' < Termino AND '${horaactual}' > Inicio`;
-                
-                conection.query(query,(error,results)=>{
-                    conection.end();
-                    //console.log(results[0].Termino);
-                    if(error){
-                        reject('no se puede conectar a la BD');
-                    }
+                }else{
+                    const tiempoActual = new Date();
+                    // obtiene la hora actual 
+                    const horaactual = tiempoActual.getHours()+":"+tiempoActual.getMinutes()+":"+tiempoActual.getSeconds();
                     
-                    if(results.length == 0){
-                        if('22:20:00' < horaactual){
-                            resolve(10*60); // 1o horas si ya no hay mas horarios para hoy
-                        }else{
-                            resolve(12); 
+        
+                    
+                    //console.log(horaactual);
+                    //const horaactual = "11:00:00";
+
+                    // se busca si esta dentro de algun bloque la hora actual
+                    const query = `SELECT (Termino) FROM Bloque WHERE '${horaactual}' < Termino AND '${horaactual}' > Inicio`;
+                    
+                    conection.query(query,(error,results)=>{
+                        conection.end();
+                        //console.log(results[0].Termino);
+                        if(error){
+                            reject('no se puede conectar a la BD');
                         }
-                        
-                    }else{
-                        // aca se cerrarian todas las salas que no fueron terminadas
+                        else{
+                            if(results.length == 0){
+                                if('22:20:00' < horaactual){
 
-                        const [horaA, minutoA, segundoA] = horaactual.split(':').map(Number);
-                        const  [horaT, minutoT, segundoT] = results[0].Termino.split(':').map(Number);
-                        console.log((horaT-horaA)+':'+(minutoT-minutoA)+':'+(segundoT-segundoA));
-                        console.log((horaT-horaA)*60 + (minutoT-minutoA) + 2);
-                  
-                        resolve((horaT-horaA)*60 + (minutoT-minutoA)+ 2);
-                    }
-                    
-                });
+                                    
+                                    const [horaA, minutoA, segundoA] = (horaactual).split(':').map(Number);
+                                    const  [horaT, minutoT, segundoT] = ('8:30:00').split(':').map(Number);
+                                    const horaDiff = horaA > horaT ? (24 - horaA + horaT) : horaT - horaA;  
+                                    console.log((horaDiff)+':'+(minutoT-minutoA)+':00');
+
+                                    
+                                    resolve((horaDiff)*60 + (minutoT-minutoA)+ 2); // 1o horas si ya no hay mas horarios para hoy
+                                }else{
+                                    // aca se cerrarian todas las salas que no fueron terminadas
+
+                                    cursolocal = [];
+                                    resolve(12); 
+                                }
+                                
+                            }else{
+
+
+
+
+                                const [horaA, minutoA, segundoA] = horaactual.split(':').map(Number);
+                                const  [horaT, minutoT, segundoT] = results[0].Termino.split(':').map(Number);
+                        
+                                resolve((horaT-horaA)*60 + (minutoT-minutoA)+ 2);
+                            }
+                        }
+                    });
+                }
             });
 
 
