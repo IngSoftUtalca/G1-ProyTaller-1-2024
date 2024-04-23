@@ -6,6 +6,8 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import { createApp } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import MarcarAsistencia from './Paginas/MarcarAsistencia.vue'
+import ErrorAsistencia from './Paginas/error_de_asistencia.vue'
+import ReportarError from './Paginas/reportar_error.vue'
 import App from './App.vue' // Asegúrate de que la ruta a App.vue es correcta
 
 const router = createRouter({
@@ -15,6 +17,16 @@ const router = createRouter({
       path: '/sala:idSala',
       name: 'MarcarAsistencia',
       component: MarcarAsistencia
+    },
+    {
+      path: '/error',
+      name: 'ErrorAsistencia',
+      component: ErrorAsistencia
+    },
+    {
+      path: '/reporte',
+      name: 'ReporteError',
+      component: ReportarError
     }
   ]
 })

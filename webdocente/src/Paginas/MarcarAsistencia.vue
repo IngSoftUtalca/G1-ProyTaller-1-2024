@@ -3,7 +3,7 @@
   <div id="app" class="fondo" >
     <!-- Imagen en la parte superior -->
     <div class="row justify-content-center">
-      <img src="https://cdn.utalca.cl/img_utal/ins/utal.png" alt="Logo" class="img-fluid" style="max-width: 200px; max-height: 200px;">
+      <img src="../assets/utalca.svg" alt="Logo" class="img-fluid" style="max-width: 200px; max-height: 200px;">
     </div>
     <!-- Contenido principal -->
     <div class="row justify-content-center">
