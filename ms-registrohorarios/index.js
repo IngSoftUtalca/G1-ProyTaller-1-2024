@@ -24,35 +24,39 @@ app.post('/', async (req, res) => {
   });
 
   const XLSX = require('xlsx');
-  const fs = require('fs');
+const fs = require('fs');
 
-  // Get data from request body
-  const fechaInicio = req.body.fechaInicio;
-  const fechaTermino = req.body.fechaTermino;
-  const feriados = req.body.feriados;
-  const horario_periodo = req.body.horario_periodo;
+let fechaInicioDate, fechaTerminoDate;
+// Get data from request body
+let fechaInicio = req.body.fechaInicio;
+let fechaTermino = req.body.fechaTermino;
+const feriados = req.body.feriados;
+const horario_periodo = req.body.horario_periodo;
 
-  const buffer = Buffer.from(horario_periodo, 'base64');
+const buffer = Buffer.from(horario_periodo, 'base64');
 
+// Convert fechaInicio and fechaTermino to Date objects
+fechaInicioDate = new Date(fechaInicio);
+fechaTerminoDate = new Date(fechaTermino);
 
-  // Get all the dates between fechaInicio and fechaTermino
-  const datesInRange = [];
-  const currentDate = new Date(fechaInicioDate);
-  while (currentDate <= fechaTerminoDate) {
-    datesInRange.push(new Date(currentDate));
-    currentDate.setDate(currentDate.getDate() + 1);
-  }
+// Get all the dates between fechaInicio and fechaTermino
+const datesInRange = [];
+const currentDate = new Date(fechaInicioDate);
+while (currentDate <= fechaTerminoDate) {
+  datesInRange.push(new Date(currentDate));
+  currentDate.setDate(currentDate.getDate() + 1);
+}
 
-  // Filter out the weekends (Saturday and Sunday)
-  const filteredDates = datesInRange.filter(date => date.getDay() !== 0 && date.getDay() !== 6);
+// Filter out the weekends (Saturday and Sunday)
+const filteredDates = datesInRange.filter(date => date.getDay() !== 0 && date.getDay() !== 6);
 
-  // Filter out the dates that are already in feriados
-  const newFeriados = filteredDates.filter(date => !feriados.includes(date.toISOString().split('T')[0]));
+// Filter out the dates that are already in feriados
+const newFeriados = filteredDates.filter(date => !feriados.includes(date.toISOString().split('T')[0]));
 
-  // Add the new feriados to the existing feriados array
-  feriados.push(...newFeriados);
-  // Guardar el archivo .xlsx
-  fs.writeFileSync('archivo.xlsx', buffer);
+// Add the new feriados to the existing feriados array
+feriados.push(...newFeriados);
+// Guardar el archivo .xlsx
+fs.writeFileSync('archivo.xlsx', buffer);
 
   // Leer el archivo
   const workbook = XLSX.readFile('archivo.xlsx');
@@ -78,8 +82,8 @@ app.post('/', async (req, res) => {
   const [yearTermino, monthTermino, dayTermino] = fechaTermino.split('-').map(Number);
 
   // Create new Date objects
-  const fechaInicioDate = new Date(yearInicio, monthInicio - 1, dayInicio);
-  const fechaTerminoDate = new Date(yearTermino, monthTermino - 1, dayTermino);
+  fechaInicioDate = new Date(yearInicio, monthInicio - 1, dayInicio);
+  fechaTerminoDate = new Date(yearTermino, monthTermino - 1, dayTermino);
 
   // Determine the semester based on both fechaInicio and fechaTermino
   const semesterInicio = monthInicio < 7 || (monthInicio === 7 && dayInicio <= 15) ? 1 : 2;
