@@ -4,7 +4,7 @@
     <div id="app" class="fondo" >
       <!-- Imagen en la parte superior -->
       <div class="row justify-content-center">
-        <img src="../assets/utalca.svg" alt="Logo" class="img-fluid" style="max-width: 200px; max-height: 200px;">
+        <img src="../assets/error.svg" alt="Logo" class="img-fluid" style="max-width: 200px; max-height: 200px;">
       </div>
       <!-- Contenido principal -->
       <div class="row justify-content-center">
@@ -40,6 +40,7 @@
     height: 48px;
     margin: 56px 44px 90px 43px;
     padding: 0 0.4px 0 0;
+    margin-bottom: -15%;
   }
   
   .ramos{
@@ -104,9 +105,10 @@
   
   .img-fluid {
     width: 213px;
-    height: 48px;
+    height: 150 px;
     margin: 56px 44px 90px 43px;
     padding: 0 0.4px 0 0;
+    margin-bottom: -15%;
   }
   </style>
   

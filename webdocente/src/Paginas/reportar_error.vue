@@ -2,13 +2,12 @@
     <center>
       <div id="app" class="fondo">
         <!-- Imagen en la parte superior -->
-        <div class="row justify-content-center">
-          <img src="../assets/utalca.svg" alt="Logo" class="img-fluid" style="max-width: 200px; max-height: 200px;">
-        </div>
+        
         <!-- Contenido principal -->
         
         <div class="row justify-content-center">
           <div class="card-body">
+            <img src="../assets/utalca.svg" alt="Logo" class="img-fluid" style="max-width: 200px; max-height: 200px;">
             <p class="texto">Cuentanos que pasó:</p>
             <select class="form-control ramos" v-model="selectedOption">
               <option value="error_de_red">Error de red</option>
@@ -57,7 +56,7 @@
     height: 852px;
     flex-grow: 0;
     padding: 54px 46px 168px 47px;
-    background-color: #f4f4f4;
+    background-color: #55C8C8;
   }
   
   .ramos {
@@ -83,7 +82,7 @@
     margin: 5px 0;
     border-radius: 16px;
     box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
-    background-color: #60cdcd;
+    background-color: #fff;
   }
   
   .boton {
@@ -93,6 +92,7 @@
     margin: 20px 58px 0 57px;
     padding: 11px 32px 12px 33px;
     border-radius: 16px;
+    margin-bottom: 5%;
     background-color: #FF4141;
     color:white;
   }
@@ -101,7 +101,8 @@
     width: 150px;
     height: 100px8px;
     margin: 56px 44px 90px 43px;
-    padding: 0 0.4px 0
+    padding: 0 0.4px 0;
+    margin-bottom: -15%;
   }
   
   .texto {
