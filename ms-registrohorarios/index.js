@@ -119,9 +119,9 @@ app.post('/new', async (req, res) => {
     console.log("no se pudo borrar semestre: ", error.message);
   }
 
-  const query1 = `INSERT INTO \`Periodo\` (ID, fechaInicio, fechaTermino) VALUES (?, ?, ?);`;
+  const query1 = `INSERT INTO \`Periodo\` (ID, fechaInicio, fechaTermino, Estado) VALUES (?, ?, ?, ?);`;
   try {
-    await funciones.runQuery(connection, query1, [semestre, fechaInicioDate, fechaTerminoDate]);
+    await funciones.runQuery(connection, query1, [semestre, fechaInicioDate, fechaTerminoDate, "Pendiente"]);
   } catch (error) {
     return res.status(500).json({ error: 'Error ejecutando la query dentro de Periodo: '+error.message });
   }
@@ -159,13 +159,13 @@ app.post('/new', async (req, res) => {
   }catch(error){
     console.log("no se pudo borrar instancias: ", error.message);
   }
-  const query4 = `INSERT INTO \`Instancia\` (Sala, Bloque, Dia_Semana, Ramo) VALUES (?, ?, ?, ?);`;
+  const query4 = `INSERT INTO \`Instancia\` (Sala, Bloque, Dia_Semana, Ramo, Semestre) VALUES (?, ?, ?, ?, ?);`;
   const bar2 = new ProgressBar('Agregando instancias [:bar] :percent', { total: instancia.length });
   for (let ins of instancia){
     const inicio = getBloqueId(ins.INICIO);
     const termino = getBloqueId(ins.TERMINO);
     for (let i = inicio; i < termino; i++) {
-      const params = [ins.SALA, i, ins.DIA, ins.NOMBRE];
+      const params = [ins.SALA, i, ins.DIA, ins.NOMBRE, semestre];
       try {
         await runQuery(connection, query4, params);
       } catch (error) {
@@ -270,9 +270,9 @@ app.post('/editfull', async (req, res) => {
     console.log("no se pudo borrar semestre: ", error.message);
   }
 
-  const query1 = `INSERT INTO \`Periodo\` (ID, fechaInicio, fechaTermino) VALUES (?, ?, ?);`;
+  const query1 = `INSERT INTO \`Periodo\` (ID, fechaInicio, fechaTermino, Estado) VALUES (?, ?, ?, ?);`;
   try {
-    await funciones.runQuery(connection, query1, [semestre, fechaInicioDate, fechaTerminoDate]);
+    await funciones.runQuery(connection, query1, [semestre, fechaInicioDate, fechaTerminoDate, "Pendiente"]);
   } catch (error) {
     return res.status(500).json({ error: 'Error ejecutando la query dentro de Periodo: '+error.message });
   }
