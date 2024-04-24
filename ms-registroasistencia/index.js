@@ -55,7 +55,7 @@ function CalcularSemestre(){
 const PORT = 3009;
 
 
-const cursolocal = [];
+var cursolocal = [];
 
 app.get('/', (req, res) => {
   res.json({ message: 'Micro servicio para registro asistencia' });
@@ -83,11 +83,16 @@ app.post('/consultarhorario', (req, res) => {
     //const query = `SELECT Bloque,Sala,Ramo,Nombre,RUT_Docente FROM Sala INNER JOIN Instancia ON Sala = ID INNER JOIN Ramo ON Nombre = Ramo INNER JOIN Asignacion ON Nombre = Nombre_Ramo WHERE RUT_Docente = '${req.body.RUT_Docente}' AND Latitud = '${req.body.Latitud}' AND Longitud = '${req.body.Longitud}'`;
     //SELECT * FROM `Sala`  INNER JOIN `Instancia` ON `Sala` = Sala.ID INNER JOIN `Bloque` ON Bloque.ID = Instancia.Bloque INNER JOIN `Ramo` ON `Nombre` = `Ramo` WHERE  `Inicio` < '10:00:00' AND `Termino` > '10:00:00' AND `Latitud` = -35.0025 AND `Longitud` = -71.2303 AND `Periodo` = 'Semestre.1-2024';
     //const query = `SELECT Bloque,Inicio,Termino,Ramo FROM Sala  INNER JOIN Instancia ON Sala = Sala.ID INNER JOIN Bloque ON Bloque.ID = Instancia.Bloque INNER JOIN Ramo ON Nombre = Ramo WHERE  Inicio < '${horaactual}' AND Termino > '${horaactual}' AND Latitud = '${req.body.Latitud}' AND Longitud = '${req.body.Longitud}' AND Dia_Semana = ${disS} AND Periodo = '${semestreActual}' LIMIT 1`;
-    const query = `SELECT Bloque,Inicio,Termino,Ramo FROM Sala  INNER JOIN Instancia ON Sala = Sala.ID INNER JOIN Bloque ON Bloque.ID = Instancia.Bloque INNER JOIN Ramo ON Nombre = Ramo WHERE  Inicio < '10:00:00' AND Termino > '10:00:00' AND Latitud = ${req.body.Latitud} AND Longitud = ${req.body.Longitud}  AND Dia_Semana = ${disS} AND Periodo = '${semestreActual}' LIMIT 1`;
+    //const query = `SELECT Bloque,Inicio,Termino,Ramo FROM Sala  INNER JOIN Instancia ON Sala = Sala.ID INNER JOIN Bloque ON Bloque.ID = Instancia.Bloque INNER JOIN Ramo ON Nombre = Ramo WHERE  Inicio < '10:00:00' AND Termino > '10:00:00' AND Latitud = ${req.body.Latitud} AND Longitud = ${req.body.Longitud}  AND Dia_Semana = ${disS} AND Periodo = '${semestreActual}' LIMIT 1`;
     //SELECT * FROM `Sala`  INNER JOIN `Instancia` ON `Sala` = Sala.ID INNER JOIN `Bloque` ON Bloque.ID = Instancia.Bloque INNER JOIN `Ramo` ON `Nombre` = `Ramo` WHERE  `Inicio` < '10:00:00' AND `Termino` > '10:00:00' AND `Latitud` = -35.0025 AND `Longitud` = -71.2303  LIMIT 1
     //const query = `SELECT Bloque,Sala.ID,Inicio,Termino,Ramo,Dia_Semana FROM Sala  INNER JOIN Instancia ON Sala = Sala.ID INNER JOIN Bloque ON Bloque.ID = Instancia.Bloque INNER JOIN Ramo ON Nombre = Ramo INNER JOIN Asignacion ON Nombre = Nombre_Ramo WHERE RUT_Docente = ${req.body.Rut} AND Inicio < ${horaactual} AND Termino > ${horaactual}`;
     //const query = `SELECT * FROM Bloque WHERE '${horaactual}' < Termino AND '${horaactual}' > Inicio`; // se uso la tabla de bloque por simple hecho de demostracion 
     const conection = mysql.createConnection(dbData);
+
+    const query = `SELECT Bloque,Inicio,Termino,Ramo FROM Sala  INNER JOIN Instancia ON Sala = Sala.ID INNER JOIN Bloque ON Bloque.ID = Instancia.Bloque INNER JOIN Ramo ON Nombre = Ramo INNER JOIN Asignacion ON Nombre_Ramo = Nombre WHERE  Inicio < '12:30:00' AND Termino > '12:30:00'  AND Dia_Semana = 2 AND Periodo = 'Semestre.1-2024' AND RUT_Docente = '33061234-1'`;
+    //const query = `SELECT Bloque,Inicio,Termino,Ramo FROM Sala  INNER JOIN Instancia ON Sala = Sala.ID INNER JOIN Bloque ON Bloque.ID = Instancia.Bloque INNER JOIN Ramo ON Nombre = Ramo WHERE  Inicio < '${horaactual}' AND Termino > '${horaactual}'  AND Dia_Semana = ${disS} AND Periodo = '${semestreActual}' LIMIT 1`;
+    //const query = `SELECT Bloque,Inicio,Termino,Ramo FROM Sala  INNER JOIN Instancia ON Sala = Sala.ID INNER JOIN Bloque ON Bloque.ID = Instancia.Bloque INNER JOIN Ramo ON Nombre = Ramo WHERE  Inicio < '10:00:00' AND Termino > '10:00:00' AND Latitud = ${req.body.Latitud} AND Longitud = ${req.body.Longitud}  AND Dia_Semana = ${disS} AND Periodo = '${semestreActual}' LIMIT 1`;
+
 
     // esto es una version de prueba que envia este json 
     let envioestatico = {
@@ -252,20 +257,21 @@ function procesarHora(espera){
                         }
                         else{
                             if(results.length == 0){
-                                if('22:20:00' < horaactual){
+                                cursolocal = [];
+                                if('22:20:00' < horaactual || '8:30:00' > horaactual){
 
                                     
                                     const [horaA, minutoA, segundoA] = (horaactual).split(':').map(Number);
                                     const  [horaT, minutoT, segundoT] = ('8:30:00').split(':').map(Number);
                                     const horaDiff = horaA > horaT ? (24 - horaA + horaT) : horaT - horaA;  
-                                    console.log((horaDiff)+':'+(minutoT-minutoA)+':00');
+                                    console.log((minutoT >= minutoA? horaDiff : horaDiff - 1)+':'+(minutoT >= minutoA? (minutoT-minutoA):(60+minutoT-minutoA))+':00');
 
                                     
                                     resolve((horaDiff)*60 + (minutoT-minutoA)+ 2); // 1o horas si ya no hay mas horarios para hoy
                                 }else{
                                     // aca se cerrarian todas las salas que no fueron terminadas
 
-                                    cursolocal = [];
+                                    
                                     resolve(12); 
                                 }
                                 
