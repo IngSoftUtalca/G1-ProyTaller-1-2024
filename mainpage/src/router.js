@@ -8,7 +8,8 @@ const routes = [
   { path: '/', component: LandingPage },
   { path: '/docente', component: HomeDocente },
   { path: '/administrador', component: HomeAdministrador },
-  { path: '/webmaster', component: HomeWebMaster }
+  { path: '/webmaster', component: HomeWebMaster },
+  { path: '/:pathMatch(.*)*', redirect: '/' }
 ]
 
 const router = createRouter({

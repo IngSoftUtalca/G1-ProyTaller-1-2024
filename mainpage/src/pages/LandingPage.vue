@@ -72,7 +72,22 @@
             </div>
         </div>
     </section>
+    <MainFooter />
 </template> 
+
+<script>
+    import MainFooter from '@/components/MainFooter.vue'
+
+    export default {
+        name: 'LandingPage',
+        mounted() {
+            document.title = 'UTalca | Asistencia Docente'
+        },
+        components: {
+            MainFooter
+        }
+    }
+</script>
 
 <style>
     .image-container {

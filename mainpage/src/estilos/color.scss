@@ -4,6 +4,7 @@ $secondary-color: #F4F4F4;
 $accent-color: #F29B33;
 $light-color: #FFFFFF;
 $dark-color: #A2A2A0;
+$black: #272727;
 
 // Colores de texto
 $text-primary: #ffffff; // Un color oscuro para contrastar con el color primario claro
@@ -36,6 +37,12 @@ $text-dark: #fff; // Un color claro para contrastar con el color oscuro
     background-color: $dark-color;
     color: $text-dark;
 }
+
+.black-bg {
+    background-color: $black;
+    color: $text-dark;
+}
+
 .debug{
     border: 1px solid red;
 }

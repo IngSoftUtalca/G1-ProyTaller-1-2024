@@ -20,6 +20,12 @@
     display: none;
 }
 
+.footer {
+    @extend .black-bg;
+    padding: 1rem;
+    height: 135px;
+}
+
 body {
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
