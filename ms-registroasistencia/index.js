@@ -88,36 +88,27 @@ app.post('/consultarhorario', (req, res) => {
     //const query = `SELECT Bloque,Sala.ID,Inicio,Termino,Ramo,Dia_Semana FROM Sala  INNER JOIN Instancia ON Sala = Sala.ID INNER JOIN Bloque ON Bloque.ID = Instancia.Bloque INNER JOIN Ramo ON Nombre = Ramo INNER JOIN Asignacion ON Nombre = Nombre_Ramo WHERE RUT_Docente = ${req.body.Rut} AND Inicio < ${horaactual} AND Termino > ${horaactual}`;
     //const query = `SELECT * FROM Bloque WHERE '${horaactual}' < Termino AND '${horaactual}' > Inicio`; // se uso la tabla de bloque por simple hecho de demostracion 
     const conection = mysql.createConnection(dbData);
-
-    const query = `SELECT Bloque,Inicio,Termino,Ramo FROM Sala  INNER JOIN Instancia ON Sala = Sala.ID INNER JOIN Bloque ON Bloque.ID = Instancia.Bloque INNER JOIN Ramo ON Nombre = Ramo INNER JOIN Asignacion ON Nombre_Ramo = Nombre WHERE  Inicio < '12:30:00' AND Termino > '12:30:00'  AND Dia_Semana = 2 AND Periodo = 'Semestre.1-2024' AND RUT_Docente = '33061234-1'`;
+    console.log(req.body);
+    const query = `SELECT RUT_Docente, Bloque,Inicio,Termino,Ramo FROM Sala  INNER JOIN Instancia ON Sala = Sala.ID INNER JOIN Bloque ON Bloque.ID = Instancia.Bloque INNER JOIN Ramo ON Nombre = Ramo INNER JOIN Asignacion ON Nombre_Ramo = Nombre WHERE  Inicio < '12:30:00' AND Termino > '12:30:00'  AND Dia_Semana = 2 AND Periodo = '${semestreActual}' AND RUT_Docente = '${req.body.Rut}'`;
     //const query = `SELECT Bloque,Inicio,Termino,Ramo FROM Sala  INNER JOIN Instancia ON Sala = Sala.ID INNER JOIN Bloque ON Bloque.ID = Instancia.Bloque INNER JOIN Ramo ON Nombre = Ramo WHERE  Inicio < '${horaactual}' AND Termino > '${horaactual}'  AND Dia_Semana = ${disS} AND Periodo = '${semestreActual}' LIMIT 1`;
     //const query = `SELECT Bloque,Inicio,Termino,Ramo FROM Sala  INNER JOIN Instancia ON Sala = Sala.ID INNER JOIN Bloque ON Bloque.ID = Instancia.Bloque INNER JOIN Ramo ON Nombre = Ramo WHERE  Inicio < '10:00:00' AND Termino > '10:00:00' AND Latitud = ${req.body.Latitud} AND Longitud = ${req.body.Longitud}  AND Dia_Semana = ${disS} AND Periodo = '${semestreActual}' LIMIT 1`;
 
 
     // esto es una version de prueba que envia este json 
-    let envioestatico = {
-        'Bloque': 'B1',
-        'Sala': 'E2',
-        'Inicio': '8:30:00',
-        'Termino': '9:40:00',
-        'Ramo': "Taller de Software",
-        'Dia_Semana': '1' ,
-        'Iniciada': false
-    }
 
     conection.connect((error)=>{
         if(error){
             console.log(error);
-            res.end(error);
+            res.end("no hay conexion 1");
         }
         conection.query(query,(error,results)=>{
             conection.end();
             if(error){
-                res.end(error);
+                res.end("no hay conexion 2");
             }
+            console.log(results);
             if(results.length != 0){
-                console.log(results);
-                res.end(JSON.stringify(results));
+                res.end(JSON.stringify(results[0]));
 
             }else{
                 res.end("no hay clase");
@@ -131,22 +122,74 @@ app.post('/consultarhorario', (req, res) => {
 
 
 app.post('/registrarinicio', (req, res) => {
-    let hola = {
-        "titulo":  "aprendiedo React.js",
-        "numeroVistas": 567834,
-        "numLikes": 4523456,
-        "temas":[
-            "Javascript",
-            "Node.js"
-        ],
-        "publico":true
-    }
 
-    cursolocal.push(req.body);
+    const tiempoActual = new Date();
+    const horaactual = tiempoActual.getHours()+":"+tiempoActual.getMinutes()+":"+tiempoActual.getSeconds();
+    const diaS = tiempoActual.getDay(); 
 
-    cursolocal.forEach(element => {
-        console.log(element);
+    const conection = mysql.createConnection(dbData);
+
+    var valido = false;
+    conection.connect((error)=>{
+        if(error){
+            console.log(error);
+            res.end(error);
+        }
+        else{
+            //const queryComprobar = `SELECT RUT_Docente, Bloque,Inicio,Termino,Ramo FROM Sala  INNER JOIN Instancia ON Sala = Sala.ID INNER JOIN Bloque ON Bloque.ID = Instancia.Bloque INNER JOIN Ramo ON Nombre = Ramo INNER JOIN Asignacion ON Nombre_Ramo = Nombre WHERE  Inicio < '12:30:00' AND Termino > '12:30:00'  AND Dia_Semana = 2 AND Periodo = 'Semestre.1-2024' AND RUT_Docente = '33061234-1'`;
+
+            // VERSION ESTATICA
+                                   
+            const queryComprobar = `SELECT RUT_Docente, Bloque,Inicio,Termino,Ramo FROM Sala  INNER JOIN Instancia ON Sala = Sala.ID INNER JOIN Bloque ON Bloque.ID = Instancia.Bloque INNER JOIN Ramo ON Nombre = Ramo INNER JOIN Asignacion ON Nombre_Ramo = Nombre WHERE  Inicio < '${req.body.Inicio}'  AND Termino > '${req.body.Inicio}' AND Dia_Semana = 2 AND Periodo = '${semestreActual}' AND RUT_Docente = '${req.body.Rut}'`; 
+
+            // VERSION REAL
+            //const queryComprobar = `SELECT RUT_Docente, Bloque,Inicio,Termino,Ramo FROM Sala  INNER JOIN Instancia ON Sala = Sala.ID INNER JOIN Bloque ON Bloque.ID = Instancia.Bloque INNER JOIN Ramo ON Nombre = Ramo INNER JOIN Asignacion ON Nombre_Ramo = Nombre WHERE  Inicio < ${req.body.Inicio}  AND Termino > ${req.body.Inicio}  AND Inicio < ${horaactual} AND Termino > ${horaactual} AND Dia_Semana = ${diaS} AND Periodo = ${semestreActual} AND RUT_Docente = ${req.body.Rut}`;
+            conection.query(queryComprobar,(error,results)=>{
+                conection.end();
+                if(error){
+                    console.log(error);
+                    res.end(error);
+                }
+                
+                if(results.length != 0){
+                    valido = true;
+                    var desc = null;
+                    var desc = cursolocal.find(function(e) {
+                        return e.RUT_Docente == req.body.Rut;
+                      })
+
+
+                    if(desc == null){ // se guardara localmente como pendiente
+                        console.log("se guardara:")
+                        results[0].Inicio = req.body.Inicio;
+                        cursolocal.push(results[0]);
+                        console.log('cursos actuales en pendiente:')
+                        cursolocal.forEach(element => {
+                            console.log(element.RUT_Docente+" / "+element.Inicio+" / "+element.Ramo);
+                        });
+                        res.end('se guardo tu registro');
+                    }else{
+                        res.end('el profesor ya tiene una clase iniciada');
+                    }
+        
+        
+                
+
+                }else{
+                    valido = false;
+                    res.end(error);
+                }
+
+
+    
+            });
+        }
+
+
     });
+
+
+
 
     // insert
 
@@ -168,24 +211,34 @@ app.post('/registrarinicio', (req, res) => {
         //const horaactual = tiempoActual.getHours()+":"+tiempoActual.getMinutes()+":"+tiempoActual.getSeconds();
         //const query = `INSERT INTO Clase (Dia, Hora_Inicio, IP, Estado) VALUES ('${diaactual}','${horaactual}','${req.body.IP}','Pendiente')`
 
-        res.end("registar inicio de clases")
+
 
 });
 
 
-app.post('/registrarfinal', (req, res) => {
-
-    var desc = cursolocal.find(function(e) {
-        return e.Dia_Semana == req.body.Dia_Semana;
+app.post('/registrarfinal', (req, res) => { // se necesita el rut del docente
+    var desc = null
+    desc = cursolocal.find(function(e) {
+        return e.RUT_Docente == req.Rut;
       })
+      console.log("finalizando...");
 
-      if(cursolocal.length != 0){
-        cursolocal.pop();
+
+      if(desc != null){
+        if(cursolocal.length != 0){
+            cursolocal = cursolocal.filters(cursosel => cursosel.RUT_Docente != req.Rut);
+          }
+          
+          console.log('cursos actuales en pendiente:')
+          cursolocal.forEach(element => {
+              console.log(element.RUT_Docente+" / "+element.Inicio+" / "+element.Ramo);
+          });
+
+
+          // selection y modificar las columnas de la tabla clase para definir la columna de termino y estado
+        res.end("registar fin de clases")
       }
-      
-      console.log(cursolocal);
-    // selection y modificar las columnas de la tabla clase para definir la columna de termino y estado
-    res.end("registar fin de clases")
+
 });
 
 
