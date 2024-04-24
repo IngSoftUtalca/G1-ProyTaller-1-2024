@@ -9,7 +9,51 @@ process.env.TZ = 'America/Santiago'; // se define la zona horaria en chile
 
 var cola = [];
 
-; // día lunes
+
+
+// consulta de cursos
+
+/** 
+POST http://localhost:3009/consultarhorario  HTTP/1.1
+Content-Type: application/json
+
+{
+    "Rut": "33061234-1"
+}*/
+
+
+
+//solicitud de registro inicia
+
+/**
+ POST http://localhost:3009/registrarinicio  HTTP/1.1
+Content-Type: application/json
+
+{
+    "Rut": "33061234-1",
+    "Inicio": "12:20:00"
+}
+ 
+ 
+ */
+
+
+// solicitud de registro final
+
+/**
+ POST http://localhost:3009/registrarfinal HTTP/1.1
+Content-Type: application/json
+
+{
+    "Rut": "33061234-1"
+}
+ 
+ 
+ */
+
+
+
+
 
 
 
@@ -108,6 +152,15 @@ app.post('/consultarhorario', (req, res) => {
             }
             console.log(results);
             if(results.length != 0){
+
+                var desc = null;
+                var desc = cursolocal.find(function(e) {
+                    return e.RUT_Docente == req.body.Rut;
+                  })
+                
+                results[0].Iniciado = (desc != null);
+
+
                 res.end(JSON.stringify(results[0]));
 
             }else{
@@ -124,12 +177,13 @@ app.post('/consultarhorario', (req, res) => {
 app.post('/registrarinicio', (req, res) => {
 
     const tiempoActual = new Date();
-    const horaactual = tiempoActual.getHours()+":"+tiempoActual.getMinutes()+":"+tiempoActual.getSeconds();
+    //const horaactual = tiempoActual.getHours()+":"+tiempoActual.getMinutes()+":"+tiempoActual.getSeconds();
+    
     const diaS = tiempoActual.getDay(); 
 
     const conection = mysql.createConnection(dbData);
 
-    var valido = false;
+
     conection.connect((error)=>{
         if(error){
             console.log(error);
@@ -217,30 +271,65 @@ app.post('/registrarinicio', (req, res) => {
 
 
 app.post('/registrarfinal', (req, res) => { // se necesita el rut del docente
-    var desc = null
-    desc = cursolocal.find(function(e) {
-        return e.RUT_Docente == req.Rut;
-      })
-      console.log("finalizando...");
 
 
-      if(desc != null){
-        if(cursolocal.length != 0){
-            cursolocal = cursolocal.filters(cursosel => cursosel.RUT_Docente != req.Rut);
-          }
-          
-          console.log('cursos actuales en pendiente:')
-          cursolocal.forEach(element => {
-              console.log(element.RUT_Docente+" / "+element.Inicio+" / "+element.Ramo);
-          });
 
+    conection = mysql.createConnection(dbData);
+    conection.connect((error)=>{
+        if(error){
+            console.log("no hay conexion");
+            reject('no se puede conectar a la BD');
+        }else{
+            const tiempoActual = new Date();
+            // obtiene la hora actual 
+            const horaactual = tiempoActual.getHours()+":"+tiempoActual.getMinutes()+":"+tiempoActual.getSeconds();
+            
 
-          // selection y modificar las columnas de la tabla clase para definir la columna de termino y estado
-        res.end("registar fin de clases")
-      }
+            
+            //console.log(horaactual);
+            //const horaactual = "11:00:00";
 
+            // se busca si esta dentro de algun bloque la hora actual
+            const query = `SELECT (Termino) FROM Bloque WHERE '${horaactual}' < Termino AND '${horaactual}' > Inicio`;
+            
+            conection.query(query,(error,results)=>{
+                if(error){
+                    res.end(error);
+                }else{
+                    if(results.length != 0){
+
+                        var desc = null
+                        desc = cursolocal.find(function(e) {
+                            return e.RUT_Docente == req.body.Rut;
+                          })
+                        console.log("finalizando...");         
+                        if(desc != null){
+                            if(cursolocal.length != 0){
+                                cursolocal = cursolocal.filter(cursosel => cursosel.RUT_Docente != req.body.Rut);
+                            }
+                    
+                            desc.Termino = horaactual;
+                            console.log("curso finalizazo:" +desc.RUT_Docente+" / "+desc.Inicio+" / "+desc.Termino+" / "+desc.Ramo)
+                            console.log('cursos actuales en pendiente:')
+                            cursolocal.forEach(element => {
+                                console.log(element.RUT_Docente+" / "+element.Inicio+" / "+element.Ramo);
+                            });
+                    
+                    
+                            // selection y modificar las columnas de la tabla clase para definir la columna de termino y estado
+                            res.end("registar fin de clases");
+                        }else{
+                            res.end("no se encontro clase iniciada");
+                        }
+                    }else{
+                        res.end("registro fuera de horario de clase");
+                    }
+                }
+            });
+        }
+    
+    });
 });
-
 
 
 
@@ -293,7 +382,7 @@ function procesarHora(espera){
                     const tiempoActual = new Date();
                     // obtiene la hora actual 
                     const horaactual = tiempoActual.getHours()+":"+tiempoActual.getMinutes()+":"+tiempoActual.getSeconds();
-                    
+                    //const horaactual = '23:30:00';
         
                     
                     //console.log(horaactual);
@@ -310,32 +399,26 @@ function procesarHora(espera){
                         }
                         else{
                             if(results.length == 0){
+                                const [horaA, minutoA, segundoA] = (horaactual).split(':').map(Number);
+                                // aca se cerrarian todas las salas que no fueron terminadas
                                 cursolocal = [];
-                                if('22:20:00' < horaactual || '8:30:00' > horaactual){
 
-                                    
-                                    const [horaA, minutoA, segundoA] = (horaactual).split(':').map(Number);
+
+
+
+                                // aca se definiria la nueva espera
+                                if(CompararHoras(horaA,minutoA,segundoA)){
+                                    resolve(12); 
+                                }else{
                                     const  [horaT, minutoT, segundoT] = ('8:30:00').split(':').map(Number);
                                     const horaDiff = horaA > horaT ? (24 - horaA + horaT) : horaT - horaA;  
                                     console.log((minutoT >= minutoA? horaDiff : horaDiff - 1)+':'+(minutoT >= minutoA? (minutoT-minutoA):(60+minutoT-minutoA))+':00');
-
-                                    
                                     resolve((horaDiff)*60 + (minutoT-minutoA)+ 2); // 1o horas si ya no hay mas horarios para hoy
-                                }else{
-                                    // aca se cerrarian todas las salas que no fueron terminadas
-
-                                    
-                                    resolve(12); 
                                 }
                                 
                             }else{
-
-
-
-
                                 const [horaA, minutoA, segundoA] = horaactual.split(':').map(Number);
                                 const  [horaT, minutoT, segundoT] = results[0].Termino.split(':').map(Number);
-                        
                                 resolve((horaT-horaA)*60 + (minutoT-minutoA)+ 2);
                             }
                         }
@@ -348,6 +431,23 @@ function procesarHora(espera){
     });
 }
 
+
+function CompararHoras(HoraA,MinutoA,SegundoA)
+{
+    var actual = new Date();
+    var inicio = new Date();
+    var final = new Date();
+
+    actual.setHours(HoraA,MinutoA,SegundoA);
+    inicio.setHours(8,30,0); 
+    final.setHours(22,20,0); 
+
+    if(actual >= inicio && actual < final ){
+        return true;
+    }else{
+        return false;
+    }
+}
 
 
 //console.log(process.env.TZ);
