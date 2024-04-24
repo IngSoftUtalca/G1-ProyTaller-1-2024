@@ -55,7 +55,7 @@
                 </div>
                 
             </div>
-            <div class="col-4 d-flex justify-content-end">
+            <div class="col-4 d-flex justify-content-end m-0 p-0">
                 <div class="limited-width-column secondary-bg">
                     <div class="d-flex justify-content-center align-items-center p-5 h-50">
                     <div class="row image-container">
