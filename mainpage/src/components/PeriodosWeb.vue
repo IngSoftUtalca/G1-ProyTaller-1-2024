@@ -8,6 +8,7 @@
                 <img src="@/assets/plus.svg" alt="Agregar">
             </button>
         </div>
+        <AgregarPeriodo class="overlay debug" v-if="OverlayAgregar"/>
         <div class="row container-fluid">
             <div class="row px-5 rt-50 h-55 font-20 bold primary-bg d-flex align-items-center">
                 <div class="col-2 text-center">
@@ -32,17 +33,30 @@
 </template>
 
 <script>
+    import AgregarPeriodo from '@/components/AgregarPeriodo.vue';
+    import vClickOutside from 'v-click-outside';
+
     export default {
         name: 'PeriodosWeb',
         data() {
             return {
-                periodos: [1, 2, 3, 4, 5]
+                periodos: [1, 2, 3, 4, 5],
+                OverlayAgregar: false
             }
         },
         methods: {
             add() {
-               alert('Funcionalidad en desarrollo');
+                this.OverlayAgregar = true;
+            },
+            close() {
+                this.OverlayAgregar = false;
             }
+        },
+        components: {
+            AgregarPeriodo
+        },
+        directives: {
+            'click-outside': vClickOutside.directive
         }
     }
 </script>
