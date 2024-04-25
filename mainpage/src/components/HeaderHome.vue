@@ -13,7 +13,7 @@
         </div>
     </div>
     <div class="h-55 pt-3 secondary-bg-simple primary-semibold font-24 d-flex align-items-center justify-content-end">
-        <p class="mx-5">usuario: {{ usuario }}</p>
+        <p class="mx-5">Usuario: {{ usuario }}</p>
     </div>
     <div class="d-flex justify-content-center"><div class="w-95 primary-bg h-12 r-4"></div></div>
     <div class="text-center mt-4 font-28">Plataforma de gestión de asistencia docente</div>
@@ -23,9 +23,22 @@
     @import "@/estilos/buttons.scss";
     .btn-salir {
         @extend .btn-primary;
+
+        &:hover {
+            background-color: $light-color;
+            color: $black;
+        }
+
+        &:hover .icono {
+            content: inherit;
+            background-color: $light-color;
+            color: $black;
+        }
     }
     .btn-salir:hover .icono{
         content: url('~@/assets/salir-negro.svg');
+        background-color: $light-color;
+        color: $black;
     }
 </style>
 <script>

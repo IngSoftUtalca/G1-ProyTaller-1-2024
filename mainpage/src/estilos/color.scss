@@ -48,9 +48,49 @@ $text-dark: #fff; // Un color claro para contrastar con el color oscuro
     background-color: $secondary-color;
 }
 
+.accent-hover {
+    &:hover {
+        background-color: $accent-color;
+    }
+}
+
+.dark-hover {
+    &:hover {
+        background-color: $dark-color;
+    }
+}
+
+.light-hover {
+    &:hover {
+        background-color: $light-color;
+    }
+}
+
+.black-hover {
+    &:hover {
+        background-color: $black;
+    }
+}
+
+.gray-hover {
+    &:hover {
+        background-color: $gray;
+        color: $text-light;
+    }
+}
+
+.secondary-hover {
+    &:hover {
+        background-color: $secondary-color;
+        color: $text-secondary;
+    }
+}
+
+
 .debug{
     border: 1px solid red;
 }
+
 /*
 $primary-color (#60CDCD): Este color verde azulado es vibrante y llamativo,
  lo que lo convierte en una excelente opción para elementos principales que deben destacar.

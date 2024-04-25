@@ -9,10 +9,10 @@
                     <a href="https://www.utalca.cl/" class="pb-1">Universidad de Talca</a>
                 </div>
                 <div class="col text-center">
-                    <a href="/docente" class="pb-1">Docentes</a>
+                    <a href="/docente/1" class="pb-1">Docentes</a>
                 </div>
                 <div class="col text-center">
-                    <a href="/administrador" class="pb-1">Directores de Escuela</a>
+                    <a href="/administrador/1" class="pb-1">Directores de Escuela</a>
                 </div>
                 <div class="col text-center">
                     <a href="/login/webmaster" class="pb-1">Decanos</a>
