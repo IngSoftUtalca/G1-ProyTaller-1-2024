@@ -13,7 +13,9 @@
       </div>
       <!-- Botón de asistencia -->
       <div>
-        <button type="button" class="btn boton_gris" :class="{ 'boton-amarillo': botonC }" @click="cambiarColor">Confirmar</button>
+        <a href="claseinicio" class="btn boton_gris" :class="{ 'boton-amarillo': botonC }">
+          <button type="button" @click="cambiarColor">Confirmar</button>
+        </a>
       </div>
     </div>
   </center>

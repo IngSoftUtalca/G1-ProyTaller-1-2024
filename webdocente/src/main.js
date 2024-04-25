@@ -6,6 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import { createApp } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import MarcarAsistencia from './Paginas/MarcarAsistencia.vue'
+import ClaseIniciada from './Paginas/clase_iniciada.vue'
 import ErrorAsistencia from './Paginas/error_de_asistencia.vue'
 import ReportarError from './Paginas/reportar_error.vue'
 import LoginScreen from './Paginas/iniciar_sesion.vue'
@@ -23,6 +24,12 @@ const router = createRouter({
       path: '/error',
       name: 'ErrorAsistencia',
       component: ErrorAsistencia
+    },
+    {
+      path: '/claseinicio',
+      name: 'ClaseIniciada',
+      component: ClaseIniciada
+
     },
     {
       path: '/reporte',
