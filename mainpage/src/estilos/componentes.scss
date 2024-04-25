@@ -1,0 +1,32 @@
+@import 'color.scss';
+
+.header {
+    @extend .primary-bg;
+    padding: 1rem;
+    height: 120px;
+}
+
+.header a{
+    color: $text-light;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.header a:hover{
+    border-bottom: 5px solid $accent-color;
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+.footer {
+    @extend .black-bg;
+    padding: 1rem;
+    height: 135px;
+}
+
+body {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
