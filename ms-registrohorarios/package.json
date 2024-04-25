@@ -1,6 +1,6 @@
 {
   "name": "ms-registrohorarios",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -11,6 +11,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "file-saver": "^2.0.5",
+    "mysql": "^2.18.1",
+    "progress": "^2.0.3",
+    "xlsx": "^0.18.5"
   }
 }
