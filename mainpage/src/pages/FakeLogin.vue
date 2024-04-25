@@ -64,7 +64,7 @@
                 this.rut = `${formattedNumber}-${rutParts[1]}`;
             },
             handleLogin() {
-                this.$router.push({ name: this.userType, params: { rut: this.rut } });
+                this.$router.push({ name: 'HomePage', params: {userType: this.userType, rut: this.rut } });
                 this.username = '';
                 this.password = '';
             },

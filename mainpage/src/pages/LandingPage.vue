@@ -6,13 +6,13 @@
             </div>
             <div class="col ms-3 container row d-flex align-items-end mb-0">
                 <div class="col text-center">
-                    <a href="https://www.utalca.cl/" class="pb-1">Universidad de Talca</a>
+                    <a href="https://www.utalca.cl/" class="pb-1">UTalca</a>
                 </div>
                 <div class="col text-center">
-                    <a href="/docente/1" class="pb-1">Docentes</a>
+                    <a href="/login/docente" class="pb-1">Docentes</a>
                 </div>
                 <div class="col text-center">
-                    <a href="/administrador/1" class="pb-1">Directores de Escuela</a>
+                    <a href="/login/administrador" class="pb-1">Directores Escuela</a>
                 </div>
                 <div class="col text-center">
                     <a href="/login/webmaster" class="pb-1">Decanos</a>
