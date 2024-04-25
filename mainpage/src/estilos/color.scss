@@ -5,12 +5,13 @@ $accent-color: #F29B33;
 $light-color: #FFFFFF;
 $dark-color: #A2A2A0;
 $black: #272727;
+$gray: #A2A09F;
 
 // Colores de texto
-$text-primary: #ffffff; // Un color oscuro para contrastar con el color primario claro
-$text-secondary: #000; // Un color oscuro para contrastar con el color secundario claro
+$text-primary: #ffffff; // Un color claro para contrastar con el color primario oscuro
+$text-secondary: #000000; // Un color oscuro para contrastar con el color secundario claro
 $text-accent: #fff; // Un color claro para contrastar con el color de acento oscuro
-$text-light: #fff; // Un color claro para contrastar con el color claro
+$text-light: #000000; // Un color oscuro para contrastar con el color claro
 $text-dark: #fff; // Un color claro para contrastar con el color oscuro
 
 .primary-bg {
@@ -41,6 +42,10 @@ $text-dark: #fff; // Un color claro para contrastar con el color oscuro
 .black-bg {
     background-color: $black;
     color: $text-dark;
+}
+
+.secondary-bg-simple {
+    background-color: $secondary-color;
 }
 
 .debug{

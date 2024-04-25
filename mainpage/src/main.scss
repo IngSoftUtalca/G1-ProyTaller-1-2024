@@ -1,3 +1,9 @@
 @import '~bootstrap/scss/bootstrap';
 @import './estilos/color.scss';
 @import './estilos/componentes.scss';
+@import './estilos/text.scss'; 
+@import './estilos/buttons.scss';
+
+body {
+    font-family: 'Inter', sans-serif;
+}

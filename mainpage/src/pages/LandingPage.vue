@@ -15,7 +15,7 @@
                     <a href="/administrador" class="pb-1">Directores de Escuela</a>
                 </div>
                 <div class="col text-center">
-                    <a href="/webmaster" class="pb-1">Decanos</a>
+                    <a href="/login/webmaster" class="pb-1">Decanos</a>
                 </div>
             </div>
             <div class="col-3"></div>
