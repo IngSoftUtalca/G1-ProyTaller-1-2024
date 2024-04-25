@@ -69,7 +69,7 @@ function CalcularSemestre(){
     conection.connect((error)=>{
         if(error){
             console.log(error);
-            res.end(error);
+            
         }
 
         const query = `SELECT ID, FechaInicio, FechaTermino FROM Periodo ORDER BY FechaTermino DESC LIMIT 1;`
@@ -305,7 +305,21 @@ app.post('/registrarfinal', (req, res) => { // se necesita el rut del docente
                         console.log("finalizando...");         
                         if(desc != null){
                             if(cursolocal.length != 0){
-                                cursolocal = cursolocal.filter(cursosel => cursosel.RUT_Docente != req.body.Rut);
+                              //RUT_Docente, Bloque,Inicio,Termino,Ramo
+                              const fechaActual = new Date();
+                              const formatofecha = fechaActual.getFullYear()+"-"+fechaActual.getMonth()+"-"+fechaActual.getDay();
+                              const queryInsert =`INSERT INTO Clase (Dia, Hora_Inicio, Hora_Termino, IP, Ramo_Nombre, Ramo_Periodo) VALUES ('${formatofecha}','${desc.Inicio}','${horaactual}','192.178.0.0','${desc.Ramo}','${semestreActual}')`;
+                              conection.query(queryInsert,(error,results)=>{
+                                conection.end();
+                                if(error){
+                                  console.log(error);
+                                }else{
+                                  cursolocal = cursolocal.filter(cursosel => cursosel.RUT_Docente != req.body.Rut);
+                                }
+                              });
+                              
+
+
                             }
                     
                             desc.Termino = horaactual;
