@@ -65,6 +65,11 @@ body {
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
 }
 
+.size-24 {
+    height: 24px !important;
+    width: 24px !important;
+}
+
 .mt-108 {
     margin-top: 108px;
 }
@@ -81,8 +86,21 @@ body {
     margin-top: 48px;
 }
 
+.mt-24 {
+    margin-top: 24px;
+}
+
+.mb-52 {
+    margin-bottom: 52px;
+}
+
 .mt-14 {
     margin-top: 14px;
+}
+
+.my-52 {
+    margin-top: 52px;
+    margin-bottom: 52px;
 }
 
 .my-14 {
@@ -98,8 +116,30 @@ body {
     max-width: 220px !important;
 }
 
+.w-200 {
+    max-width: 200px !important;
+}
+
+.w-190 {
+    max-width: 190px !important;
+}
 .w-180{
     max-width: 180px !important;
+}
+
+.w-170 {
+    max-width: 170px !important;
+}
+
+.w-160 {
+    max-width: 160px !important;
+}
+
+.w-150 {
+    max-width: 150px !important;
+}
+.w-120 {
+    max-width: 120px !important;
 }
 
 .w-80 {
@@ -150,18 +190,27 @@ body {
     border-top-left-radius: 50px;
 }
 
+.underlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba($primary-color, 0.25);
+    z-index: 1000;
+}
+
 .overlay {
     position: fixed;
     top: 50%;
     left: 50%;
     width: 700px !important;
     height: 500px !important;
-    background-color: rgba($primary-color, 0.25);
-    z-index: 1000;
+    @extend .light-bg;
     transform: translate(-50%, -50%);
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    z-index: 1000;
+    border: 0;
+    border-radius: 8px;
 }
 
 .background {

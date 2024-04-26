@@ -1,6 +1,8 @@
 const express = require('express');
 const mysql = require('mysql');
 const app = express();
+const cors = require('cors');
+const moment = require('moment');
 const ProgressBar = require('progress');
 
 const funciones = require('./shared/funciones.js');
@@ -8,6 +10,8 @@ const { get } = require('http');
 const runQuery = funciones.runQuery;
 const getBloqueId = funciones.getBloqueId;
 const getInstancia = funciones.getInstancia;
+
+app.use(cors({ origin: 'http://localhost:8080' }));
 
 app.use(express.json({ limit: '50mb' }));
 
@@ -36,8 +40,15 @@ app.post('/new', async (req, res) => {
   const buffer = Buffer.from(horario_periodo, 'base64');
 
   // Convert fechaInicio and fechaTermino to Date objects
-  fechaInicioDate = new Date(fechaInicio);
-  fechaTerminoDate = new Date(fechaTermino);
+  fechaInicioDate = moment(fechaInicio, 'YYYY-MM-DD').toDate();
+  fechaTerminoDate = moment(fechaTermino, 'YYYY-MM-DD').toDate();
+
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(fechaInicio) || !/^\d{4}-\d{2}-\d{2}$/.test(fechaTermino)) {
+    return res.status(400).json({ error: 'fechaInicio y fechaTermino deben estar en el formato YYYY-MM-DD' });
+  }
+
+  
+  console.log("Horario: ", "Archivo de " + buffer.length + " bytes");
 
   // Get all the dates between fechaInicio and fechaTermino
   const datesInRange = [];

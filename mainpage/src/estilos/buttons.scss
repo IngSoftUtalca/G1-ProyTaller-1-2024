@@ -7,6 +7,17 @@
     color: white;
 }
 
+.btn-primary-16 {
+    background-color: $primary-color;
+    border-radius: 16px;
+    border: 0;
+    color: white;
+}
+
+.btn-primary-16:hover {
+    background-color: $accent-color;
+}
+
 .btn-primary:hover {
     background-color: $accent-color;
     
@@ -40,7 +51,10 @@
 .btn-gray:hover {
     background-color: darken($gray, 10%);
 }
-
+.btn-size-150 {
+    width: 150px;
+    height: 40px;
+}
 .btn-size-120 {
     width: 120px;
     height: 40px;

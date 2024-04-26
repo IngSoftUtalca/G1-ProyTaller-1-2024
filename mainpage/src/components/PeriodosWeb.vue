@@ -1,14 +1,16 @@
 <template>
     <div class="container-fluid w-90">
         <div class="row container-fluid my-14 d-flex justify-content-end">
-            <button class="btn-primary btn-size-120" @click="add">
+            <button class="btn-primary-16 btn-size-120" @click="add">
                 <span class="bold">
                     Agregar
                 </span>
                 <img src="@/assets/plus.svg" alt="Agregar">
             </button>
         </div>
-        <AgregarPeriodo class="overlay debug" v-if="OverlayAgregar"/>
+        <div class="underlay" v-if="OverlayAgregar" @click="close">
+            <AgregarPeriodo class="overlay" v-if="OverlayAgregar" @click.stop @close="close"/>
+        </div>
         <div class="row container-fluid">
             <div class="row px-5 rt-50 h-55 font-20 bold primary-bg d-flex align-items-center">
                 <div class="col-2 text-center">
@@ -34,14 +36,12 @@
 
 <script>
     import AgregarPeriodo from '@/components/AgregarPeriodo.vue';
-    import vClickOutside from 'v-click-outside';
-
     export default {
         name: 'PeriodosWeb',
         data() {
             return {
                 periodos: [1, 2, 3, 4, 5],
-                OverlayAgregar: false
+                OverlayAgregar: true
             }
         },
         methods: {
@@ -54,9 +54,6 @@
         },
         components: {
             AgregarPeriodo
-        },
-        directives: {
-            'click-outside': vClickOutside.directive
         }
     }
 </script>
