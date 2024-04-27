@@ -135,7 +135,8 @@
                 let file = this.$refs.fileInput.files[0];
                 let reader = new FileReader();
                 reader.onloadend = () => {
-                    this.Horarios = reader.result.replace(/\n/g, '');
+                    // Eliminar 'data:;base64,' de la cadena
+                    this.Horarios = reader.result.split(',')[1];
                     this.File = file.name;
                 };
                 reader.readAsDataURL(file);

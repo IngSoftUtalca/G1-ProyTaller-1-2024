@@ -164,12 +164,6 @@ app.post('/new', async (req, res) => {
   }
   
   console.log("Ramos agregados");
-  try{
-    await runQuery(connection, `DELETE FROM \`Instancia\`;`, '');
-    console.log("Instancias borradas");
-  }catch(error){
-    console.log("no se pudo borrar instancias: ", error.message);
-  }
   const query4 = `INSERT INTO \`Instancia\` (Sala, Bloque, Dia_Semana, Ramo, Semestre) VALUES (?, ?, ?, ?, ?);`;
   const bar2 = new ProgressBar('Agregando instancias [:bar] :percent', { total: instancia.length });
   for (let ins of instancia){
