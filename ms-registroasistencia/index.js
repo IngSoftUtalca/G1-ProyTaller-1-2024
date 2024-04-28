@@ -3,8 +3,11 @@ const mysql = require('mysql');
 const dbData = require('../ENPOINTS.json').DB;
 const app = express();
 app.use(express.json());
+
+
+
 const cors = require('cors');
-app.use(cors({ origin: 'http://localhost:5173' }));
+app.use(cors({ origin: '*' }));
 
 const consultas = require('./verificaciones.js');
 
@@ -32,7 +35,7 @@ app.get('/', (req, res) => {
 app.post('/', (req, res) => {
         
         if(req.body.rut){
-            res.status(300);
+            res.status(200);
             res.end("es valido");
         }else{
             res.status(400);
@@ -66,8 +69,7 @@ app.post('/consultarhorario', (req, res) => {
 
 
     // VERSION ESTATICA
-    const query = `SELECT RUT_Docente, Bloque,Inicio,Termino,Ramo FROM Sala  INNER JOIN Instancia ON Sala = Sala.ID INNER JOIN Bloque ON Bloque.ID = Instancia.Bloque INNER JOIN Ramo ON Nombre = Ramo INNER JOIN Asignacion ON Nombre_Ramo = Nombre WHERE  Inicio < '12:30:00' AND Termino > '12:30:00'  AND Dia_Semana = 2 AND Periodo = 'Semestre.1-2024'  AND Periodo = Semestre AND RUT_Docente = '33061234-1'`;
-
+    const query = `SELECT RUT_Docente, Bloque,Inicio,Termino,Ramo FROM Sala  INNER JOIN Instancia ON Sala = Sala.ID INNER JOIN Bloque ON Bloque.ID = Instancia.Bloque INNER JOIN Ramo ON Nombre = Ramo INNER JOIN Asignacion ON Nombre_Ramo = Nombre WHERE  Inicio < '${req.body.Inicio}'  AND Termino > '${req.body.Inicio}' AND Dia_Semana = ${req.body.diaS} AND Periodo = '${req.body.semestreActual}' AND Semestre = Periodo AND RUT_Docente = '${req.body.Rut}'`; 
     // VERSION REAL
     //const query = `SELECT RUT_Docente, Bloque,Inicio,Termino,Ramo FROM Sala  INNER JOIN Instancia ON Sala = Sala.ID INNER JOIN Bloque ON Bloque.ID = Instancia.Bloque INNER JOIN Ramo ON Nombre = Ramo INNER JOIN Asignacion ON Nombre_Ramo = Nombre WHERE  Inicio < '${horaactual}' AND Termino > '${horaactual}'  AND Dia_Semana = ${disS} AND Periodo = '${semestreActual}' AND RUT_Docente = '${req.body.Rut}'`;
 
@@ -93,7 +95,7 @@ app.post('/consultarhorario', (req, res) => {
                 results[0].Iniciado = (desc != null);
 
         
-                res.status(300);
+                res.status(200);
                 res.end(JSON.stringify(results[0]));
 
             }else{
@@ -117,7 +119,7 @@ app.post('/registrarinicio', (req, res) => {
 
 
 
-    // comprobar si ya hizo presente en esta hora
+ 
 
 
 
@@ -127,7 +129,23 @@ app.post('/registrarinicio', (req, res) => {
 
 
     const conection = mysql.createConnection(dbData);
-
+/** 
+   // comprobar si ya hizo presente en esta hora
+   conection.connect((error)=>{
+        if(error){
+            return res.status(500).json({error: "no hay conexion a la BD"});
+        }
+        else{
+            const queryComprobar = 'select * from Clase';
+         conection.query(queryComprobar,(error,results)=>{
+            conection.end();
+            if(error){
+                return res.status(500).json({error: "no hay conexion a la BD"});
+            }
+        });
+    }
+    });
+*/
 
 
     const tiempoActual = new Date();
@@ -144,10 +162,10 @@ app.post('/registrarinicio', (req, res) => {
 
             // VERSION ESTATICA
                                    
-            const queryComprobar = `SELECT RUT_Docente, Bloque,Inicio,Termino,Ramo FROM Sala  INNER JOIN Instancia ON Sala = Sala.ID INNER JOIN Bloque ON Bloque.ID = Instancia.Bloque INNER JOIN Ramo ON Nombre = Ramo INNER JOIN Asignacion ON Nombre_Ramo = Nombre WHERE  Inicio < '${req.body.Inicio}'  AND Termino > '${req.body.Inicio}' AND Dia_Semana = 2 AND Periodo = '${semestreActual}' AND Semestre = Periodo AND RUT_Docente = '${req.body.Rut}'`; 
+            queryComprobar = `SELECT RUT_Docente, Bloque,Inicio,Termino,Ramo FROM Sala  INNER JOIN Instancia ON Sala = Sala.ID INNER JOIN Bloque ON Bloque.ID = Instancia.Bloque INNER JOIN Ramo ON Nombre = Ramo INNER JOIN Asignacion ON Nombre_Ramo = Nombre WHERE  Inicio < '${req.body.Inicio}'  AND Termino > '${req.body.Inicio}' AND Dia_Semana = ${req.body.diaS} AND Periodo = '${req.body.semestreActual}' AND Semestre = Periodo AND RUT_Docente = '${req.body.Rut}'`; 
 
             // VERSION REAL
-            //const queryComprobar = `SELECT RUT_Docente, Bloque,Inicio,Termino,Ramo FROM Sala  INNER JOIN Instancia ON Sala = Sala.ID INNER JOIN Bloque ON Bloque.ID = Instancia.Bloque INNER JOIN Ramo ON Nombre = Ramo INNER JOIN Asignacion ON Nombre_Ramo = Nombre WHERE  Inicio < ${req.body.Inicio}  AND Termino > ${req.body.Inicio}  AND Inicio < ${horaactual} AND Termino > ${horaactual} AND Dia_Semana = ${diaS} AND Periodo = ${semestreActual} AND RUT_Docente = ${req.body.Rut}`;
+            //const queryComprobar = `SELECT RUT_Docente, Bloque,Inicio,Termino,Ramo FROM Sala  INNER JOIN Instancia ON Sala = Sala.ID INNER JOIN Bloque ON Bloque.ID = Instancia.Bloque INNER JOIN Ramo ON Nombre = Ramo INNER JOIN Asignacion ON Nombre_Ramo = Nombre WHERE  Inicio < ${req.body.Inicio}  AND Termino > ${req.body.Inicio}  AND Inicio < ${horaactual} AND Termino > ${horaactual} AND Dia_Semana = ${diaS} AND Periodo = ${semestreActual} AND Semestre = Periodo AND RUT_Docente = ${req.body.Rut}`;
             conection.query(queryComprobar,(error,results)=>{
                 conection.end();
                 if(error){
@@ -168,7 +186,7 @@ app.post('/registrarinicio', (req, res) => {
                         cursolocal.forEach(element => {
                             console.log(element.RUT_Docente+" / "+element.Inicio+" / "+element.Ramo);
                         });
-                        return res.status(300).json({ok: "se guardo tu registro"});
+                        return res.status(200).json({ok: "se guardo tu registro"});
                     }else{
                         return res.status(400).json({error: 'el profesor ya tiene una clase iniciada'});
 
@@ -237,7 +255,7 @@ app.post('/registrarfinal', (req, res) => { // se necesita el rut del docente
                             });
 
                             // selection y modificar las columnas de la tabla clase para definir la columna de termino y estado
-                            return res.status(300).json({ok: "registar fin de clases"});
+                            return res.status(200).json({ok: "registar fin de clases"});
 
                         }else{
                             return res.status(400).json({error: "no se encontro clase iniciada"});
@@ -260,8 +278,7 @@ async function monitorearHorario(){
         try{
             esperaMin = await procesarHora(esperaMin == 0? 10000:esperaMin*60*1000);
             console.log('la siguiente revision de salas no cerradas es en '+esperaMin+" minutos");
-            // seguiria aca si se llega a un horario ded no clase (los 10 minutos entre bloques o fuera de un horario de clase establecida)
-            // por lo que cerraria todas las clases sin terminar y diferenciar entre cursos que si terminarian y los qei estan en receso
+
 
         }catch(error){
             console.log(error);
@@ -299,25 +316,25 @@ function procesarHora(espera){
                                 const [horaA, minutoA, segundoA] = (horaactual).split(':').map(Number);
 
 
+                                // aca se cerrarian todas las salas que no fueron terminadas
+                                
+                                // aca se definiria la nueva espera
+
+                                if(!horaGlobalActual){
+                                    horaGlobalActual = ((minutoA-20 >= 0? (horaA+':'+(minutoA-20)+':00') : ((horaA - 1)+':'+(minutoA+50)+':00')));
+                                    
+                                }
+
+                                console.log(horaGlobalActual);
+                                // seguiria aca si se llega a un horario ded no clase (los 10 minutos entre bloques o fuera de un horario de clase establecida)
+                                // por lo que cerraria todas las clases sin terminar y diferenciar entre cursos que si terminarian y los qei estan en receso
+                                RevisionClasesNoIniciadas();
+                                RevisionClasesIniciadas(cursolocal);
+
 
                                 if(consultas.CompararHoras(horaA,minutoA,segundoA)){
-                                    // aca se cerrarian todas las salas que no fueron terminadas
-                                    
-                                    // aca se definiria la nueva espera
-                                    if(!horaGlobalActual){
-                                        horaGlobalActual = ((minutoA-20 >= 0? (horaA+':'+(minutoA-20)+':00') : ((horaA - 1)+':'+(minutoA+50)+':00')));
-                                        
-                                    }
-
-                                    console.log(horaGlobalActual);
-
-                                    RevisionClasesNoIniciadas();
-                                    RevisionClasesIniciadas(cursolocal);
-
                                     cursolocal = [];
                                     resolve(12); 
-
-
                                 }else{
                                     CalcularSemestre(); // se vuelve a preguntar
 
@@ -337,8 +354,6 @@ function procesarHora(espera){
                     });
                 }
             });
-
-
         },espera)
     });
 }
