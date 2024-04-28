@@ -96,7 +96,7 @@
         mounted() {
             this.rut = this.$route.params.rut;
             this.userType = this.$route.params.userType;
-            document.title = 'UTalca | WebMaster';
+            document.title = `UTalca | ${this.userType.toString().toUpperCase()}`;
         },
         methods: {
             selectDocente() {

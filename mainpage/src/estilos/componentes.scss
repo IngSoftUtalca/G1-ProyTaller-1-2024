@@ -175,6 +175,14 @@ body {
     width: 95%;
 }
 
+.h-450 {
+    height: 450px !important;
+}
+
+.h-350 {
+    height: 350px !important;
+}
+
 .h-55 {
     height: 55px;
 }
@@ -189,6 +197,16 @@ body {
 
 .h-12{
     height: 12px;
+}
+
+.div-size-72 {
+    height: 72px !important;
+    width: 72px !important;
+}
+
+.div-size-52 {
+    height: 52px !important;
+    width: 52px !important;
 }
 
 .r-4 {
@@ -228,6 +246,13 @@ body {
     z-index: 1000;
     border: 0;
     border-radius: 8px;
+}
+
+.skeleton {
+    background: linear-gradient(90deg, $secondary-color, $primary-color, $secondary-color);
+    background-size: 200% 200%;
+    animation: skeleton 0.5s infinite linear;
+    border-radius: 4px;
 }
 
 .background {
