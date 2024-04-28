@@ -41,7 +41,7 @@
         data() {
             return {
                 periodos: [1, 2, 3, 4, 5],
-                OverlayAgregar: true
+                OverlayAgregar: false
             }
         },
         methods: {

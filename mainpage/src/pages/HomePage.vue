@@ -85,10 +85,10 @@
             return {
                 rut: 'xxxxxxxx',
                 userType: null,
-                home: false,
+                home: true,
                 docentes: false,
                 admin: false,
-                periodos: true,
+                periodos: false,
                 horarios: false,
                 asistencia: false
             }
