@@ -3,7 +3,8 @@ const mysql = require('mysql');
 const dbData = require('../ENPOINTS.json').DB;
 const app = express();
 app.use(express.json());
-
+const cors = require('cors');
+app.use(cors({ origin: 'http://localhost:5173' }));
 
 const consultas = require('./verificaciones.js');
 
@@ -49,7 +50,7 @@ app.post('/consultarhorario', (req, res) => {
 
 
 
-
+    console.log(req.body);
 
     if(!req.body.Rut){
         return res.status(400).json({error: "no existe variable Rut en el Body"});
