@@ -1,5 +1,7 @@
+
+
 <template>
-  <div class="no-scroll">
+  <div id="app">
     <router-view></router-view>
   </div>
 </template>
