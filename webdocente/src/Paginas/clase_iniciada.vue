@@ -8,12 +8,12 @@
         <!-- Contenido principal -->
         <div class="row justify-content-center">
           <div class="card-celeste">
-            <h3 class="ramos"> {{ramo}}Clase iniciada 8:29</h3>
+            <h3 class="ramos"> Clase iniciada {{ inicio }}</h3>
           </div>
         </div>
         <!-- Botón de asistencia -->
         <div>
-          <button type="button" class="btn boton_gris" :class="{ 'boton-amarillo': botonC }" @click="cambiarColor">Finalizar Clase</button>
+          <button type="button" class="btn boton_gris" :class="{ 'boton-amarillo': botonC }" @click="claseiniciada">Finalizar Clase</button>
         </div>
       </div>
     </center>
@@ -22,16 +22,25 @@
   <script>
   import { ref, onMounted } from 'vue'
   import { useRoute } from 'vue-router'
-  
+  import axios from 'axios'
   export default {
     setup() {
       const route = useRoute()
+      console.log(route.params)
+
+      let inicio = ref('');
+      
+
+
       let idSala = ref(route.params.idSala)
       const botonC = ref(false); // Variable para controlar el color del botón
   
       onMounted(() => {
         // Fetch data for this sala here
-        console.log('Fetching data for sala', idSala)
+        console.log('Fetching data for sala', idSala);
+        console.log(route.params.Iniciado);
+        inicio.value = (route.params.Iniciado).substring(0,5);
+
         idSala = "Taller de Software"
       })
   
@@ -43,12 +52,41 @@
       return {
         idSala,
         botonC,
+        inicio,
         cambiarColor
       }
     },
     methods: {
       claseiniciada() {
         // Aquí puedes agregar la lógica para marcar la asistencia
+        axios.post('http://localhost:3009/registrarfinal', 
+      {
+        "Rut": "33061234-1"
+      }, 
+      {
+          headers: {
+              'Content-Type': 'application/json',
+          }
+      })
+      .then(response => {
+          console.log('Response: ',  response.data);
+          this.$router.push({name:'InicioSesion'});
+      })
+
+      
+      .catch(error => {
+
+          console.error('Error:', error);
+          //return "malo";
+          this.$router.push('/error');
+      });
+
+
+
+
+
+
+
         console.log('Asistencia marcada');
       }
     }

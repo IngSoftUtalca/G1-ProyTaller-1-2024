@@ -69,7 +69,7 @@ app.post('/consultarhorario', (req, res) => {
 
 
     // VERSION ESTATICA
-    const query = `SELECT RUT_Docente, Bloque,Inicio,Termino,Ramo FROM Sala  INNER JOIN Instancia ON Sala = Sala.ID INNER JOIN Bloque ON Bloque.ID = Instancia.Bloque INNER JOIN Ramo ON Nombre = Ramo INNER JOIN Asignacion ON Nombre_Ramo = Nombre WHERE  Inicio < '${req.body.Inicio}'  AND Termino > '${req.body.Inicio}' AND Dia_Semana = ${req.body.diaS} AND Periodo = '${req.body.semestreActual}' AND Semestre = Periodo AND RUT_Docente = '${req.body.Rut}'`; 
+    const query = `SELECT Instancia.Sala as idSala, RUT_Docente, Bloque,Inicio,Termino,Ramo FROM Sala  INNER JOIN Instancia ON Sala = Sala.ID INNER JOIN Bloque ON Bloque.ID = Instancia.Bloque INNER JOIN Ramo ON Nombre = Ramo INNER JOIN Asignacion ON Nombre_Ramo = Nombre WHERE  Inicio < '${req.body.Inicio}'  AND Termino > '${req.body.Inicio}' AND Dia_Semana = ${req.body.diaS} AND Periodo = '${req.body.semestreActual}' AND Semestre = Periodo AND RUT_Docente = '${req.body.Rut}'`; 
     // VERSION REAL
     //const query = `SELECT RUT_Docente, Bloque,Inicio,Termino,Ramo FROM Sala  INNER JOIN Instancia ON Sala = Sala.ID INNER JOIN Bloque ON Bloque.ID = Instancia.Bloque INNER JOIN Ramo ON Nombre = Ramo INNER JOIN Asignacion ON Nombre_Ramo = Nombre WHERE  Inicio < '${horaactual}' AND Termino > '${horaactual}'  AND Dia_Semana = ${disS} AND Periodo = '${semestreActual}' AND RUT_Docente = '${req.body.Rut}'`;
 
@@ -92,7 +92,13 @@ app.post('/consultarhorario', (req, res) => {
                 var desc = cursolocal.find(function(e) {
                     return e.RUT_Docente == req.body.Rut;
                   })
-                results[0].Iniciado = (desc != null);
+
+                if(desc != null){
+                    results[0].Iniciado = desc.Inicio;
+                }else{
+                    results[0].Iniciado = '';
+                }
+                
 
         
                 res.status(200);
@@ -150,7 +156,7 @@ app.post('/registrarinicio', (req, res) => {
 
     const tiempoActual = new Date();
     const diaS = tiempoActual.getDay(); 
-
+    const horaactual = consultas.GetHoraActual(); // este se usaria como referencia para tomar la hora actual que estaria iniciando el profesor
 
 
     conection.connect((error)=>{
@@ -162,7 +168,7 @@ app.post('/registrarinicio', (req, res) => {
 
             // VERSION ESTATICA
                                    
-            queryComprobar = `SELECT RUT_Docente, Bloque,Inicio,Termino,Ramo FROM Sala  INNER JOIN Instancia ON Sala = Sala.ID INNER JOIN Bloque ON Bloque.ID = Instancia.Bloque INNER JOIN Ramo ON Nombre = Ramo INNER JOIN Asignacion ON Nombre_Ramo = Nombre WHERE  Inicio < '${req.body.Inicio}'  AND Termino > '${req.body.Inicio}' AND Dia_Semana = ${req.body.diaS} AND Periodo = '${req.body.semestreActual}' AND Semestre = Periodo AND RUT_Docente = '${req.body.Rut}'`; 
+            queryComprobar = `SELECT Instancia.Sala, RUT_Docente, Bloque,Inicio,Termino,Ramo FROM Sala  INNER JOIN Instancia ON Sala = Sala.ID INNER JOIN Bloque ON Bloque.ID = Instancia.Bloque INNER JOIN Ramo ON Nombre = Ramo INNER JOIN Asignacion ON Nombre_Ramo = Nombre WHERE  Inicio < '${req.body.Inicio}'  AND Termino > '${req.body.Inicio}' AND Dia_Semana = ${req.body.diaS} AND Periodo = '${req.body.semestreActual}' AND Semestre = Periodo AND RUT_Docente = '${req.body.Rut}'`; 
 
             // VERSION REAL
             //const queryComprobar = `SELECT RUT_Docente, Bloque,Inicio,Termino,Ramo FROM Sala  INNER JOIN Instancia ON Sala = Sala.ID INNER JOIN Bloque ON Bloque.ID = Instancia.Bloque INNER JOIN Ramo ON Nombre = Ramo INNER JOIN Asignacion ON Nombre_Ramo = Nombre WHERE  Inicio < ${req.body.Inicio}  AND Termino > ${req.body.Inicio}  AND Inicio < ${horaactual} AND Termino > ${horaactual} AND Dia_Semana = ${diaS} AND Periodo = ${semestreActual} AND Semestre = Periodo AND RUT_Docente = ${req.body.Rut}`;
@@ -180,13 +186,13 @@ app.post('/registrarinicio', (req, res) => {
                       })
                     if(desc == null){ // se guardara localmente como pendiente
                         console.log("se guardara:")
-                        results[0].Inicio = req.body.Inicio;
+                        results[0].Inicio = horaactual;
                         cursolocal.push(results[0]);
                         console.log('cursos actuales en pendiente:')
                         cursolocal.forEach(element => {
                             console.log(element.RUT_Docente+" / "+element.Inicio+" / "+element.Ramo);
                         });
-                        return res.status(200).json({ok: "se guardo tu registro"});
+                        return res.status(200).json({Iniciado: horaactual});
                     }else{
                         return res.status(400).json({error: 'el profesor ya tiene una clase iniciada'});
 
@@ -218,8 +224,8 @@ app.post('/registrarfinal', (req, res) => { // se necesita el rut del docente
             const horaactual = consultas.GetHoraActual();
 
             // se busca si esta dentro de algun bloque la hora actual
-            const query = `SELECT (Termino) FROM Bloque WHERE '${horaactual}' < Termino AND '${horaactual}' > Inicio`;
-            
+            //const query = `SELECT (Termino) FROM Bloque WHERE '${horaactual}' < Termino AND '${horaactual}' > Inicio`;
+            const query = `SELECT (Termino) FROM Bloque WHERE '12:30:00' < Termino AND '12:30:00' > Inicio`;
             conection.query(query,(error,results)=>{
                 if(error){
                     res.status(500);

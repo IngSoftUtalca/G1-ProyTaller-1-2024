@@ -29,8 +29,9 @@
   
   <script>
     import { ref } from 'vue'
+    import axios from 'axios';
+    //import { data } from 'jquery';
 
-  
 export default {
   setup() {
     const botonC = ref(false); // Variable para controlar el color del botón
@@ -46,11 +47,42 @@ export default {
     }
   },
   methods: {
-  Logearse() {
+    Logearse() {
     // Aquí puedes agregar la ruta a la que deseas redirigir al usuario
-    this.$router.push('/sala11-101');
+
+      axios.post('http://localhost:3009/consultarhorario', 
+      {
+        "Inicio" : "12:30:00",
+        "diaS": "2",
+        "semestreActual": "Semestre.1-2023",
+        "Rut": "33061234-1"
+
+      }, 
+      {
+          headers: {
+              'Content-Type': 'application/json',
+          }
+      })
+      .then(response => {
+          console.log('Response:', response.data);
+          //return response.data;
+          //this.$router.push('/sala11-101');
+          if(response.data.Iniciado != ''){
+            this.$router.push({name:'ClaseIniciada',params:response.data});
+          }else{
+            this.$router.push({name:'MarcarAsistencia',params:response.data});
+          }
+          
+
+      })
+      .catch(error => {
+          console.error('Error:', error);
+          //return "malo";
+          this.$router.push('/error');
+      });
+      
+    }
   }
-}
 }
   </script>
   
