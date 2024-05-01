@@ -46,12 +46,14 @@ export default {
  
       console.log(route.params);
 
+      if(route.params.Ramo){
+        ramo.value = (route.params.Ramo).toUpperCase();
+        ramo.value = ramo.value.substring(0,20) // tiene un maximo de letras en el nombre del ramo
+        bloque.value = "B"+route.params.Bloque;
+        inicio.value = route.params.Inicio.substring(0,5);
+        termino.value = route.params.Termino.substring(0,5);
+      }
 
-      ramo.value = (route.params.Ramo).toUpperCase();
-      ramo.value = ramo.value.substring(0,20) // tiene un maximo de letras en el nombre del ramo
-      bloque.value = "B"+route.params.Bloque;
-      inicio.value = route.params.Inicio.substring(0,5);
-      termino.value = route.params.Termino.substring(0,5);
 
       console.log('Fetching data for sala', idSala)
       idSala = "Taller de Software"
@@ -99,7 +101,7 @@ export default {
 
       
       .catch(error => {
-          console.error('Error:', error);
+          console.error('Error:', error.response.data.error);
           //return "malo";
           this.$router.push('/error');
       });

@@ -76,7 +76,7 @@ export default {
 
       })
       .catch(error => {
-          console.error('Error:', error);
+          console.error('Error:',  error.response.data.error);
           //return "malo";
           this.$router.push('/error');
       });

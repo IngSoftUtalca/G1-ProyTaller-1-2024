@@ -39,7 +39,7 @@
         // Fetch data for this sala here
         console.log('Fetching data for sala', idSala);
         console.log(route.params.Iniciado);
-        inicio.value = (route.params.Iniciado).substring(0,5);
+        inicio.value = (route.params.Iniciado);
 
         idSala = "Taller de Software"
       })
@@ -76,7 +76,7 @@
       
       .catch(error => {
 
-          console.error('Error:', error);
+          console.error('Error:',  error.response.data.error);
           //return "malo";
           this.$router.push('/error');
       });
