@@ -62,7 +62,7 @@
         axios.post('http://localhost:3009/registrarfinal', 
       {
         "Rut": "33061234-1",
-        "test": false
+        "test": true
       }, 
       {
           headers: {
@@ -77,7 +77,7 @@
       
       .catch(error => {
 
-          console.error('Error:',  error.response.data.error);
+          console.error('Error:',   error.response);
           //return "malo";
           this.$router.push('/error');
       });

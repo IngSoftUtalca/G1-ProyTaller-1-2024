@@ -86,7 +86,7 @@ export default {
         "diaS": "2",
         "semestreActual": "Semestre.1-2023",
         "Rut": "33061234-1",
-        "test": false
+        "test": true
 
       }, 
       {
@@ -103,7 +103,7 @@ export default {
 
       
       .catch(error => {
-          console.error('Error:', error.response.data.error);
+          console.error('Error:', error.response);
           //return "malo";
           this.$router.push('/error');
       });

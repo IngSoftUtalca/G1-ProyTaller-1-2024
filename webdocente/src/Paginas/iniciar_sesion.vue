@@ -60,7 +60,7 @@ export default {
         "diaS": "2",
         "semestreActual": "Semestre.1-2023",
         "Rut": "33061234-1",
-        "test": false
+        "test": true
         
 
       }, 
