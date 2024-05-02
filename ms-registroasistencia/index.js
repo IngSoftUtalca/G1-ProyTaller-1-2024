@@ -66,12 +66,18 @@ app.post('/consultarhorario', (req, res) => {
     const horaactual = consultas.GetHoraActual();
     const disS = tiempoActual.getDay(); 
     console.log(horaactual+" "+disS+" "+req.body.Rut+" "+semestreActual);
+    
 
-
-    // VERSION ESTATICA
-    const query = `SELECT Instancia.Sala as idSala, RUT_Docente, Bloque,Inicio,Termino,Ramo FROM Sala  INNER JOIN Instancia ON Sala = Sala.ID INNER JOIN Bloque ON Bloque.ID = Instancia.Bloque INNER JOIN Ramo ON Nombre = Ramo INNER JOIN Asignacion ON Nombre_Ramo = Nombre WHERE  Inicio < '${req.body.Inicio}'  AND Termino > '${req.body.Inicio}' AND Dia_Semana = ${req.body.diaS} AND Periodo = '${req.body.semestreActual}' AND Semestre = Periodo AND RUT_Docente = '${req.body.Rut}'`; 
-    // VERSION REAL
-    //const query = `SELECT RUT_Docente, Bloque,Inicio,Termino,Ramo FROM Sala  INNER JOIN Instancia ON Sala = Sala.ID INNER JOIN Bloque ON Bloque.ID = Instancia.Bloque INNER JOIN Ramo ON Nombre = Ramo INNER JOIN Asignacion ON Nombre_Ramo = Nombre WHERE  Inicio < '${horaactual}' AND Termino > '${horaactual}'  AND Dia_Semana = ${disS} AND Periodo = '${semestreActual}' AND RUT_Docente = '${req.body.Rut}'`;
+    let query;
+    if(req.body.test){// VERSION ESTATICA
+        query = `SELECT Instancia.Sala as idSala, RUT_Docente, Bloque,Inicio,Termino,Ramo FROM Sala  INNER JOIN Instancia ON Sala = Sala.ID INNER JOIN Bloque ON Bloque.ID = Instancia.Bloque INNER JOIN Ramo ON Nombre = Ramo INNER JOIN Asignacion ON Nombre_Ramo = Nombre WHERE  Inicio < '${req.body.Inicio}'  AND Termino > '${req.body.Inicio}' AND Dia_Semana = ${req.body.diaS} AND Periodo = '${req.body.semestreActual}' AND Semestre = Periodo AND RUT_Docente = '${req.body.Rut}'`; 
+    }else{// VERSION REAL
+        query = `SELECT  Instancia.Sala as idSala, RUT_Docente, Bloque,Inicio,Termino,Ramo FROM Sala  INNER JOIN Instancia ON Sala = Sala.ID INNER JOIN Bloque ON Bloque.ID = Instancia.Bloque INNER JOIN Ramo ON Nombre = Ramo INNER JOIN Asignacion ON Nombre_Ramo = Nombre WHERE  Inicio < '${horaactual}' AND Termino > '${horaactual}'  AND Dia_Semana = ${disS} AND Periodo = '${req.body.semestreActual}' AND RUT_Docente = '${req.body.Rut}'`;
+       
+    }
+    
+    
+    
 
 
     conection.connect((error)=>{
@@ -115,11 +121,10 @@ app.post('/consultarhorario', (req, res) => {
 app.post('/registrarinicio', (req, res) => {
 
 
-    if(!req.body.Rut || !req.body.Inicio){
+    if(!req.body.Rut){
         return res.status(400).json({error: "no existe variable Rut en el Body"});
  
     }
-
 
 
 
@@ -144,7 +149,7 @@ app.post('/registrarinicio', (req, res) => {
             return res.status(500).json({error: "no hay conexion a la BD 1"});
         }
         else{
-            const queryComprobar =`select Rut_Docente,Dia,Inicio,Termino,Hora_Inicio,Hora_Termino,Ramo from Clase Inner JOIN Instancia on Ramo_Nombre = Ramo INNER JOIN Asignacion on Nombre_Ramo = Ramo INNER JOIN Bloque on Bloque = ID where Inicio <= '${req.body.Inicio}' and Termino >= '${req.body.Inicio}' and Rut_Docente = '${req.body.Rut}'`;
+            const queryComprobar =`select Rut_Docente,Dia,Inicio,Termino,Hora_Inicio,Hora_Termino,Ramo from Clase Inner JOIN Instancia on Ramo_Nombre = Ramo INNER JOIN Asignacion on Nombre_Ramo = Ramo INNER JOIN Bloque on Bloque = ID where Inicio <= '${horaactual}' and Termino >= '${horaactual}' and Rut_Docente = '${req.body.Rut}'`;
             //const queryComprobar = `select * from Clase INNER JOIN Asignacion on Nombre_Ramo = Ramo_Nombre where Hora_Inicio <= '${horaactual}' and Hora_Termino >= '${horaactual}' and Dia = '${consultas.GetFechaHoy()}' and RUT_Docente = '${req.body.Rut}'`;
             conection.query(queryComprobar,(error,results)=>{
                 if(error){
@@ -153,11 +158,18 @@ app.post('/registrarinicio', (req, res) => {
                     if(results.length != 0){
                         return res.status(400).json({error: "ya marcaste tu asistencia en esta hora"})
                     }else{
-                        // VERSION ESTATICA              
-                        const queryComprobar2 = `SELECT Instancia.Sala, RUT_Docente, Bloque,Inicio,Termino,Ramo FROM Sala  INNER JOIN Instancia ON Sala = Sala.ID INNER JOIN Bloque ON Bloque.ID = Instancia.Bloque INNER JOIN Ramo ON Nombre = Ramo INNER JOIN Asignacion ON Nombre_Ramo = Nombre WHERE  Inicio < '${req.body.Inicio}'  AND Termino > '${req.body.Inicio}' AND Dia_Semana = ${req.body.diaS} AND Periodo = '${req.body.semestreActual}' AND Semestre = Periodo AND RUT_Docente = '${req.body.Rut}'`; 
+                        // VERSION ESTATICA     
+                     
 
-                        // VERSION REAL
-                        //const queryComprobar = `SELECT RUT_Docente, Bloque,Inicio,Termino,Ramo FROM Sala  INNER JOIN Instancia ON Sala = Sala.ID INNER JOIN Bloque ON Bloque.ID = Instancia.Bloque INNER JOIN Ramo ON Nombre = Ramo INNER JOIN Asignacion ON Nombre_Ramo = Nombre WHERE  Inicio < ${req.body.Inicio}  AND Termino > ${req.body.Inicio}  AND Inicio < ${horaactual} AND Termino > ${horaactual} AND Dia_Semana = ${diaS} AND Periodo = ${semestreActual} AND Semestre = Periodo AND RUT_Docente = ${req.body.Rut}`;
+                        let queryComprobar2;
+                        if(req.body.test){// VERSION ESTATICA        
+                            queryComprobar2 = `SELECT Instancia.Sala, RUT_Docente, Bloque,Inicio,Termino,Ramo FROM Sala  INNER JOIN Instancia ON Sala = Sala.ID INNER JOIN Bloque ON Bloque.ID = Instancia.Bloque INNER JOIN Ramo ON Nombre = Ramo INNER JOIN Asignacion ON Nombre_Ramo = Nombre WHERE  Inicio < '${req.body.Inicio}'  AND Termino > '${req.body.Inicio}' AND Dia_Semana = ${req.body.diaS} AND Periodo = '${req.body.semestreActual}' AND Semestre = Periodo AND RUT_Docente = '${req.body.Rut}'`; 
+                        }else{ // VERSION REAL
+                            queryComprobar2 = `SELECT Instancia.Sala,RUT_Docente, Bloque,Inicio,Termino,Ramo FROM Sala  INNER JOIN Instancia ON Sala = Sala.ID INNER JOIN Bloque ON Bloque.ID = Instancia.Bloque INNER JOIN Ramo ON Nombre = Ramo INNER JOIN Asignacion ON Nombre_Ramo = Nombre WHERE Inicio < '${horaactual}' AND Termino > '${horaactual}' AND Dia_Semana = ${diaS} AND Periodo = '${req.body.semestreActual}' AND Semestre = Periodo AND RUT_Docente = '${req.body.Rut}'`;
+                        }
+
+
+
                         conection.query(queryComprobar2,(error,results)=>{
                             conection.end();
                             if(error){
@@ -213,8 +225,21 @@ app.post('/registrarfinal', (req, res) => { // se necesita el rut del docente
             const horaactual = consultas.GetHoraActual();
 
             // se busca si esta dentro de algun bloque la hora actual
-            //const query = `SELECT (Termino) FROM Bloque WHERE '${horaactual}' < Termino AND '${horaactual}' > Inicio`;
-            const query = `SELECT (Termino) FROM Bloque WHERE '12:30:00' < Termino AND '12:30:00' > Inicio`;
+
+
+            let query;
+            if(req.body.test){
+                query = `SELECT (Termino) FROM Bloque WHERE '12:30:00' < Termino AND '12:30:00' > Inicio`;
+            }else{
+                query = `SELECT (Termino) FROM Bloque WHERE '${horaactual}' < Termino AND '${horaactual}' > Inicio`;
+            }
+
+            
+            //
+
+
+
+
             conection.query(query,(error,results)=>{
                 if(error){
                     res.status(500);
@@ -325,8 +350,12 @@ function procesarHora(espera){
                                 console.log(horaGlobalActual);
                                 // seguiria aca si se llega a un horario ded no clase (los 10 minutos entre bloques o fuera de un horario de clase establecida)
                                 // por lo que cerraria todas las clases sin terminar y diferenciar entre cursos que si terminarian y los qei estan en receso
-                                RevisionClasesNoIniciadas();
+
                                 RevisionClasesIniciadas(cursolocal);
+
+                                
+                                RevisionClasesNoIniciadas();
+                                
 
 
                                 if(consultas.CompararHoras(horaA,minutoA,segundoA)){

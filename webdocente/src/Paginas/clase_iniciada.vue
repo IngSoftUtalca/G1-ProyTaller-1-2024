@@ -61,7 +61,8 @@
         // Aquí puedes agregar la lógica para marcar la asistencia
         axios.post('http://localhost:3009/registrarfinal', 
       {
-        "Rut": "33061234-1"
+        "Rut": "33061234-1",
+        "test": false
       }, 
       {
           headers: {
