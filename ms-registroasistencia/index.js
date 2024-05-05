@@ -188,7 +188,7 @@ app.post('/registrarinicio', (req, res) => {
                                     cursolocal.push(results[0]);
                                     console.log('cursos actuales en pendiente:')
                                     cursolocal.forEach(element => {
-                                        console.log(element.RUT_Docente+" / "+element.Inicio+" / "+element.Ramo);
+                                        console.log(element);
                                     });
                                     return res.status(200).json({Iniciado: horaactual});
                                 }else{
@@ -388,11 +388,35 @@ function procesarHora(espera){
 
 
 function RevisionClasesIniciadas(cursolocal){
+    console.log("iniciando cierre de clases aun no terminadas")
+    var horaactual = consultas.GetHoraActual()
+    var hoyFecha = consultas.GetFechaHoy()
+    var Acerrar = cursolocal.filter(ele => ele.Termino <= horaactual)
+    cursolocal = cursolocal.filter(ele => ele.Termino > horaactual)
 
-    cursolocal.forEach(elementos => {
 
-
+    const conection = mysql.createConnection(dbData);
+    conection.connect((error)=>{
+        if(error){
+            return;
+        }else{
+            Acerrar.forEach(elementos => {
+                
+                const queryInsert =`INSERT INTO Clase (Dia, Hora_Inicio, Hora_Termino, IP, Ramo_Nombre, Ramo_Periodo) VALUES ('${hoyFecha}','${elementos.Inicio}','${horaactual}','192.178.0.0','${elementos.Ramo}','${semestreActual}')`;
+                conection.query(queryInsert,(error,results)=>{
+                    if(error){
+                        return;
+                    }else{
+                        console.log(elementos.Ramo+" terminado")
+                    }
+        
+                })
+                
+        
+            });
+        }
     });
+
 
 }
 
