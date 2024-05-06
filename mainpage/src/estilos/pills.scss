@@ -1,0 +1,46 @@
+@import 'color.scss';
+
+.pill-gray{
+    background-color: $gray;
+    border-radius: 50px;
+    color: $light-color;
+    border: 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pill-green{
+    background-color: $green;
+    border-radius: 50px;
+    color: $light-color;
+    border: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pill-red{
+    background-color: $red;
+    border-radius: 50px;
+    color: $light-color;
+    border: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pill-yellow{
+    background-color: $yellow;
+    border-radius: 50px;
+    color: $light-color;
+    border: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pill-size-150{
+    width: 150px;
+    height: 40px;
+}
