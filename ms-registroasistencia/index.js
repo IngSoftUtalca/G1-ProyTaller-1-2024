@@ -70,10 +70,13 @@ app.post('/consultarhorario', (req, res) => {
 
     let query;
     if(req.body.test){// VERSION ESTATICA
-        query = `SELECT Instancia.Sala as idSala, RUT_Docente, Bloque,Inicio,Termino,Ramo FROM Sala  INNER JOIN Instancia ON Sala = Sala.ID INNER JOIN Bloque ON Bloque.ID = Instancia.Bloque INNER JOIN Ramo ON Nombre = Ramo INNER JOIN Asignacion ON Nombre_Ramo = Nombre WHERE  Inicio < '${req.body.Inicio}'  AND Termino > '${req.body.Inicio}' AND Dia_Semana = ${req.body.diaS} AND Periodo = '${req.body.semestreActual}' AND Semestre = Periodo AND RUT_Docente = '${req.body.Rut}'`; 
+        //query = `SELECT Instancia.Sala as idSala, RUT_Docente, Bloque,Inicio,Termino,Ramo FROM Sala  INNER JOIN Instancia ON Sala = Sala.ID INNER JOIN Bloque ON Bloque.ID = Instancia.Bloque INNER JOIN Ramo ON Nombre = Ramo INNER JOIN Asignacion ON Nombre_Ramo = Nombre WHERE  Inicio < '${req.body.Inicio}'  AND Termino > '${req.body.Inicio}' AND Dia_Semana = ${req.body.diaS} AND Periodo = '${req.body.semestreActual}' AND Semestre = Periodo AND RUT_Docente = '${req.body.Rut}'`; 
+        query = `SELECT Sala as idSala, RUT_Docente,Ramo,Bloque,Hora_Inicio as Inicio, Hora_Termino as Termino   from Asignacion INNER JOIN 
+        (SELECT MIN(ID)as Bloque,MIN(Bloque.Inicio) as Hora_Inicio, MAX(Bloque.Termino) as Hora_Termino,Ramo,Sala,Semestre,Dia_Semana FROM Instancia INNER JOIN Bloque on Instancia.Bloque = Bloque.ID INNER JOIN Asignacion on Ramo = Nombre_Ramo GROUP BY Sala,Semestre,Dia_Semana,Ramo) as t1 on Ramo = Nombre_Ramo and Semestre = '${req.body.semestreActual}' and Hora_Inicio < '${req.body.Inicio}' and Hora_Termino > '${req.body.Inicio}' and RUT_Docente = '${req.body.Rut}' and (select Sala from Instancia INNER JOIN Asignacion on Nombre_Ramo = Ramo INNER JOIN Bloque on Bloque = ID where Semestre = '${req.body.semestreActual}' and Inicio < '${req.body.Inicio}' and Termino > '${req.body.Inicio}' and Rut_Docente = '${req.body.Rut}'and Dia_Semana='${req.body.diaS}') = Sala;`;
     }else{// VERSION REAL
-        query = `SELECT  Instancia.Sala as idSala, RUT_Docente, Bloque,Inicio,Termino,Ramo FROM Sala  INNER JOIN Instancia ON Sala = Sala.ID INNER JOIN Bloque ON Bloque.ID = Instancia.Bloque INNER JOIN Ramo ON Nombre = Ramo INNER JOIN Asignacion ON Nombre_Ramo = Nombre WHERE  Inicio < '${horaactual}' AND Termino > '${horaactual}'  AND Dia_Semana = ${disS} AND Periodo = '${req.body.semestreActual}' AND RUT_Docente = '${req.body.Rut}'`;
-       
+        //query = `SELECT  Instancia.Sala as idSala, RUT_Docente, Bloque,Inicio,Termino,Ramo FROM Sala  INNER JOIN Instancia ON Sala = Sala.ID INNER JOIN Bloque ON Bloque.ID = Instancia.Bloque INNER JOIN Ramo ON Nombre = Ramo INNER JOIN Asignacion ON Nombre_Ramo = Nombre WHERE  Inicio < '${horaactual}' AND Termino > '${horaactual}'  AND Dia_Semana = ${disS} AND Periodo = '${req.body.semestreActual}' AND RUT_Docente = '${req.body.Rut}'`;
+        query = `SELECT Sala as idSala, RUT_Docente,Ramo,Bloque,Hora_Inicio as Inicio, Hora_Termino as Termino   from Asignacion INNER JOIN 
+        (SELECT MIN(ID)as Bloque,MIN(Bloque.Inicio) as Hora_Inicio, MAX(Bloque.Termino) as Hora_Termino,Ramo,Sala,Semestre,Dia_Semana FROM Instancia INNER JOIN Bloque on Instancia.Bloque = Bloque.ID INNER JOIN Asignacion on Ramo = Nombre_Ramo GROUP BY Sala,Semestre,Dia_Semana,Ramo) as t1 on Ramo = Nombre_Ramo and Semestre = '${semestreActual}' and Hora_Inicio < '${horaactual}' and Hora_Termino > '${horaactual}' and RUT_Docente = '${req.body.Rut}' and (select Sala from Instancia INNER JOIN Asignacion on Nombre_Ramo = Ramo INNER JOIN Bloque on Bloque = ID where Semestre = '${semestreActual}' and Inicio < '${horaactual}' and Termino > '${horaactual}' and Rut_Docente = '${req.body.Rut}'and Dia_Semana='${disS}') = Sala;`;
     }
     
     
@@ -149,7 +152,15 @@ app.post('/registrarinicio', (req, res) => {
             return res.status(500).json({error: "no hay conexion a la BD 1"});
         }
         else{
-            const queryComprobar =`select Rut_Docente,Dia,Inicio,Termino,Hora_Inicio,Hora_Termino,Ramo from Clase Inner JOIN Instancia on Ramo_Nombre = Ramo INNER JOIN Asignacion on Nombre_Ramo = Ramo INNER JOIN Bloque on Bloque = ID where Inicio <= '${horaactual}' and Termino >= '${horaactual}' and Rut_Docente = '${req.body.Rut}'`;
+            let queryComprobar;
+            if(req.body.test){// VERSION ESTATICA  
+                
+                 queryComprobar =`select Rut_Docente,Dia,Inicio,Termino,Hora_Inicio,Hora_Termino,Ramo from Clase Inner JOIN Instancia on Ramo_Nombre = Ramo INNER JOIN Asignacion on Nombre_Ramo = Ramo INNER JOIN Bloque on Bloque = ID where Inicio <= '${req.body.Inicio}' and Termino >= '${req.body.Inicio}' and Rut_Docente = '${req.body.Rut}'`;
+            }else{
+                 queryComprobar =`select Rut_Docente,Dia,Inicio,Termino,Hora_Inicio,Hora_Termino,Ramo from Clase Inner JOIN Instancia on Ramo_Nombre = Ramo INNER JOIN Asignacion on Nombre_Ramo = Ramo INNER JOIN Bloque on Bloque = ID where Inicio <= '${horaactual}' and Termino >= '${horaactual}' and Rut_Docente = '${req.body.Rut}'`;
+
+            }
+            
             //const queryComprobar = `select * from Clase INNER JOIN Asignacion on Nombre_Ramo = Ramo_Nombre where Hora_Inicio <= '${horaactual}' and Hora_Termino >= '${horaactual}' and Dia = '${consultas.GetFechaHoy()}' and RUT_Docente = '${req.body.Rut}'`;
             conection.query(queryComprobar,(error,results)=>{
                 if(error){
@@ -163,9 +174,14 @@ app.post('/registrarinicio', (req, res) => {
 
                         let queryComprobar2;
                         if(req.body.test){// VERSION ESTATICA        
-                            queryComprobar2 = `SELECT Instancia.Sala, RUT_Docente, Bloque,Inicio,Termino,Ramo FROM Sala  INNER JOIN Instancia ON Sala = Sala.ID INNER JOIN Bloque ON Bloque.ID = Instancia.Bloque INNER JOIN Ramo ON Nombre = Ramo INNER JOIN Asignacion ON Nombre_Ramo = Nombre WHERE  Inicio < '${req.body.Inicio}'  AND Termino > '${req.body.Inicio}' AND Dia_Semana = ${req.body.diaS} AND Periodo = '${req.body.semestreActual}' AND Semestre = Periodo AND RUT_Docente = '${req.body.Rut}'`; 
+                            
+                            //queryComprobar2 = `SELECT Instancia.Sala, RUT_Docente, Bloque,Inicio,Termino,Ramo FROM Sala  INNER JOIN Instancia ON Sala = Sala.ID INNER JOIN Bloque ON Bloque.ID = Instancia.Bloque INNER JOIN Ramo ON Nombre = Ramo INNER JOIN Asignacion ON Nombre_Ramo = Nombre WHERE  Inicio < '${req.body.Inicio}'  AND Termino > '${req.body.Inicio}' AND Dia_Semana = ${req.body.diaS} AND Periodo = '${req.body.semestreActual}' AND Semestre = Periodo AND RUT_Docente = '${req.body.Rut}'`; 
+                            queryComprobar2 = `SELECT Sala as iDSala, RUT_Docente,Ramo,Bloque,Hora_Inicio as Inicio, Hora_Termino as Termino   from Asignacion INNER JOIN 
+                            (SELECT MIN(ID)as Bloque,MIN(Bloque.Inicio) as Hora_Inicio, MAX(Bloque.Termino) as Hora_Termino,Ramo,Sala,Semestre,Dia_Semana FROM Instancia INNER JOIN Bloque on Instancia.Bloque = Bloque.ID INNER JOIN Asignacion on Ramo = Nombre_Ramo GROUP BY Sala,Semestre,Dia_Semana,Ramo) as t1 on Ramo = Nombre_Ramo and Semestre = '${req.body.semestreActual}' and Hora_Inicio < '${req.body.Inicio}' and Hora_Termino > '${req.body.Inicio}' and RUT_Docente = '${req.body.Rut}' and (select Sala from Instancia INNER JOIN Asignacion on Nombre_Ramo = Ramo INNER JOIN Bloque on Bloque = ID where Semestre = '${req.body.semestreActual}' and Inicio < '${req.body.Inicio}' and Termino > '${req.body.Inicio}' and Rut_Docente = '${req.body.Rut}'and Dia_Semana='${req.body.diaS}') = Sala;`;
                         }else{ // VERSION REAL
-                            queryComprobar2 = `SELECT Instancia.Sala,RUT_Docente, Bloque,Inicio,Termino,Ramo FROM Sala  INNER JOIN Instancia ON Sala = Sala.ID INNER JOIN Bloque ON Bloque.ID = Instancia.Bloque INNER JOIN Ramo ON Nombre = Ramo INNER JOIN Asignacion ON Nombre_Ramo = Nombre WHERE Inicio < '${horaactual}' AND Termino > '${horaactual}' AND Dia_Semana = ${diaS} AND Periodo = '${req.body.semestreActual}' AND Semestre = Periodo AND RUT_Docente = '${req.body.Rut}'`;
+                           // queryComprobar2 = `SELECT Instancia.Sala,RUT_Docente, Bloque,Inicio,Termino,Ramo FROM Sala  INNER JOIN Instancia ON Sala = Sala.ID INNER JOIN Bloque ON Bloque.ID = Instancia.Bloque INNER JOIN Ramo ON Nombre = Ramo INNER JOIN Asignacion ON Nombre_Ramo = Nombre WHERE Inicio < '${horaactual}' AND Termino > '${horaactual}' AND Dia_Semana = ${diaS} AND Periodo = '${req.body.semestreActual}' AND Semestre = Periodo AND RUT_Docente = '${req.body.Rut}'`;
+                            queryComprobar2 = `SELECT Sala as iDSala, RUT_Docente,Ramo,Bloque,Hora_Inicio as Inicio, Hora_Termino as Termino   from Asignacion INNER JOIN 
+                            (SELECT MIN(ID)as Bloque,MIN(Bloque.Inicio) as Hora_Inicio, MAX(Bloque.Termino) as Hora_Termino,Ramo,Sala,Semestre,Dia_Semana FROM Instancia INNER JOIN Bloque on Instancia.Bloque = Bloque.ID INNER JOIN Asignacion on Ramo = Nombre_Ramo GROUP BY Sala,Semestre,Dia_Semana,Ramo) as t1 on Ramo = Nombre_Ramo and Semestre = '${semestreActual}' and Hora_Inicio < '${horaactual}' and Hora_Termino > '${horaactual}' and RUT_Docente = '${req.body.Rut}' and (select Sala from Instancia INNER JOIN Asignacion on Nombre_Ramo = Ramo INNER JOIN Bloque on Bloque = ID where Semestre = '${semestreActual}' and Inicio < '${horaactual}' and Termino > '${horaactual}' and Rut_Docente = '${req.body.Rut}'and Dia_Semana='${diaS}') = Sala;`;
                         }
 
 
@@ -218,7 +234,7 @@ app.post('/registrarfinal', (req, res) => { // se necesita el rut del docente
 
     conection.connect((error)=>{
         if(error){
-            return res.status(500).json({error: "no hay conexion a la BD"});
+            return res.status(500).json({error: "no hay conexion a la BD 1"});
         }else{
 
             // obtiene la hora actual 
@@ -257,11 +273,11 @@ app.post('/registrarfinal', (req, res) => { // se necesita el rut del docente
                               //RUT_Docente, Bloque,Inicio,Termino,Ramo
 
                               const formatofecha = consultas.GetFechaHoy();
-                              const queryInsert =`INSERT INTO Clase (Dia, Hora_Inicio, Hora_Termino, IP, Ramo_Nombre, Ramo_Periodo) VALUES ('${formatofecha}','${desc.Inicio}','${horaactual}','192.178.0.0','${desc.Ramo}','${semestreActual}')`;
+                              const queryInsert =`INSERT INTO Clase (Dia, Hora_Inicio, Hora_Termino, IP,Estado, Ramo_Nombre, Ramo_Periodo) VALUES ('${formatofecha}','${desc.Inicio}','${horaactual}','192.178.0.0','Asistido','${desc.Ramo}','${semestreActual}')`;
                               conection.query(queryInsert,(error,results)=>{
                                 conection.end();
                                 if(error){
-                                    return res.status(500).json({error: "no hay conexion a la BD"});
+                                    return res.status(500).json({error: "no hay conexion a la BD 2"});
                                 }else{
                                     cursolocal = cursolocal.filter(cursosel => cursosel.RUT_Docente != req.body.Rut);
                                     desc.Termino = horaactual;
@@ -402,7 +418,7 @@ function RevisionClasesIniciadas(cursolocal){
         }else{
             Acerrar.forEach(elementos => {
                 
-                const queryInsert =`INSERT INTO Clase (Dia, Hora_Inicio, Hora_Termino, IP, Ramo_Nombre, Ramo_Periodo) VALUES ('${hoyFecha}','${elementos.Inicio}','${horaactual}','192.178.0.0','${elementos.Ramo}','${semestreActual}')`;
+                const queryInsert =`INSERT INTO Clase (Dia, Hora_Inicio, Hora_Termino, IP,Estado, Ramo_Nombre, Ramo_Periodo) VALUES ('${hoyFecha}','${elementos.Inicio}','${horaactual}','192.178.0.0','No Terminado','${elementos.Ramo}','${semestreActual}')`;
                 conection.query(queryInsert,(error,results)=>{
                     if(error){
                         return;

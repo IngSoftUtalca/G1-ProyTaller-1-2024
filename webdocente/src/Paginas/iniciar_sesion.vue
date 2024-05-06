@@ -56,12 +56,11 @@ export default {
 
       axios.post('http://localhost:3009/consultarhorario', 
       {
-        "Inicio" : "12:30:00",
-        "diaS": "2",
-        "semestreActual": "Semestre.1-2023",
-        "Rut": "33061234-1",
-        "test": true
-        
+    "Inicio" : "9:00:00",
+    "diaS": "4",
+    "semestreActual": "Semestre.1-2023",
+    "Rut": "33061234-1",
+    "test": true
 
       }, 
       {
