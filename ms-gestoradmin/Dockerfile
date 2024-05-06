@@ -1,6 +1,6 @@
 FROM node:10-alpine
-WORKDIR /app
-COPY  . /app
+WORKDIR /app/ms-gestoradmin/
+COPY  ./ms-gestoradmin/* /app/ms-gestoradmin/
 RUN npm install
 EXPOSE 3006
 CMD node index.js
