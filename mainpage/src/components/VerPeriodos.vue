@@ -17,25 +17,43 @@
             <div class="col-2 text-center">
                 Termino
             </div>
-            <div class="col text-end">
+            <div class="col"></div>
+            <div class="col-2 text-center">
                 Estado
             </div>
         </div>
         <!-- Body -->
-        <div class="row h-100 secondary-bg text-center d-flex align-items-center" v-for="(periodo, index) in periodos"
-            :key="index">
-            <div class="col-2">
-                {{ periodo.ID }}
+        <div class="row h-100 px-5 secondary-bg text-center bold d-flex align-items-center"
+            v-for="(periodo, index) in periodos" :key="index">
+            <div class="col-2 text-center">
+                {{ getAño(periodo.ID) }}
             </div>
-            <div class="col-2">
-                {{ periodo.FechaInicio }}
+            <div class="col-2 text-center">
+                {{ parseFecha(periodo.FechaInicio) }}
             </div>
-            <div class="col-2">
-                {{ periodo.FechaTermino }}
+            <div class="col-2 text-center">
+                {{ parseFecha(periodo.FechaTermino) }}
             </div>
-            <div class="col text-end">
-                {{ periodo.Estado }}
+            <div class="col">
+                <button class="btn-light-50 bold btn-size-150" @click="add">
+                    Modificar
+                </button>
             </div>
+            <div class="col-2 d-flex justify-content-center align-items-center">
+                <div class="pill-yellow pill-size-150" v-if="periodo.Estado == 'Pendiente'">
+                    {{ periodo.Estado }}
+                </div>
+                <div class="pill-green pill-size-150" v-if="periodo.Estado == 'Activo'">
+                    {{ periodo.Estado }}
+                </div>
+                <div class="pill-gray pill-size-150" v-if="periodo.Estado == 'Finalizado'">
+                    {{ periodo.Estado }}
+                </div>
+            </div>
+        </div>
+        <!-- Modificar -->
+        <div class="underlay" v-if="OverlayAgregar" @click="close">
+            <AgregarPeriodo class="overlay" v-if="OverlayAgregar" @click.stop @close="close" />
         </div>
     </div>
 </template>
@@ -43,6 +61,7 @@
 <script>
 import axios from 'axios';
 import moment from 'moment';
+import AgregarPeriodo from '@/components/AgregarPeriodo.vue';
 import ENPOINTS from '../../../ENPOINTS.json';
 
 export default {
@@ -50,7 +69,8 @@ export default {
     data() {
         return {
             loading: true,
-            periodos: null
+            periodos: null,
+            OverlayAgregar: false
         }
     },
     mounted() {
@@ -78,7 +98,23 @@ export default {
             } catch (error) {
                 this.loading = false;
             }
+        },
+        getAño(periodo) {
+            return periodo.split('-')[1];
+        },
+        parseFecha(fecha) {
+            moment.locale('es');
+            return moment(fecha, 'DD/MM/YYYY').format('DD [de] MMMM');
+        },
+        add() {
+            this.OverlayAgregar = true;
+        },
+        close() {
+            this.OverlayAgregar = false;
         }
+    },
+    components: {
+        AgregarPeriodo
     }
 }
 
