@@ -2,7 +2,9 @@ version: "2"
 
 services:
   bff-asistencia:
-    build: ./bff-asistencia
+    build: 
+      dockerfile: ./bff-asistencia/Dockerfile
+      context: .
     networks:
       universidad:
         aliases: 
@@ -10,7 +12,9 @@ services:
     ports:
       - 3000:3000
   bff-datosadministradores:
-    build: ./bff-datosadministradores
+    build: 
+      dockerfile: ./bff-datosadministradores/Dockerfile
+      context: .
     networks:
       universidad:
         aliases: 
@@ -18,7 +22,9 @@ services:
     ports:
       - 3001:3001
   bff-datosasistencia:
-    build: ./bff-datosasistencia
+    build: 
+      dockerfile: ./bff-datosasistencia/Dockerfile
+      context: .
     networks:
       universidad:
         aliases: 
@@ -26,7 +32,9 @@ services:
     ports:
       - 3002:3002
   bff-datosdocente:
-    build: ./bff-datosdocente
+    build: 
+      dockerfile: ./bff-datosdocente/Dockerfile
+      context: .
     networks:
       universidad:
         aliases: 
@@ -34,7 +42,9 @@ services:
     ports:
       - 3003:3003
   bff-horarios:
-    build: ./bff-horarios
+    build: 
+      dockerfile: ./bff-horarios/Dockerfile
+      context: .
     networks:
       universidad:
         aliases: 
@@ -42,7 +52,9 @@ services:
     ports:
       - 3004:3004
   ms-erroresasistencia:
-    build: ./ms-erroresasistencia
+    build: 
+      dockerfile: ./ms-erroresasistencia/Dockerfile
+      context: .
     networks:
       universidad:
         aliases: 
@@ -50,7 +62,9 @@ services:
     ports:
       - 3005:3005
   ms-gestoradmin:
-    build: ./ms-gestoradmin
+    build: 
+      dockerfile: ./ms-gestoradmin/Dockerfile
+      context: .
     networks:
       universidad:
         aliases: 
@@ -58,7 +72,9 @@ services:
     ports:
       - 3006:3006
   ms-gestorasistencia:
-    build: ./ms-gestorasistencia
+    build: 
+      dockerfile: ./ms-gestorasistencia/Dockerfile
+      context: .
     networks:
       universidad:
         aliases: 
@@ -67,7 +83,9 @@ services:
       - 3007:3007
 
   ms-gestordocente:
-    build: ./ms-gestordocente
+    build: 
+      dockerfile: ./ms-gestordocente/Dockerfile
+      context: .
     networks:
       universidad:
         aliases: 
@@ -76,15 +94,21 @@ services:
       - 3008:3008
 
   ms-registroasistencia:
-    build: ./ms-registroasistencia
+    build:  
+      dockerfile: ./ms-registroasistencia/Dockerfile
+      context: .
     networks:
       universidad:
         aliases: 
           - ms-registroasistencia
     ports:
       - 3009:3009
+
   ms-registrohorarios:
-    build: ./ms-registrohorarios
+    build:  
+      dockerfile: ./ms-registrohorarios/Dockerfile
+      context: .
+
     networks:
       universidad:
         aliases: 
@@ -93,7 +117,9 @@ services:
       - 3010:3010
 
   ms-validacionrol:
-    build: ./ms-validacionrol
+    build: 
+      dockerfile: ./ms-validacionrol/Dockerfile
+      context: .
     networks:
       universidad:
         aliases: 
@@ -101,7 +127,9 @@ services:
     ports:
       - 3011:3011
   ms-verificaciongps:
-    build: ./ms-verificaciongps
+    build: 
+      dockerfile: ./ms-verificaciongps/Dockerfile
+      context: .
     networks:
       universidad:
         aliases: 
@@ -111,6 +139,7 @@ services:
 
 networks:
   universidad:
+
 
 
 
