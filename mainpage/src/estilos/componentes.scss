@@ -1,5 +1,27 @@
 @import 'color.scss';
 
+input[type="date"] {
+    position: relative;
+    padding: 0;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    opacity: 0;
+    z-index: 1;
+    pointer-events: auto;
+    margin: 0;
+    padding: 0;
+}
+
+.fullscreen{
+    height: 100vh;
+    width: 100%;
+}
+
 .header {
     @extend .primary-bg;
     padding: 1rem;
@@ -7,7 +29,7 @@
 }
 
 .header a{
-    color: $text-light;
+    color: $light-color;
     text-decoration: none;
     font-weight: bold;
 }
@@ -29,4 +51,214 @@
 body {
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
+}
+
+.text-input {
+    width: 100%;
+    height: 35px;
+    background-color: $secondary-color;
+    color: $primary-color;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 4px;
+    border: 1px solid $primary-color;
+    justify-content: center;
+    align-self: center;
+    align-items: center;
+    &:focus {
+        outline: none;
+        box-shadow: none;
+        border: 1px solid $primary-color;
+    }
+}
+
+.login-container {
+    @extend .light-bg;
+    width: 650px;
+    height: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+}
+
+.size-24 {
+    height: 24px !important;
+    width: 24px !important;
+}
+
+.mt-108 {
+    margin-top: 108px;
+}
+
+.mt-96 {
+    margin-top: 96px;
+}
+
+.mt-64 {
+    margin-top: 64px;
+}
+
+.mt-48 {
+    margin-top: 48px;
+}
+
+.mt-24 {
+    margin-top: 24px;
+}
+
+.mb-52 {
+    margin-bottom: 52px;
+}
+
+.mt-14 {
+    margin-top: 14px;
+}
+
+.my-52 {
+    margin-top: 52px;
+    margin-bottom: 52px;
+}
+
+.my-14 {
+    margin-top: 14px;
+    margin-bottom: 14px;
+}
+
+.w-340 {
+    max-width: 340px !important;
+}
+
+.w-220 {
+    max-width: 220px !important;
+}
+
+.w-200 {
+    max-width: 200px !important;
+}
+
+.w-190 {
+    max-width: 190px !important;
+}
+.w-180{
+    max-width: 180px !important;
+}
+
+.w-170 {
+    max-width: 170px !important;
+}
+
+.w-160 {
+    max-width: 160px !important;
+}
+
+.w-150 {
+    max-width: 150px !important;
+}
+.w-120 {
+    max-width: 120px !important;
+}
+
+.w-80 {
+    width: 80% !important;
+}
+
+.w-85 {
+    width: 85%;
+}
+
+.w-90 {
+    width: 90%;
+}
+
+.w-95 {
+    width: 95%;
+}
+
+.h-450 {
+    height: 450px !important;
+}
+
+.h-350 {
+    height: 350px !important;
+}
+
+.h-55 {
+    height: 55px;
+}
+
+.h-75 {
+    height: 75px;
+}
+
+.h-100 {
+    height: 100px !important;
+}
+
+.h-12{
+    height: 12px;
+}
+
+.div-size-72 {
+    height: 72px !important;
+    width: 72px !important;
+}
+
+.div-size-52 {
+    height: 52px !important;
+    width: 52px !important;
+}
+
+.r-4 {
+    border-radius: 4px;
+}
+
+.r-4-ci {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 4px;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+.rt-50 {
+    border-top-right-radius: 50px;
+    border-top-left-radius: 50px;
+}
+
+.underlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba($primary-color, 0.25);
+    z-index: 1000;
+}
+
+.overlay {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 700px !important;
+    height: 500px !important;
+    @extend .light-bg;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    border: 0;
+    border-radius: 8px;
+}
+
+.skeleton {
+    background: linear-gradient(90deg, $secondary-color, $primary-color, $secondary-color);
+    background-size: 200% 200%;
+    animation: skeleton 0.5s infinite linear;
+    border-radius: 4px;
+}
+
+.background {
+    background-image: url('~@/assets/working.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh;
+    width: 100vw;
 }

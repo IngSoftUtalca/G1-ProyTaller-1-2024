@@ -11,8 +11,8 @@
 <style scoped>
     .background {
         background-image: url('~@/assets/working.png');
-        background-size: cover;
         background-position: center;
+        background-repeat: no-repeat;
         height: 100vh;
         width: 100vw;
     }
