@@ -1,0 +1,11 @@
+@import '~bootstrap/scss/bootstrap';
+@import './estilos/color.scss';
+@import './estilos/componentes.scss';
+@import './estilos/text.scss'; 
+@import './estilos/buttons.scss';
+@import './estilos/Spiner.scss';
+@import './estilos/pills.scss';
+
+body {
+    font-family: 'Inter', sans-serif;
+}
