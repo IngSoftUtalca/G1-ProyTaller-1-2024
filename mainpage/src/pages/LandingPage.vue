@@ -9,13 +9,13 @@
                     <a href="https://www.utalca.cl/" class="pb-1">UTalca</a>
                 </div>
                 <div class="col text-center">
-                    <a href="/docente" class="pb-1">Docentes</a>
+                    <a href="/login/docente" class="pb-1">Docentes</a>
                 </div>
                 <div class="col text-center">
-                    <a href="/administrador" class="pb-1">Directores Escuela</a>
+                    <a href="/login/administrador" class="pb-1">Directores Escuela</a>
                 </div>
                 <div class="col text-center">
-                    <a href="/webmaster" class="pb-1">Decanos</a>
+                    <a href="/login/webmaster" class="pb-1">Decanos</a>
                 </div>
             </div>
             <div class="col-3"></div>

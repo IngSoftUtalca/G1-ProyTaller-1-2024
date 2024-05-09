@@ -9,13 +9,13 @@
     "bff-datosadministradores": "https://bff-datosadministradores-ymb46wny6a-uc.a.run.app",
     "bff-datosasistencia": "https://bff-datosasistencia-ymb46wny6a-uc.a.run.app",
     "bff-datosdocentes": "https://bff-datosdocente-ymb46wny6a-uc.a.run.app",
-    "bff-horarios": "https://bff-horarios-ymb46wny6a-uc.a.run.app",
+    "bff-horarios": "http://localhost:3004",
     "ms-erroresasistencia": "https://ms-erroresasistencia-ymb46wny6a-uc.a.run.app",
     "ms-gestoradmin": "https://ms-gestoradmin-ymb46wny6a-uc.a.run.app",
     "ms-gestorasistencia": "https://ms-gestorasistencia-ymb46wny6a-uc.a.run.app",
     "ms-gestordocente": "https://ms-gestordocente-ymb46wny6a-uc.a.run.app",
     "ms-registroasistencia": "https://ms-registroasistencia-ymb46wny6a-uc.a.run.app",
-    "ms-registrohorarios": "https://ms-registrohorarios-ymb46wny6a-uc.a.run.app",
+    "ms-registrohorarios": "http://localhost:3010",
     "ms-validacionrol": "https://ms-validacionrol-ymb46wny6a-uc.a.run.app",
     "ms-verificaciongps":"https://ms-verificaciongps-ymb46wny6a-uc.a.run.app"
 }
