@@ -2,6 +2,7 @@
 # https://github.com/firebase/firebase-tools
 
 name: Deploy to Firebase Hosting on PR
+name: Deploy to Firebase Hosting on PR
 on: pull_request
 permissions:
   checks: write
@@ -13,9 +14,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: npm ci && npm run build
+      - name: Build and deploy mainpage
+        run: |
+          cd mainpage
+          npm ci
+          npm run build
+      - name: Build and deploy webdocente
+        run: |
+          cd webdocente
+          npm ci
+          npm run build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
+          channelId: live
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_PRESENTE_DOCENTE }}
           projectId: presente-docente
+          entryPoint: mainpage
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          channelId: live
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_PRESENTE_DOCENTE }}
+          projectId: presente-docente
+          entryPoint: webdocente
