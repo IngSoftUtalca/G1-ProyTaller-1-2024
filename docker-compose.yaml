@@ -136,6 +136,37 @@ services:
           - ms-verificaciongps
     ports:
       - 3012:3012
+  api-main-wm:
+    build: 
+      dockerfile: ./API-MAIN-WM/Dockerfile
+      context: .
+    networks:
+      universidad:
+        aliases: 
+          - api-main-wm
+    ports:
+      - 3013:3013
+  api-main-docente:
+    build: 
+      dockerfile: ./API-MAIN-Docente/Dockerfile
+      context: .
+    networks:
+      universidad:
+        aliases: 
+          - api-main-Docente
+    ports:
+      - 3014:3014
+  api-main-admin:
+    build: 
+      dockerfile: ./API-MAIN-ADMIN/Dockerfile
+      context: .
+    networks:
+      universidad:
+        aliases: 
+          - api-main-admin
+    ports:
+      - 3015:3015
+
 
 networks:
   universidad:

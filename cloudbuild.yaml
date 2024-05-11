@@ -101,7 +101,24 @@
     args: ['push', 'us-central1-docker.pkg.dev/presente-420701/presente/ms-verificaciongps:ms-verificaciongps'] 
   ##############################################################################################################################
 
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/presente-420701/presente/API-MAIN-ADMIN:API-MAIN-ADMIN', '-f', './API-MAIN-ADMIN/Dockerfile','.'] 
 
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'us-central1-docker.pkg.dev/presente-420701/presente/API-MAIN-ADMIN:API-MAIN-ADMIN'] 
+  ##############################################################################################################################
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/presente-420701/presente/API-MAIN-Docente:API-MAIN-Docente', '-f', './API-MAIN-Docente/Dockerfile','.'] 
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'us-central1-docker.pkg.dev/presente-420701/presente/API-MAIN-Docente:API-MAIN-Docente'] 
+  ##############################################################################################################################
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/presente-420701/presente/API-MAIN-WM:API-MAIN-WM', '-f', './API-MAIN-WM/Dockerfile','.'] 
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'us-central1-docker.pkg.dev/presente-420701/presente/API-MAIN-WM:API-MAIN-WM'] 
+  ##############################################################################################################################
 
 
 
@@ -119,6 +136,9 @@ images:
   - us-central1-docker.pkg.dev/presente-420701/presente/ms-registrohorarios:ms-registrohorarios
   - us-central1-docker.pkg.dev/presente-420701/presente/ms-validacionrol:ms-validacionrol
   - us-central1-docker.pkg.dev/presente-420701/presente/ms-verificaciongps:ms-verificaciongps
+  - us-central1-docker.pkg.dev/presente-420701/presente/API-MAIN-WM:API-MAIN-WM
+  - us-central1-docker.pkg.dev/presente-420701/presente/API-MAIN-Docente:API-MAIN-Docente
+  - us-central1-docker.pkg.dev/presente-420701/presente/API-MAIN-ADMIN:API-MAIN-ADMIN
 
 
   
