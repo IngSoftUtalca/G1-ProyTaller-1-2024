@@ -102,22 +102,22 @@
   ##############################################################################################################################
 
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'us-central1-docker.pkg.dev/presente-420701/presente/API-MAIN-ADMIN:API-MAIN-ADMIN', '-f', './API-MAIN-ADMIN/Dockerfile','.'] 
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/presente-420701/presente/api-main-admin:api-main-admin', '-f', './API-MAIN-ADMIN/Dockerfile','.'] 
 
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'us-central1-docker.pkg.dev/presente-420701/presente/API-MAIN-ADMIN:API-MAIN-ADMIN'] 
+    args: ['push', 'us-central1-docker.pkg.dev/presente-420701/presente/api-main-admin:api-main-admin'] 
   ##############################################################################################################################
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'us-central1-docker.pkg.dev/presente-420701/presente/API-MAIN-Docente:API-MAIN-Docente', '-f', './API-MAIN-Docente/Dockerfile','.'] 
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/presente-420701/presente/api-main-docente:api-main-docente', '-f', './API-MAIN-Docente/Dockerfile','.'] 
 
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'us-central1-docker.pkg.dev/presente-420701/presente/API-MAIN-Docente:API-MAIN-Docente'] 
+    args: ['push', 'us-central1-docker.pkg.dev/presente-420701/presente/api-main-docente:api-main-docente'] 
   ##############################################################################################################################
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'us-central1-docker.pkg.dev/presente-420701/presente/API-MAIN-WM:API-MAIN-WM', '-f', './API-MAIN-WM/Dockerfile','.'] 
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/presente-420701/presente/api-main-wm:api-main-wm', '-f', './API-MAIN-WM/Dockerfile','.'] 
 
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'us-central1-docker.pkg.dev/presente-420701/presente/API-MAIN-WM:API-MAIN-WM'] 
+    args: ['push', 'us-central1-docker.pkg.dev/presente-420701/presente/api-main-wm:api-main-wm'] 
   ##############################################################################################################################
 
 
@@ -136,9 +136,9 @@ images:
   - us-central1-docker.pkg.dev/presente-420701/presente/ms-registrohorarios:ms-registrohorarios
   - us-central1-docker.pkg.dev/presente-420701/presente/ms-validacionrol:ms-validacionrol
   - us-central1-docker.pkg.dev/presente-420701/presente/ms-verificaciongps:ms-verificaciongps
-  - us-central1-docker.pkg.dev/presente-420701/presente/API-MAIN-WM:API-MAIN-WM
-  - us-central1-docker.pkg.dev/presente-420701/presente/API-MAIN-Docente:API-MAIN-Docente
-  - us-central1-docker.pkg.dev/presente-420701/presente/API-MAIN-ADMIN:API-MAIN-ADMIN
+  - us-central1-docker.pkg.dev/presente-420701/presente/api-main-wm:api-main-wm
+  - us-central1-docker.pkg.dev/presente-420701/presente/api-main-docente:api-main-docente
+  - us-central1-docker.pkg.dev/presente-420701/presente/api-main-admin:api-main-admin
 
 
   
