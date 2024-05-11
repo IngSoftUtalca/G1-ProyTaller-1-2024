@@ -26,7 +26,6 @@
         session_start();
         $_SESSION['id'] = $id;
         $_SESSION['sso'] = true;
-        $_SESSION['userType'] = $user_type;
 
         /*-------------------------*/ 
         /* Link de página de inicio sistema a loguear - Modificable*/
