@@ -62,7 +62,7 @@
 import axios from 'axios';
 import moment from 'moment';
 import AgregarPeriodo from '@/components/AgregarPeriodo.vue';
-import ENPOINTS from '../../../ENPOINTS.json';
+import ENDPOINTS from '../../../ENPOINTS.json';
 
 export default {
     name: 'VerPeriodos',
@@ -79,7 +79,7 @@ export default {
     methods: {
         async getPeriodos() {
             try {
-                const response = await axios.get(ENPOINTS['bff-horarios'] + '/periodos');
+                const response = await axios.get(ENDPOINTS['bff-horarios'] + '/periodos');
                 this.periodos = response.data;
                 this.periodos.sort((a, b) => {
                     const startDateA = new Date(a.FechaInicio);
