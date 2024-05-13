@@ -499,7 +499,7 @@ function RevisionClasesNoIniciadas(){
     });
 }
 
-monitorearHorario(); 
+//monitorearHorario(); 
 
 
 

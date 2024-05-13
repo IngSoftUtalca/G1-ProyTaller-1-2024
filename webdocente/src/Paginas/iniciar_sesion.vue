@@ -31,7 +31,7 @@
     import { ref } from 'vue'
     import axios from 'axios';
     //import { data } from 'jquery';
-
+    import ENPOINTS from '../../../ENPOINTS.json';
 export default {
   setup() {
     const botonC = ref(false); // Variable para controlar el color del botón
@@ -54,13 +54,13 @@ export default {
     Logearse() {
     // Aquí puedes agregar la ruta a la que deseas redirigir al usuario
 
-      axios.post('http://localhost:3009/consultarhorario', 
+      axios.post(ENPOINTS['ms-registroasistencia']+'/consultarhorario', 
       {
-        "Inicio" : "14:30:00",
-        "diaS": "4",
-        "semestreActual": "Semestre.1-2023",
-        "Rut": "33061234-1",
-        "test": true
+    "Inicio" : "14:40:00",
+    "diaS": "4",
+    "semestreActual": "Semestre.1-2023",
+    "Rut": "33061234-1",
+    "test": true
 
       }, 
       {
@@ -84,7 +84,7 @@ export default {
 
       })
       .catch(error => {
-          console.error('Error:',  error);
+          console.error('Error:',  error.response);
           //return "malo";
           this.$router.push('/error');
       });
