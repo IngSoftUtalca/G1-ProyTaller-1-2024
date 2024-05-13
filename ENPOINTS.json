@@ -17,5 +17,7 @@
     "ms-registroasistencia": "http://localhost:3009",
     "ms-registrohorarios": "https://ms-registrohorarios-ymb46wny6a-uc.a.run.app",
     "ms-validacionrol": "https://ms-validacionrol-ymb46wny6a-uc.a.run.app",
-    "ms-verificaciongps":"https://ms-verificaciongps-ymb46wny6a-uc.a.run.app"
+    "ms-verificaciongps":"https://ms-verificaciongps-ymb46wny6a-uc.a.run.app",
+    "webdocente": "https://web-docente-dev.web.app",
+    "mainpage": "https://presente-utalca-dev.web.app"
 }
