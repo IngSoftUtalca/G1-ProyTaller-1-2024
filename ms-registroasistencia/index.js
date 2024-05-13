@@ -400,7 +400,7 @@ function CalcularTiempo(){
                         return resolve(10) // intentar en 10 minutos
                     }
                     else{
-                        if(results.length == 0){//error
+                        if(results.length == 0 ){//error
                             console.log('error');
                             return resolve(10)// intentar en 10 minutos
                             

@@ -95,7 +95,7 @@ function CompararHorasFinDia(HoraA,MinutoA,SegundoA)
 
     actual.setHours(HoraA,MinutoA,SegundoA);
     inicio.setHours(8,30,0); 
-    final.setHours(23,30,0); 
+    final.setHours(22,20,0); 
 
     if(actual >= inicio && actual < final ){
         console.log('true')
