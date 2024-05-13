@@ -22,9 +22,6 @@ let horaGlobalActual = '';
 
 CalcularSemestre();
 
-console.log(semestreActual);
-
-
 const PORT = 3009;
 
 app.get('/', (req, res) => {
@@ -51,9 +48,6 @@ app.listen(PORT, () => {
 app.post('/consultarhorario', (req, res) => {
 
 
-
-    console.log(req.body);
-
     if(!req.body.Rut){
         return res.status(400).json({error: "no existe variable Rut en el Body"});
 
@@ -64,10 +58,6 @@ app.post('/consultarhorario', (req, res) => {
     const tiempoActual = new Date();
     const horaactual = consultas.GetHoraActual();
     const disS = tiempoActual.getDay(); 
-    console.log(horaactual+" "+disS+" "+req.body.Rut+" "+semestreActual);
-    
-
-
 
     if(req.body.test){// VERSION ESTATICA        
         parametros = [req.body.semestreActual,req.body.Inicio,req.body.Inicio,req.body.Rut,req.body.semestreActual,req.body.Inicio,req.body.Inicio,req.body.Rut,req.body.diaS]
@@ -83,7 +73,7 @@ app.post('/consultarhorario', (req, res) => {
 
     conection.connect((error)=>{
         if(error){
-            console.log(error);
+            
             return res.status(500).json({error: "no hay conexion a la BD"});
 
         }
@@ -93,7 +83,7 @@ app.post('/consultarhorario', (req, res) => {
                 return res.status(500).json({error: "no hay conexion a la BD"});
 
             }
-            console.log(results);
+            
             if(results.length != 0){
                 var desc = null;
                 var desc = cursolocal.find(function(e) {
@@ -126,14 +116,6 @@ app.post('/registrarinicio', (req, res) => {
         return res.status(400).json({error: "no existe variable Rut en el Body"});
  
     }
-
-
-
-
-
- 
-
-
 
     const fechaActual = consultas.GetFechaHoy()
     const tiempoActual = new Date();
@@ -193,7 +175,6 @@ app.post('/registrarinicio', (req, res) => {
                                     return e.RUT_Docente == req.body.Rut;
                                 })
                                 if(desc == null){ // se guardara localmente como pendiente
-                                    console.log("se guardara:")
                                     if(req.body.test){
                                         results[0].Inicio = req.body.Inicio;
                                     }else{
@@ -201,10 +182,7 @@ app.post('/registrarinicio', (req, res) => {
                                     }
                                     
                                     cursolocal.push(results[0]);
-                                    console.log('cursos actuales en pendiente:')
-                                    cursolocal.forEach(element => {
-                                        console.log(element);
-                                    });
+
                                     return res.status(200).json({Iniciado: horaactual});
                                 }else{
                                     return res.status(400).json({error: 'el profesor ya tiene una clase iniciada'});
@@ -240,16 +218,7 @@ app.post('/registrarfinal', (req, res) => { // se necesita el rut del docente
         if(error){
             return res.status(500).json({error: "no hay conexion a la BD 1"});
         }else{
-
-            // obtiene la hora actual 
             const horaactual = consultas.GetHoraActual();
-
-            // se busca si esta dentro de algun bloque la hora actual
-
-
-            //
-
-
 
             var desc = null
             desc = cursolocal.find(function(e) {
@@ -258,7 +227,6 @@ app.post('/registrarfinal', (req, res) => { // se necesita el rut del docente
                     
             if(desc != null){
                 if(cursolocal.length != 0){
-                    console.log("finalizando..."); 
 
                     const formatofecha = consultas.GetFechaHoy();
 
@@ -281,19 +249,11 @@ app.post('/registrarfinal', (req, res) => { // se necesita el rut del docente
                     conection.query(queryInsert,parametros,(error,results)=>{
                         conection.end();
                         if(error){
-                            console.log(error);
+
                             return res.status(500).json({error: "no hay conexion a la BD 2"});
                         }else{
                             cursolocal = cursolocal.filter(cursosel => cursosel.RUT_Docente != req.body.Rut);
                             desc.Termino = horafinal;
-                            console.log("curso finalizazo:" +desc.RUT_Docente+" / "+desc.Inicio+" / "+desc.Termino+" / "+desc.Ramo)
-                            console.log('cursos actuales en pendiente:')
-                            cursolocal.forEach(element => {
-                            console.log(element.RUT_Docente+" / "+element.Inicio+" / "+element.Ramo);
-
-                            });
-
-                            // selection y modificar las columnas de la tabla clase para definir la columna de termino y estado
                             return res.status(200).json({ok: "registar fin de clases"});
                         }
                     });
@@ -310,7 +270,7 @@ app.post('/registrarfinal', (req, res) => { // se necesita el rut del docente
 let revisarSemestre = true
 
 
-// este se encargara de la gestion del cierre de la clase en el caso de que el profe no lo cierre. esto se hara de manera asincrona 
+
 async function monitorearHorario(){
     var revisar = false
     let espera = await CalcularTiempo()
@@ -322,15 +282,10 @@ async function monitorearHorario(){
             let fecha = new Date();
             let fecha2 = new Date(fecha.getTime() + espera*60000)
 
-            console.log('la siguiente revision de salas no cerradas es en '+espera+" minutos ( a las "+fecha2.getHours()+":"+fecha2.getMinutes()+":"+fecha2.getSeconds()+")");
-
-
-            
             procesandoClases =  await procesarHora(espera == 0? 10000:espera*60*1000);
             espera = await CalcularTiempo()
 
         }catch(error){
-            console.log(error);
             procesandoClases = false
             espera = await CalcularTiempo()
         }
@@ -345,7 +300,6 @@ function procesarHora(espera){
 
 
     return new Promise((resolve,reject) => {
-        console.log(`iniciado espera`);
         setTimeout(()=>{
             
             if(revisarSemestre){
@@ -353,7 +307,6 @@ function procesarHora(espera){
                 revisarSemestre = false
             }
 
-            console.log("Comienza Revision Clases Iniciadas")
             RevisionClasesIniciadas(cursolocal)
 
             resolve(false)
@@ -374,26 +327,22 @@ function CalcularTiempo(){
 
 
         if(EsDiaLibre()){
-            console.log("si")
+
             revisarSemestre = true;
             const  [horaT, minutoT, segundoT] = ('8:30:00').split(':').map(Number);
             const horaDiff = horaA > horaT ? (24 - horaA + horaT) : horaT - horaA + 24; 
-            console.log((minutoT >= minutoA? horaDiff : horaDiff - 1)+':'+(minutoT >= minutoA? (minutoT-minutoA):(60+minutoT-minutoA))+':00');
-            return resolve((horaDiff)*60 + (minutoT-minutoA)+ TiempoRezago); // 1o horas si ya no hay mas horarios para hoy
+
+            return resolve((horaDiff)*60 + (minutoT-minutoA)+ TiempoRezago); 
         }else{
-            console.log("no")
+
 
         }
     
         conection.connect((error)=>{
             if(error){
-                console.log("no hay conexion");
+
                 return resolve(10)
             }else{
-                // obtiene la hora actual 
-                
-    
-                // se busca si esta dentro de algun bloque la hora actual
 
                 let parametros = [horaactual]
                 const query = `SELECT MIN(Inicio) as Inicio,MIN(Termino) as Termino FROM Bloque WHERE ? < Termino `;
@@ -401,16 +350,16 @@ function CalcularTiempo(){
                 conection.query(query,parametros,(error,results)=>{
                     conection.end();
                     if(error){
-                        console.log('no se puede conectar a la BD');
-                        return resolve(10) // intentar en 10 minutos
+
+                        return resolve(10) 
                     }
                     else{
-                        if(results.length == 0 ){//error
-                            console.log('error');
-                            return resolve(10)// intentar en 10 minutos
+                        if(results.length == 0 ){
+
+                            return resolve(10)
                             
                         }else{
-                            console.log('aca estoy '+results[0].Inicio+' | '+results[0].Termino);
+  
     
                             horaGlobalActual = horaactual;
 
@@ -426,10 +375,10 @@ function CalcularTiempo(){
 
                                 if(consultas.CompararHorasBool(horaA,minutoA,segundoA,horaI,minutoI,segundoI)){
                                    return resolve(((horaI-horaA)*60 + (minutoI-minutoA)+ TiempoRezago));
-                                   //return resolve(1)
+
                                 }else{
                                     return resolve(((horaT-horaA)*60 + (minutoT-minutoA)+ TiempoRezago));
-                                    //return resolve(1)
+
                                 }
 
                                     
@@ -440,8 +389,8 @@ function CalcularTiempo(){
                                 revisarSemestre = true;
                                 const  [horaT, minutoT, segundoT] = ('8:30:00').split(':').map(Number);
                                 const horaDiff = horaA > horaT ? (24 - horaA + horaT) : horaT - horaA;  
-                                console.log((minutoT >= minutoA? horaDiff : horaDiff - 1)+':'+(minutoT >= minutoA? (minutoT-minutoA):(60+minutoT-minutoA))+':00');
-                                return resolve((horaDiff)*60 + (minutoT-minutoA)+ TiempoRezago); // 1o horas si ya no hay mas horarios para hoy
+
+                                return resolve((horaDiff)*60 + (minutoT-minutoA)+ TiempoRezago); 
                             }
 
 
@@ -462,22 +411,12 @@ function RevisionClasesIniciadas(cursolocal){
 
 
     procesandoClases = true;
-    
-    console.log("iniciando cierre de clases aun no terminadas")
-
-
     let fecha = new Date();
-
     let fecha2 = new Date(fecha.getTime() - TiempoRezago*60000)
-
     var horaactual = fecha2.getHours()+":"+fecha2.getMinutes()+":"+fecha2.getSeconds()
-
-
-
     var hoyFecha = consultas.GetFechaHoy()
     var Acerrar = cursolocal.filter(ele => ele.Termino <= horaactual)
     cursolocal = cursolocal.filter(ele => ele.Termino > horaactual)
-
 
     const conection = mysql.createConnection(dbData);
     conection.connect((error)=>{
@@ -487,21 +426,14 @@ function RevisionClasesIniciadas(cursolocal){
         }else{
             const queryInsert =`INSERT INTO Clase (docente, Dia, Hora_Inicio, Hora_Termino, IP,Estado, Ramo_Nombre, Ramo_Periodo) VALUES (? ,? ,? ,? ,? ,? ,? ,? )`;
             Acerrar.forEach(elementos => {
-                
-                
                 let parametros = [elementos.RUT_Docente,hoyFecha,elementos.Inicio,horaactual,'192.178.0.0','No Terminado',elementos.Ramo,semestreActual]
-
                 conection.query(queryInsert,parametros,(error,results)=>{
                     if(error){
                         procesandoClases = false
                         return;
                     }else{
-                        console.log(elementos.Ramo+" terminado")
                     }
-        
                 })
-                
-        
             });
             RevisionClasesNoIniciadas()
             procesandoClases = false
@@ -513,7 +445,7 @@ function RevisionClasesIniciadas(cursolocal){
 }
 
 function RevisionClasesNoIniciadas(){
-    console.log("Iniciando revision de clases no iniciadas ");
+
 
     const horaactual = consultas.GetHoraActual()
     const fecha = new Date();
@@ -521,7 +453,7 @@ function RevisionClasesNoIniciadas(){
     const hoyFecha = consultas.GetFechaHoy()
     const formatohora = fecha2.getHours()+"-"+fecha2.getMinutes()+"-"+fecha2.getSeconds();
     
-    console.log("La revision se hara en esta hora: "+ formatohora)
+
 
     const conection = mysql.createConnection(dbData);
 
@@ -540,20 +472,19 @@ function RevisionClasesNoIniciadas(){
                 }else{
 
 
-                    console.log(results)
                     results.forEach(elementos => {
-                        console.log( elementos.Rut_Docente+" | "+elementos.Nombre_Ramo+" | "+elementos.Sala+" | "+elementos.Inicio+" | "+elementos.Termino)
+
 
                         const queryInsert =`INSERT INTO Clase (docente, Dia, Hora_Inicio, Hora_Termino, IP,Estado, Ramo_Nombre, Ramo_Periodo) VALUES (?,?,?,?,?,?,?,?)`;
                         let parametros = [elementos.Rut_Docente,hoyFecha,elementos.Inicio,horaactual,'192.178.0.0','No Iniciado',elementos.Nombre_Ramo,semestreActual]
 
                         conection.query(queryInsert,parametros,(error,results)=>{
                             if(error){
-                                console.log(error)
+
                                 procesandoClases = false
                                 return;
                             }else{
-                                console.log(elementos.Nombre_Ramo+" terminado")
+
                             }
                 
                         })
@@ -578,7 +509,7 @@ function EsDiaLibre(){
     const conection = mysql.createConnection(dbData);
     conection.connect((error)=>{
         if(error){
-            console.log(error);
+
             return ;
             
         }
@@ -586,7 +517,7 @@ function EsDiaLibre(){
         let parametros = [formatofecha]
         conection.query(query,parametros,(error,results)=>{
             conection.end();
-            console.log(results)
+
             if(results.length == 0){
                 return false;
             }else{
@@ -606,14 +537,14 @@ function CalcularSemestre(){
 
     const fechaActual = new Date();
     const formatofecha = fechaActual.getFullYear()+"-"+fechaActual.getMonth()+"-"+fechaActual.getDay();
-    console.log(formatofecha);
+
 
 
 
     const conection = mysql.createConnection(dbData);
     conection.connect((error)=>{
         if(error){
-            console.log(error);
+
             return ;
             
         }
@@ -623,11 +554,11 @@ function CalcularSemestre(){
             
 
             if(error){
-                console.log("error.message");
+
 
             }else{
                 semestreActual = results[0].ID;
-                console.log(results[0].ID);
+
 
             }
 
