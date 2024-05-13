@@ -57,7 +57,37 @@ function GetHoraActual(){
 
 
 
-function CompararHoras(HoraA,MinutoA,SegundoA)
+function CompararHoras(HoraA,MinutoA,SegundoA,HoraF,MinutoF,SegundoF)
+{
+    var actual = new Date();
+    var final = new Date();
+    actual.setHours(HoraA,MinutoA,SegundoA);
+
+    final.setHours(HoraF,MinutoF,SegundoF); 
+
+    if( actual <= final ){
+        return actual.getHours()+":"+actual.getMinutes()+":"+actual.getSeconds();
+    }else{
+        return final.getHours()+":"+final.getMinutes()+":"+final.getSeconds();
+    }
+}
+
+function CompararHorasBool(HoraA,MinutoA,SegundoA,HoraF,MinutoF,SegundoF)
+{
+    var actual = new Date();
+    var final = new Date();
+    actual.setHours(HoraA,MinutoA,SegundoA);
+
+    final.setHours(HoraF,MinutoF,SegundoF); 
+
+    if( actual < final ){
+        return true;
+    }else{
+        return false;
+    }
+}
+
+function CompararHorasFinDia(HoraA,MinutoA,SegundoA)
 {
     var actual = new Date();
     var inicio = new Date();
@@ -65,21 +95,24 @@ function CompararHoras(HoraA,MinutoA,SegundoA)
 
     actual.setHours(HoraA,MinutoA,SegundoA);
     inicio.setHours(8,30,0); 
-    final.setHours(22,20,0); 
+    final.setHours(23,30,0); 
 
     if(actual >= inicio && actual < final ){
+        console.log('true')
         return true;
     }else{
+        console.log('false')
         return false;
     }
 }
-
 
 module.exports = {
     CalcularSemestre,
     GetFechaHoy,
     GetHoraActual,
-    CompararHoras
+    CompararHoras,
+    CompararHorasBool,
+    CompararHorasFinDia
 };
 
 
