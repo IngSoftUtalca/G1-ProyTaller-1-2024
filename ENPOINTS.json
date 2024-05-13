@@ -14,7 +14,7 @@
     "ms-gestoradmin": "https://ms-gestoradmin-ymb46wny6a-uc.a.run.app",
     "ms-gestorasistencia": "https://ms-gestorasistencia-ymb46wny6a-uc.a.run.app",
     "ms-gestordocente": "https://ms-gestordocente-ymb46wny6a-uc.a.run.app",
-    "ms-registroasistencia": "http://localhost:3009",
+    "ms-registroasistencia": "https://ms-registroasistencia-ymb46wny6a-uc.a.run.app",
     "ms-registrohorarios": "https://ms-registrohorarios-ymb46wny6a-uc.a.run.app",
     "ms-validacionrol": "https://ms-validacionrol-ymb46wny6a-uc.a.run.app",
     "ms-verificaciongps":"https://ms-verificaciongps-ymb46wny6a-uc.a.run.app",
