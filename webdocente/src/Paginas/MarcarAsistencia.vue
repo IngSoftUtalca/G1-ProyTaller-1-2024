@@ -82,13 +82,14 @@ export default {
 
       axios.post('http://localhost:3009/registrarinicio', 
       {
-    "Inicio" : "9:00:00",
-    "diaS": "4",
-    "semestreActual": "Semestre.1-2023",
-    "Rut": "33061234-1",
-    "test": true
+        "Inicio" : "14:30:00",
+        "diaS": "4",
+        "semestreActual": "Semestre.1-2023",
+        "Rut": "33061234-1",
+        "fecha": "2024-05-14",
+        "test": true
 
-      }, 
+      },
       {
           headers: {
               'Content-Type': 'application/json',

@@ -76,7 +76,7 @@ app.post('/consultarhorario', (req, res) => {
 
     }       
 
-    const query = `SELECT Sala as iDSala, RUT_Docente,Ramo,Bloque,Hora_Inicio as Inicio, Hora_Termino as Termino   from Asignacion INNER JOIN 
+    const query = `SELECT Sala as idSala, RUT_Docente,Ramo,Bloque,Hora_Inicio as Inicio, Hora_Termino as Termino   from Asignacion INNER JOIN 
     (SELECT MIN(ID)as Bloque,MIN(Bloque.Inicio) as Hora_Inicio, MAX(Bloque.Termino) as Hora_Termino,Ramo,Sala,Semestre,Dia_Semana FROM Instancia INNER JOIN Bloque on Instancia.Bloque = Bloque.ID INNER JOIN Asignacion on Ramo = Nombre_Ramo GROUP BY Sala,Semestre,Dia_Semana,Ramo) as t1 on Ramo = Nombre_Ramo and Semestre = ? and Hora_Inicio < ? and Hora_Termino > ? and RUT_Docente = ? and (select Sala from Instancia INNER JOIN Asignacion on Nombre_Ramo = Ramo INNER JOIN Bloque on Bloque = ID where Semestre = ? and Inicio < ? and Termino > ? and Rut_Docente = ? and Dia_Semana= ? ) = Sala;`;
 
 
@@ -177,7 +177,7 @@ app.post('/registrarinicio', (req, res) => {
 
                         }       
 
-                        queryComprobar2 = `SELECT Sala as iDSala, RUT_Docente,Ramo,Bloque,Hora_Inicio as Inicio, Hora_Termino as Termino   from Asignacion INNER JOIN 
+                        queryComprobar2 = `SELECT Sala as idSala, RUT_Docente,Ramo,Bloque,Hora_Inicio as Inicio, Hora_Termino as Termino   from Asignacion INNER JOIN 
                         (SELECT MIN(ID)as Bloque,MIN(Bloque.Inicio) as Hora_Inicio, MAX(Bloque.Termino) as Hora_Termino,Ramo,Sala,Semestre,Dia_Semana FROM Instancia INNER JOIN Bloque on Instancia.Bloque = Bloque.ID INNER JOIN Asignacion on Ramo = Nombre_Ramo GROUP BY Sala,Semestre,Dia_Semana,Ramo) as t1 on Ramo = Nombre_Ramo and Semestre = ? and Hora_Inicio < ? and Hora_Termino > ? and RUT_Docente = ? and (select Sala from Instancia INNER JOIN Asignacion on Nombre_Ramo = Ramo INNER JOIN Bloque on Bloque = ID where Semestre = ? and Inicio < ? and Termino > ? and Rut_Docente = ? and Dia_Semana= ? ) = Sala;`;
 
                         conection.query(queryComprobar2,parametros,(error,results)=>{
@@ -194,7 +194,12 @@ app.post('/registrarinicio', (req, res) => {
                                 })
                                 if(desc == null){ // se guardara localmente como pendiente
                                     console.log("se guardara:")
-                                    results[0].Inicio = horaactual;
+                                    if(req.body.test){
+                                        results[0].Inicio = req.body.Inicio;
+                                    }else{
+                                        results[0].Inicio = horaactual;
+                                    }
+                                    
                                     cursolocal.push(results[0]);
                                     console.log('cursos actuales en pendiente:')
                                     cursolocal.forEach(element => {
@@ -265,10 +270,10 @@ app.post('/registrarfinal', (req, res) => { // se necesita el rut del docente
                     let parametros
                     let queryInsert
                     if(req.body.test){
-                        queryInsert =`INSERT INTO Clase (docente,Dia, Hora_Inicio, Hora_Termino, IP,Estado, Ramo_Nombre, Ramo_Periodo) VALUES ('${req.body.Rut}','${req.body.fecha}','${desc.Inicio}','${horafinal}','192.178.0.0','Asistido','${desc.Ramo}','${semestreActual}')`;
-                        parametros = [req.body.Rut,req.body.fecha,desc.Inicio,horafinal,'192.178.0.0','Asistido',desc.Ramo,semestreActual]
+                        
+                        parametros = [req.body.Rut,req.body.fecha,desc.Inicio,desc.Termino,'192.178.0.0','Asistido',desc.Ramo,semestreActual]
                     }else{
-                        queryInsert =`INSERT INTO Clase (docente,Dia, Hora_Inicio, Hora_Termino, IP,Estado, Ramo_Nombre, Ramo_Periodo) VALUES ('${req.body.Rut}','${formatofecha}','${desc.Inicio}','${horafinal}','192.178.0.0','Asistido','${desc.Ramo}','${semestreActual}')`;
+                        
                         parametros = [req.body.Rut,formatofecha,desc.Inicio,horafinal,'192.178.0.0','Asistido',desc.Ramo,semestreActual]
                     }
                     queryInsert = `INSERT INTO Clase (docente, Dia, Hora_Inicio, Hora_Termino, IP,Estado, Ramo_Nombre, Ramo_Periodo) VALUES (?, ?, ?, ?, ?, ?, ?, ?);`

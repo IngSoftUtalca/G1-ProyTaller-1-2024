@@ -62,6 +62,7 @@
         axios.post('http://localhost:3009/registrarfinal', 
       {
         "Rut": "33061234-1",
+        "fecha": "2024-05-14",
         "test": true
       }, 
       {
