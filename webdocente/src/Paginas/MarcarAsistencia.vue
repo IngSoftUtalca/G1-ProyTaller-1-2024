@@ -27,7 +27,7 @@
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import axios from 'axios';
-
+import ENPOINTS from '../../../ENPOINTS.json';
 export default {
   setup() {
     const route = useRoute()
@@ -80,15 +80,15 @@ export default {
     marcarAsistencia() {
       // Aquí puedes agregar la lógica para marcar la asistencia
 
-      axios.post('http://localhost:3009/registrarinicio', 
+      axios.post(ENPOINTS['ms-registroasistencia']+'/registrarinicio', 
       {
-    "Inicio" : "9:00:00",
-    "diaS": "4",
-    "semestreActual": "Semestre.1-2023",
-    "Rut": "33061234-1",
-    "test": true
-
-      }, 
+        "Inicio" : "14:40:00",
+        "diaS": "4",
+        "semestreActual": "Semestre.1-2023",
+        "Rut": "33061234-1",
+        "fecha": "2024-05-14",
+        "test": true
+      },
       {
           headers: {
               'Content-Type': 'application/json',

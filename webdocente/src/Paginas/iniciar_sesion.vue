@@ -30,6 +30,7 @@
   <script>
     import { ref } from 'vue'
     import axios from 'axios';
+    import ENPOINTS from '../../../ENPOINTS.json';
     //import { data } from 'jquery';
 
 export default {
@@ -54,9 +55,9 @@ export default {
     Logearse() {
     // Aquí puedes agregar la ruta a la que deseas redirigir al usuario
 
-      axios.post('http://localhost:3009/consultarhorario', 
+    axios.post(ENPOINTS['ms-registroasistencia']+'/consultarhorario', 
       {
-    "Inicio" : "9:00:00",
+    "Inicio" : "14:40:00",
     "diaS": "4",
     "semestreActual": "Semestre.1-2023",
     "Rut": "33061234-1",
