@@ -1,6 +1,5 @@
 <template>
-    <div class="background">
-    </div>
+   <div><title>Hu administrador</title></div>
 </template>
 
 <script>
@@ -10,11 +9,4 @@
 </script>
 
 <style scoped>
-    .background {
-        background-image: url('~@/assets/working.png');
-        background-position: center;
-        background-repeat: no-repeat;
-        height: 100vh;
-        width: 100vw;
-    }
 </style>
