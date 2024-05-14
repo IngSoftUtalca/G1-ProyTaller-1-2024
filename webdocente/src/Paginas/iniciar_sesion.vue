@@ -29,28 +29,69 @@
   
   <script>
     import { ref } from 'vue'
+    import axios from 'axios';
+    import ENPOINTS from '../../../ENPOINTS.json';
+    //import { data } from 'jquery';
 
-  
 export default {
   setup() {
     const botonC = ref(false); // Variable para controlar el color del botón
-
-
+    let details = ref('');
+    let password = ref('');
+    
     const cambiarColor = () => {
       // Cambiar el estado del botón de rojo a otro color y viceversa
       botonC.value = !botonC.value;
     }
 
     return {
-      cambiarColor
+      cambiarColor,
+      details,
+      password,
+      botonC
     }
   },
   methods: {
-  Logearse() {
+    Logearse() {
     // Aquí puedes agregar la ruta a la que deseas redirigir al usuario
-    this.$router.push('/sala11-101');
+
+    axios.post(ENPOINTS['ms-registroasistencia']+'/consultarhorario', 
+      {
+    "Inicio" : "14:40:00",
+    "diaS": "4",
+    "semestreActual": "Semestre.1-2023",
+    "Rut": "33061234-1",
+    "test": true
+
+      }, 
+      {
+          headers: {
+              'Content-Type': 'application/json',
+          }
+      })
+      .then(response => {
+          
+          //return response.data;
+          //this.$router.push('/sala11-101');
+          if(response.data.Iniciado != ''){
+            console.log('Response:', response.data);
+            this.$router.push({name:'ClaseIniciada',params:response.data});
+            
+          }else{
+            console.log('Response:', response.data);
+            this.$router.push({name:'MarcarAsistencia',params:response.data});
+          }
+          
+
+      })
+      .catch(error => {
+          console.error('Error:',  error.response);
+          //return "malo";
+          this.$router.push('/error');
+      });
+      
+    }
   }
-}
 }
   </script>
   

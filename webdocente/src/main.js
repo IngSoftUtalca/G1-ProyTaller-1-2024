@@ -18,7 +18,7 @@ const router = createRouter({
     {
       path: '/sala:idSala',
       name: 'MarcarAsistencia',
-      component: MarcarAsistencia
+      component: MarcarAsistencia,
     },
     {
       path: '/error',

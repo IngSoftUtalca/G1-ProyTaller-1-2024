@@ -1,0 +1,113 @@
+// paleta de colores
+$primary-color: #60CDCD;
+$secondary-color: #F4F4F4;
+$accent-color: #F29B33;
+$light-color: #FFFFFF;
+$dark-color: #A2A2A0;
+$black: #272727;
+$gray: #A2A09F;
+$green: #BAE4A6;
+$red: #FFD8D8;
+$yellow: #FAF2B1;
+
+// Colores de texto
+$text-primary: #ffffff; // Un color claro para contrastar con el color primario oscuro
+$text-secondary: #000000; // Un color oscuro para contrastar con el color secundario claro
+$text-accent: #fff; // Un color claro para contrastar con el color de acento oscuro
+$text-light: #000000; // Un color oscuro para contrastar con el color claro
+$text-dark: #fff; // Un color claro para contrastar con el color oscuro
+
+.primary-bg {
+    background-color: $primary-color;
+    color: $text-primary;
+}
+
+.secondary-bg {
+    background-color: $secondary-color;
+    color: $text-secondary;
+}
+
+.accent-bg {
+    background-color: $accent-color;
+    color: $text-accent;
+}
+
+.light-bg {
+    background-color: $light-color;
+    color: $text-light;
+}
+
+.dark-bg {
+    background-color: $dark-color;
+    color: $text-dark;
+}
+
+.black-bg {
+    background-color: $black;
+    color: $text-dark;
+}
+
+.secondary-bg-simple {
+    background-color: $secondary-color;
+}
+
+.accent-hover {
+    &:hover {
+        background-color: $accent-color;
+    }
+}
+
+.dark-hover {
+    &:hover {
+        background-color: $dark-color;
+    }
+}
+
+.light-hover {
+    &:hover {
+        background-color: $light-color;
+    }
+}
+
+.black-hover {
+    &:hover {
+        background-color: $black;
+    }
+}
+
+.gray-hover {
+    &:hover {
+        background-color: $gray;
+        color: $text-light;
+    }
+}
+
+.secondary-hover {
+    &:hover {
+        background-color: $secondary-color;
+        color: $text-secondary;
+    }
+}
+
+
+.debug{
+    border: 1px solid red;
+}
+
+/*
+$primary-color (#60CDCD): Este color verde azulado es vibrante y llamativo,
+ lo que lo convierte en una excelente opción para elementos principales que deben destacar.
+$secondary-color (#F4F4F4): Un gris claro que es sutil y neutral, ideal para 
+ fondos o elementos secundarios que complementan el color principal.
+$accent-color (#F29B33): El color naranja sirve como un fuerte acento, atrayendo
+ la atención hacia áreas específicas sin abrumar al color principal.
+$light-color (#FFFFFF): El blanco puro se puede utilizar para crear contraste,
+ resaltar contenido o hacer que otros colores destaquen.
+$dark-color (#A2A2A0): Este gris oscuro agrega profundidad y se puede usar para
+ texto u otros elementos que necesiten ser discretos pero visibles.
+La teoría del color implementada en esta paleta utiliza un esquema complementario,
+con el verde azulado (#60CDCD) y el naranja (#F29B33) como opuestos en la rueda de colores.
+Esto crea un aspecto vibrante pero equilibrado. Los diversos tonos de gris proporcionan
+neutralidad y versatilidad, permitiendo una amplia gama de aplicaciones de diseño mientras
+se mantiene la armonía.
+*/

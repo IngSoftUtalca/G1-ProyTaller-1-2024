@@ -3,15 +3,21 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "node index.js",
-    "serve": "vue-serve",
+    "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
     "axios": "^1.6.8",
+    "bootstrap": "^5.3.3",
     "core-js": "^3.8.3",
-    "vue": "^2.6.14"
+    "firebase": "^10.11.1",
+    "flatpickr": "^4.6.13",
+    "moment": "^2.30.1",
+    "v-click-outside": "^3.2.0",
+    "vue": "^3.2.13",
+    "vue-router": "^4.3.2",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
@@ -21,7 +27,8 @@
     "@vue/cli-service": "~5.0.0",
     "eslint": "^7.32.0",
     "eslint-plugin-vue": "^8.0.3",
-    "vue-template-compiler": "^2.6.14"
+    "sass": "^1.75.0",
+    "sass-loader": "^14.2.1"
   },
   "eslintConfig": {
     "root": true,
@@ -29,7 +36,7 @@
       "node": true
     },
     "extends": [
-      "plugin:vue/essential",
+      "plugin:vue/vue3-essential",
       "eslint:recommended"
     ],
     "parserOptions": {
@@ -40,6 +47,7 @@
   "browserslist": [
     "> 1%",
     "last 2 versions",
-    "not dead"
+    "not dead",
+    "not ie 11"
   ]
 }

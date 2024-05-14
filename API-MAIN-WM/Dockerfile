@@ -1,0 +1,6 @@
+FROM php:7.1.23-apache
+WORKDIR /app/API-MAIN-WM/
+COPY  ./API-MAIN-WM/* /app/API-MAIN-WM/
+COPY ENPOINTS.json ..
+EXPOSE 3013
+CMD ["php", "-S", "0.0.0.0:3013"]

@@ -8,13 +8,15 @@
       <!-- Contenido principal -->
       <div class="row justify-content-center">
         <div class="card-celeste">
-          <h3 class="ramos"> {{ramo}}Taller de Software B1 8:30-9:30</h3>
+          <h3 class="ramos"> {{ramo}}<hr>{{ bloque }} {{inicio}}-{{ termino }}</h3>
+          <!-- <h3 class="ramos"> {{ramo}}Taller de Software B1 8:30-9:30</h3> -->
+          
         </div>
       </div>
       <!-- Botón de asistencia -->
       <div>
-        <a href="claseinicio" class="btn boton_gris" :class="{ 'boton-amarillo': botonC }">
-          <button type="button" @click="cambiarColor">Confirmar</button>
+        <a  class="btn boton_gris" :class="{ 'boton-amarillo': botonC }">
+          <button type="button" @click="marcarAsistencia">Confirmar</button>
         </a>
       </div>
     </div>
@@ -24,17 +26,38 @@
 <script>
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-
+import axios from 'axios';
+import ENPOINTS from '../../../ENPOINTS.json';
 export default {
   setup() {
     const route = useRoute()
     let idSala = ref(route.params.idSala)
+
+    let ramo = ref('');
+    let bloque = ref('');
+    let  inicio = ref('');
+    let termino = ref('');
+
+
     const botonC = ref(false); // Variable para controlar el color del botón
 
     onMounted(() => {
       // Fetch data for this sala here
+ 
+      console.log(route.params);
+
+      if(route.params.Ramo){
+        ramo.value = (route.params.Ramo).toUpperCase();
+        ramo.value = ramo.value.substring(0,20) // tiene un maximo de letras en el nombre del ramo
+        bloque.value = "B"+route.params.Bloque;
+        inicio.value = route.params.Inicio.substring(0,5);
+        termino.value = route.params.Termino.substring(0,5);
+      }
+
+
       console.log('Fetching data for sala', idSala)
       idSala = "Taller de Software"
+      
     })
 
     const cambiarColor = () => {
@@ -44,13 +67,49 @@ export default {
 
     return {
       idSala,
+      route,
       botonC,
+      bloque,
+      ramo,
+      inicio,
+      termino,
       cambiarColor
     }
   },
   methods: {
     marcarAsistencia() {
       // Aquí puedes agregar la lógica para marcar la asistencia
+
+      axios.post(ENPOINTS['ms-registroasistencia']+'/registrarinicio', 
+      {
+        "Inicio" : "14:40:00",
+        "diaS": "4",
+        "semestreActual": "Semestre.1-2023",
+        "Rut": "33061234-1",
+        "fecha": "2024-05-14",
+        "test": true
+      },
+      {
+          headers: {
+              'Content-Type': 'application/json',
+          }
+      })
+      .then(response => {
+          console.log('Response: ',  response.data);
+          this.route.params.Iniciado = response.data.Iniciado;
+          console.log("data: ", this.route.params);
+          this.$router.push({name:'ClaseIniciada',params:this.route.params});
+      })
+
+      
+      .catch(error => {
+          console.error('Error:', error.response);
+          //return "malo";
+          this.$router.push('/error');
+      });
+
+
+      
       console.log('Asistencia marcada');
     }
   }
