@@ -5,7 +5,15 @@ const cors = require('cors');
 const moment = require('moment');
 const ProgressBar = require('progress');
 
-const funciones = require('./shared/funciones.js');
+let funciones 
+try{
+   funciones = require('./shared/funciones.js');
+
+}catch{
+   funciones = require('./funciones.js');
+}
+
+
 const { get } = require('http');
 const runQuery = funciones.runQuery;
 const getBloqueId = funciones.getBloqueId;

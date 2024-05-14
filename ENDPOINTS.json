@@ -1,6 +1,6 @@
 {
     "DB": {
-        "host": "34.133.188.199",
+        "host": "34.136.62.20",
         "user": "node",
         "password": "pollosexo69",
         "database": "presente"
@@ -17,6 +17,8 @@
     "ms-registroasistencia": "https://ms-registroasistencia-ymb46wny6a-uc.a.run.app",
     "ms-registrohorarios": "https://ms-registrohorarios-ymb46wny6a-uc.a.run.app",
     "ms-validacionrol": "https://ms-validacionrol-ymb46wny6a-uc.a.run.app",
-    "ms-verificaciongps":"https://ms-verificaciongps-ymb46wny6a-uc.a.run.app"
+    "ms-verificaciongps":"https://ms-verificaciongps-ymb46wny6a-uc.a.run.app",
+    "webdocente": "https://web-docente.web.app",
+    "mainpage": "https://presente-utalca.web.app"
 }
 
