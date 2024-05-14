@@ -35,6 +35,7 @@
       const cambiarColor = () => {
         // Cambiar el estado del botón de rojo a otro color y viceversa
         botonC.value = !botonC.value;
+        window.close();
       }
   
       return {

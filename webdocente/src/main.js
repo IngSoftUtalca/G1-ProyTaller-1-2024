@@ -16,7 +16,7 @@ const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
-      path: '/sala:idSala',
+      path: '/:idSala',
       name: 'MarcarAsistencia',
       component: MarcarAsistencia,
     },

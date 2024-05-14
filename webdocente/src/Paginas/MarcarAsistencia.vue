@@ -1,20 +1,22 @@
 <template> 
   <center>
-    <div id="app" class="fondo" >
+    <div id="app" class="fondo container" >
       <!-- Imagen en la parte superior -->
       <div class="row justify-content-center">
         <img src="../assets/utalca.svg" alt="Logo" class="logo_utalca" style="max-width: 200px; max-height: 200px;">
       </div>
       <!-- Contenido principal -->
-      <div class="row justify-content-center">
+      <div class="row d-flex justify-content-center align-items-center text-center">
         <div class="card-celeste">
           <h3 class="ramos"> {{ramo}}<hr>{{ bloque }} {{inicio}}-{{ termino }}</h3>
           <!-- <h3 class="ramos"> {{ramo}}Taller de Software B1 8:30-9:30</h3> -->
-          
         </div>
       </div>
-      <!-- Botón de asistencia -->
       <div>
+        <button class="btn boton_gris text-white bold" type="button" @click="marcarAsistencia">Confirmar</button>
+      </div>
+      <!-- Botón de asistencia -->
+      <div :hidden="true">
         <a  class="btn boton_gris" :class="{ 'boton-amarillo': botonC }">
           <button type="button" @click="marcarAsistencia">Confirmar</button>
         </a>

@@ -1,83 +1,118 @@
 .fondo {
-    width: 393px;
-    height: 852px;
-    flex-grow: 0;
-    padding: 54px 46px 168px 47px;
-    background-color: #f4f4f4;
-    text-align: center;
+  width: 100%;
+  height: 100lvh;
+  flex-grow: 0;
+  padding: 54px 46px 168px 47px;
+  background-color: #f4f4f4;
+  text-align: center;
+}
+
+.ramos {
+  width: 254px;
+  height: 30px;
+  flex-grow: 0;
+  margin: 100px 0 0;
+  font-size: 32px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  text-align: center;
+  color: #fff;
+}
+
+.card-celeste {
+  width: 100%;
+  aspect-ratio: 1/1;
+  flex-grow: 0;
+  margin: 5px 0;
+  border-radius: 16px;
+  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+  background-color: #55C8C8;
+}
+
+.card-blanca {
+  width: 100%;
+  aspect-ratio: 1/2;
+  flex-grow: 0;
+  margin: 5px 0;
+  border-radius: 16px;
+  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+  background-color: #fff;
+}
+
+.boton_gris {
+  width: 185px;
+  height: 46px;
+  flex-grow: 0;
+  margin: 90px 58px 0 57px;
+  padding: 11px 32px 12px 33px;
+  border-radius: 16px;
+  background-color: #A2A09F;
+}
+
+.boton_gris:hover {
+  background-color: #F89D1E;
+}
+
+@media (max-width: 600px) {
+  .boton_gris:active {
+    background-color: yellow;
   }
-  .ramos {
-    width: 254px;
-    height: 30px;
-    flex-grow: 0;
-    margin: 100px 0 0;
-    font-size: 32px;
-    font-weight: normal;
-    font-stretch: normal;
-    font-style: normal;
-    line-height: normal;
-    letter-spacing: normal;
-    text-align: center;
-    color: #fff;
-  }
-  .card-celeste {
-    width: 300px;
-    height: 300px;
-    flex-grow: 0;
-    margin: 5px 0;
-    border-radius: 16px;
-    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
-    background-color: #60cdcd;
-  }
-  .card-blanca {
-    width: 300px;
-    height: auto;
-    flex-grow: 0;
-    margin: 5px 0;
-    border-radius: 16px;
-    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
-    background-color: #fff;
-  }
-  .boton_gris {
-    width: 185px;
-    height: 46px;
-    flex-grow: 0;
-    margin: 90px 58px 0 57px;
-    padding: 11px 32px 12px 33px;
-    border-radius: 16px;
-    background-color: #a2a09f;
-  }
-  .boton_celeste {
-    width: 185px;
-    height: 46px;
-    flex-grow: 0;
-    margin-bottom: 35px;
-    padding: 11px 32px 12px 33px;
-    border-radius: 16px;
-    background-color: #60cdcd;
-    color: white;
-  }
-  .logo_utalca {
-    width: 150px;
-    height: 100px8px;
-    margin: 56px 44px 90px 43px;
-    padding: 0 0.4px 0 0;
-  }
-  .fondo_celeste {
-    width: 393px;
-    height: 852px;
-    flex-grow: 0;
-    padding: 54px 46px 168px 47px;
-    background-color: #55C8C8;
-  }
-  .boton_rojo {
-    width: 185px;
-    height: 46px;
-    flex-grow: 0;
-    margin: 20px 58px 0 57px;
-    padding: 11px 32px 12px 33px;
-    border-radius: 16px;
-    margin-bottom: 5%;
-    background-color: #FF4141;
-    color:white;
-  }
+}
+
+.boton_celeste {
+  width: 185px;
+  height: 46px;
+  flex-grow: 0;
+  margin-bottom: 35px;
+  padding: 11px 32px 12px 33px;
+  border-radius: 16px;
+  background-color: #55C8C8;
+  color: white;
+}
+
+.logo_utalca {
+  width: 150px;
+  height: 100px8px;
+  margin: 56px 44px 90px 43px;
+  padding: 0 0.4px 0 0;
+}
+
+.fondo_celeste {
+  width: 100%;
+  height: 100vh;
+  flex-grow: 0;
+  padding: 54px 46px 168px 47px;
+  background-color: #55C8C8;
+}
+
+.boton_rojo {
+  width: 185px;
+  height: 46px;
+  flex-grow: 0;
+  margin: 20px 58px 0 57px;
+  padding: 11px 32px 12px 33px;
+  border-radius: 16px;
+  margin-bottom: 5%;
+  background-color: #FF4141;
+  color: white;
+}
+
+.debug {
+  border: 1px solid red;
+}
+
+.text-white {
+  text-align: center;
+  color: white;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.font-20 {
+  font-size: 20px;
+}
