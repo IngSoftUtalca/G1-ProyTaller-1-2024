@@ -1,4 +1,4 @@
-FROM node:10-alpine
+FROM node:14-alpine
 WORKDIR /app/ms-registrohorarios/
 COPY  ./ms-registrohorarios/* /app/ms-registrohorarios/
 COPY ENDPOINTS.json ..
