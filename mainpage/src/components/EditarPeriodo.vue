@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid ligth-bg">
         <div class="row mt-24 mb-52">
-            <p class="text-center font-24 bold">Gestión de periodos academicos</p>
+            <p class="text-center font-24 bold">Modificando {{ Semestre }}</p>
         </div>
         <form @submit.prevent="addPeriodo" class="container-fluid">
             <div class="row d-flex justify-content-center align-items-center my-52">
@@ -9,13 +9,15 @@
                     <label for="Inicio" class="bold font-16">Fecha inicio:</label>
                 </div>
                 <div class="col">
-                    <input type="date" id="Inicio" :min="minInicio" :max="termino" v-model="inicio" class="text-center text-input">
+                    <input type="date" id="Inicio" v-model="inicio" :placeholder="FechaInicio"
+                        class="text-center text-input">
                 </div>
                 <div class="col">
                     <label for="Termino" class="bold font-16">Fecha termino:</label>
                 </div>
                 <div class="col">
-                    <input type="date" id="Termino" :min="inicio" :max="maxTermino" v-model="termino" class="text-center text-input">
+                    <input type="date" id="Termino" v-model="termino" :placeholder="FechaTermino"
+                        class="text-center text-input">
                 </div>
             </div>
             <div class="row d-flex justify-conten-start align-items-center my-52">
@@ -87,12 +89,26 @@ import ENDPOINTS from '../../../ENPOINTS.json';
 
 export default {
     name: 'EditarPeriodo',
+    props: {
+        FechaInicio: {
+            type: [String, Date],
+            default: null
+        },
+        FechaTermino: {
+            type: [String, Date],
+            default: null
+        },
+        Semestre: {
+            type: String,
+            default: null
+        }
+    },
     data() {
         return {
             loading: false,
             feriados: [],
-            inicio: null,
-            termino: null,
+            inicio: this.FechaInicio,
+            termino: this.FechaTermino,
             Horarios: null,
             File: null,
             maxTermino: null,
@@ -115,28 +131,56 @@ export default {
     },
     methods: {
         addPeriodo() {
-            this.inicio = document.getElementById('Inicio').value;
-            this.termino = document.getElementById('Termino').value;
+            let inicioInput = document.getElementById('Inicio').value;
+            let terminoInput = document.getElementById('Termino').value;
+
+            this.inicio = inicioInput ? inicioInput : this.FechaInicio;
+            this.termino = terminoInput ? terminoInput : this.FechaTermino;
+
+            let fechaInicio = moment(this.inicio, "DD/MM/YYYY").isValid() ? moment(this.inicio, "DD/MM/YYYY").format('YYYY-MM-DD') : (moment(this.inicio, "YYYY-MM-DD").isValid() ? moment(this.inicio, "YYYY-MM-DD").format('YYYY-MM-DD') : null);
+            let fechaTermino = moment(this.termino, "DD/MM/YYYY").isValid() ? moment(this.termino, "DD/MM/YYYY").format('YYYY-MM-DD') : (moment(this.termino, "YYYY-MM-DD").isValid() ? moment(this.termino, "YYYY-MM-DD").format('YYYY-MM-DD') : null);
             this.loading = true;
-            axios.post(ENDPOINTS['ms-registrohorarios'] + '/new', {
-                fechaInicio: moment(this.inicio).format('YYYY-MM-DD'),
-                fechaTermino: moment(this.termino).format('YYYY-MM-DD'),
-                feriados: this.feriados.map(f => moment(f).format('YYYY-MM-DD')),
-                horario_periodo: this.Horarios
-            }, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-                .then(response => {
-                    console.log(response);
-                    this.loading = false;
-                    this.$emit('close');
+            if (this.File !== null) {
+                axios.post(ENDPOINTS['ms-registrohorarios'] + '/new', {
+                    fechaInicio: fechaInicio,
+                    fechaTermino: fechaTermino,
+                    feriados: this.feriados.map(f => moment(f).format('YYYY-MM-DD')),
+                    horario_periodo: this.Horarios
+                }, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
                 })
-                // eslint-disable-next-line no-unused-vars
-                .catch(error => {
-                    this.loading = false;
-                });
+                    .then(response => {
+                        console.log(response);
+                        this.loading = false;
+                        this.$emit('close');
+                    })
+                    .catch(error => {
+                        console.error(error);
+                        this.loading = false;
+                    });
+            } else {
+                axios.post(ENDPOINTS['ms-registrohorarios'] + '/editfull', {
+                    semestre: this.Semestre,
+                    fechaInicio: fechaInicio,
+                    fechaTermino: fechaTermino,
+                    feriados: this.feriados.map(f => moment(f).format('YYYY-MM-DD')),
+                }, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .then(response => {
+                        console.log(response);
+                        this.loading = false;
+                        this.$emit('close');
+                    })
+                    .catch(error => {
+                        console.error(error);
+                        this.loading = false;
+                    });
+            }
 
         },
         close() {
