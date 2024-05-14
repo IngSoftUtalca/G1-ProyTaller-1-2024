@@ -35,7 +35,7 @@
                 {{ parseFecha(periodo.FechaTermino) }}
             </div>
             <div class="col">
-                <button class="btn-light-50 bold btn-size-150" @click="add">
+                <button class="btn-light-50 bold btn-size-150" @click="add(periodo)">
                     Modificar
                 </button>
             </div>
@@ -53,7 +53,8 @@
         </div>
         <!-- Modificar -->
         <div class="underlay" v-if="OverlayAgregar" @click="close">
-            <EditarPeriodo class="overlay" v-if="OverlayAgregar" @click.stop @close="close" />
+            <EditarPeriodo :FechaInicio="periodo.FechaInicio" :FechaTermino="periodo.FechaTermino"
+                :Semestre="periodo.ID" class="overlay" v-if="OverlayAgregar" @click.stop @close="close" />
         </div>
     </div>
 </template>
@@ -70,7 +71,8 @@ export default {
         return {
             loading: true,
             periodos: null,
-            OverlayAgregar: false
+            OverlayAgregar: false,
+            periodo: null
         }
     },
     mounted() {
@@ -106,7 +108,8 @@ export default {
             moment.locale('es');
             return moment(fecha, 'DD/MM/YYYY').format('DD [de] MMMM');
         },
-        add() {
+        add(periodo) {
+            this.periodo = periodo;
             this.OverlayAgregar = true;
         },
         close() {
