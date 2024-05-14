@@ -53,7 +53,7 @@
         </div>
         <!-- Modificar -->
         <div class="underlay" v-if="OverlayAgregar" @click="close">
-            <AgregarPeriodo class="overlay" v-if="OverlayAgregar" @click.stop @close="close" />
+            <EditarPeriodo class="overlay" v-if="OverlayAgregar" @click.stop @close="close" />
         </div>
     </div>
 </template>
@@ -61,7 +61,7 @@
 <script>
 import axios from 'axios';
 import moment from 'moment';
-import AgregarPeriodo from '@/components/AgregarPeriodo.vue';
+import EditarPeriodo from '@/components/EditarPeriodo.vue';
 import ENDPOINTS from '../../../ENPOINTS.json';
 
 export default {
@@ -114,7 +114,7 @@ export default {
         }
     },
     components: {
-        AgregarPeriodo
+        EditarPeriodo
     }
 }
 

@@ -220,9 +220,6 @@ app.post('/editfull', async (req, res) => {
     let fechaInicio = req.body.fechaInicio;
     let fechaTermino = req.body.fechaTermino;
     let feriados = req.body.feriados;
-    const horario_periodo = req.body.horario_periodo;
-
-    const buffer = Buffer.from(horario_periodo, 'base64');
 
     // Convert fechaInicio and fechaTermino to Date objects
     fechaInicioDate = new Date(fechaInicio);
@@ -258,46 +255,16 @@ app.post('/editfull', async (req, res) => {
     // Convert the union Set back to an array
     feriados = Array.from(unionSet).map(dateString => new Date(dateString));
 
-    // Guardar el archivo .xlsx
-    fs.writeFileSync('archivo.xlsx', buffer);
-
-    // Leer el archivo
-    const workbook = XLSX.readFile('archivo.xlsx');
-
-    // Obtener el nombre de la primera hoja
-    const sheetName = workbook.SheetNames[0];
-
-    // Convertir la hoja a JSON
-    const worksheet = workbook.Sheets[sheetName];
-    const jsonData = XLSX.utils.sheet_to_json(worksheet);
-
-    const nombresSecciones = [...new Set(jsonData.map(obj => {
-      const seccion = obj.LIGA.split("-")[1];
-      const nombre = obj.NOMBRE.replace('(CURICO)', '').trim();
-      return `${nombre} Seccion ${seccion}`;
-    }))];
-
-
-    const queryLimpieza = `DELETE FROM \`Periodo\` WHERE ID = ?;`;
-    const queryLimpieza2 = `DELETE FROM \`Dia_Libre\`WHERE ID_periodo = ?;`;
+    const query1 = `UPDATE Periodo SET FechaInicio = ?, FechaTermino = ? WHERE ID = ?`;
     try {
-      await runQuery(connection, queryLimpieza, [semestre]);
-      await runQuery(connection, queryLimpieza2, [semestre]);
-      console.log("Periodo eliminado con ON DELETE CASCADE");
-    } catch (error) {
-      console.log("no se pudo borrar semestre: ", error.message);
-    }
-
-    const query1 = `INSERT INTO \`Periodo\` (ID, fechaInicio, fechaTermino, Estado) VALUES (?, ?, ?, ?);`;
-    try {
-      await funciones.runQuery(connection, query1, [semestre, fechaInicioDate, fechaTerminoDate, "Pendiente"]);
+      await runQuery(connection, query1, [fechaInicioDate, fechaTerminoDate, semestre]);
     } catch (error) {
       return res.status(500).json({ error: 'Error ejecutando la query dentro de Periodo: ' + error.message });
     }
 
     console.log("Periodo creado");
 
-    const query2 = `INSERT INTO \`Dia_Libre\` (Dia, ID_periodo ) VALUES (?, ?);`;
+    const query2 = `INSERT IGNORE INTO \`Dia_Libre\` (Dia, ID_periodo ) VALUES (?, ?);`;
     const bar = new ProgressBar('Agregando feriados [:bar] :percent', { total: feriados.length });
     for (let feriado of feriados) {
       try {
@@ -309,19 +276,6 @@ app.post('/editfull', async (req, res) => {
     }
 
     console.log("Feriados agregados");
-
-    const query3 = `INSERT INTO \`Ramo\` (Nombre, Periodo) VALUES (?, ?);`;
-    const bar1 = new ProgressBar('Agregando ramos [:bar] :percent', { total: nombresSecciones.length });
-    for (let nombre of nombresSecciones) {
-      try {
-        await runQuery(connection, query3, [nombre, semestre]);
-        bar1.tick();
-      } catch (error) {
-        return res.status(500).json({ error: 'Error ejecutando la query dentro de Ramo' });
-      }
-    }
-
-    console.log("Ramos agregados");
 
     connection.end();
 
