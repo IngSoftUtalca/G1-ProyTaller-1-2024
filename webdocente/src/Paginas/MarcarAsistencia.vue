@@ -7,8 +7,8 @@
       </div>
       <!-- Contenido principal -->
       <div class="row d-flex justify-content-center align-items-center text-center">
-        <div class="card-celeste">
-          <h3 class="ramos"> {{ramo}}<hr>{{ bloque }} {{inicio}}-{{ termino }}</h3>
+        <div class="card-celeste container d-flex justify-content-center">
+          <h3 class="ramos"> {{ramo}}<br><br>{{ bloque }} {{inicio}}-{{ termino }}</h3>
           <!-- <h3 class="ramos"> {{ramo}}Taller de Software B1 8:30-9:30</h3> -->
         </div>
       </div>
@@ -35,10 +35,10 @@ export default {
     const route = useRoute()
     let idSala = ref(route.params.idSala)
 
-    let ramo = ref('');
+    let ramo = ref('Taller de Software');
     let bloque = ref('');
-    let  inicio = ref('');
-    let termino = ref('');
+    let  inicio = ref('12:00');
+    let termino = ref('14:20');
 
 
     const botonC = ref(false); // Variable para controlar el color del botón
