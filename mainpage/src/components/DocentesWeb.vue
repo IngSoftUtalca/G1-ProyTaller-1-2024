@@ -21,20 +21,20 @@
      <div class="row container-fluid" v-if="!loading">
          <div class="row px-5 rt-50 h-55 font-20 bold primary-bg d-flex align-items-center">
              <div class="col-2 text-center">
-                 RUT
+                 R.U.T
              </div>
              <div class="col-2 text-center">
-                 NOMBRE
+                 Nombre
              </div>
              <div class="col-2 text-center">
-                 FACULTAD
+                 Facultad
              </div>
              
              <div class="col-2 text-center">
-                 CAMPUS
+                 Campus
              </div>
              <div class="col-2 text-center">
-                 ELIMINAR
+                 
              </div>
          </div>
          <!-- Body -->
