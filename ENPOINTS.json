@@ -9,7 +9,7 @@
     "bff-datosadministradores": "https://bff-datosadministradores-ymb46wny6a-uc.a.run.app",
     "bff-datosasistencia": "https://bff-datosasistencia-ymb46wny6a-uc.a.run.app",
     "bff-datosdocentes": "https://bff-datosdocente-ymb46wny6a-uc.a.run.app",
-    "bff-horarios": "http://localhost:3004",
+    "bff-horarios": "https://bff-horarios-ymb46wny6a-uc.a.run.app/",
     "ms-erroresasistencia": "https://ms-erroresasistencia-ymb46wny6a-uc.a.run.app",
     "ms-gestoradmin": "https://ms-gestoradmin-ymb46wny6a-uc.a.run.app",
     "ms-gestorasistencia": "https://ms-gestorasistencia-ymb46wny6a-uc.a.run.app",
