@@ -48,7 +48,7 @@ app.listen(PORT, () => {
 app.post('/consultarhorario', (req, res) => {
 
 
-    if(!req.body.Rut){
+    if(!req.body.Sala){
         return res.status(400).json({error: "no existe variable Rut en el Body"});
 
     }
@@ -59,15 +59,18 @@ app.post('/consultarhorario', (req, res) => {
     const horaactual = consultas.GetHoraActual();
     const disS = tiempoActual.getDay(); 
 
-    if(req.body.test){// VERSION ESTATICA        
-        parametros = [req.body.semestreActual,req.body.Inicio,req.body.Inicio,req.body.Rut,req.body.semestreActual,req.body.Inicio,req.body.Inicio,req.body.Rut,req.body.diaS]
-    }else{ // VERSION REAL
-        parametros = [semestreActual,horaactual,horaactual,req.body.Rut,semestreActual,horaactual,horaactual,req.body.Rut,disS]
 
+    if(req.body.test){// VERSION ESTATICA        
+        //parametros = [req.body.semestreActual,req.body.Inicio,req.body.Inicio,req.body.Rut,req.body.semestreActual,req.body.Inicio,req.body.Inicio,req.body.Rut,req.body.diaS]
+        parametros = [req.body.Inicio,req.body.Inicio,req.body.semestreActual,req.body.diaS,req.body.Sala]
+    }else{ // VERSION REAL
+        //parametros = [semestreActual,horaactual,horaactual,req.body.Rut,semestreActual,horaactual,horaactual,req.body.Rut,disS]
+        parametros = [horaactual,horaactual,semestreActual,disS,req.body.Sala]
     }       
 
-    const query = `SELECT Sala as idSala, RUT_Docente,Ramo,Bloque,Hora_Inicio as Inicio, Hora_Termino as Termino   from Asignacion INNER JOIN 
-    (SELECT MIN(ID)as Bloque,MIN(Bloque.Inicio) as Hora_Inicio, MAX(Bloque.Termino) as Hora_Termino,Ramo,Sala,Semestre,Dia_Semana FROM Instancia INNER JOIN Bloque on Instancia.Bloque = Bloque.ID INNER JOIN Asignacion on Ramo = Nombre_Ramo GROUP BY Sala,Semestre,Dia_Semana,Ramo) as t1 on Ramo = Nombre_Ramo and Semestre = ? and Hora_Inicio < ? and Hora_Termino > ? and RUT_Docente = ? and (select Sala from Instancia INNER JOIN Asignacion on Nombre_Ramo = Ramo INNER JOIN Bloque on Bloque = ID where Semestre = ? and Inicio < ? and Termino > ? and Rut_Docente = ? and Dia_Semana= ? ) = Sala;`;
+    const query = `select * from (SELECT MIN(ID)as Bloque,MIN(Bloque.Inicio) as Hora_Inicio, MAX(Bloque.Termino) as Hora_Termino,Ramo,Sala,Semestre,Dia_Semana FROM Instancia INNER JOIN Bloque on Instancia.Bloque = Bloque.ID GROUP BY Sala,Semestre,Dia_Semana,Ramo) as t1
+    where Hora_Inicio <= ? and Hora_Termino >= ? and Semestre = ? and Dia_Semana = ? and Sala = ?;`;
+
 
 
 
@@ -134,13 +137,13 @@ app.post('/registrarinicio', (req, res) => {
         else{
             let queryComprobar;
             if(req.body.test){// VERSION ESTATICA  
-
-                parametros = [req.body.Inicio,req.body.Inicio,req.body.Rut,req.body.fecha]
+                parametros = [req.body.Rut,req.body.Sala,req.body.fecha]
+                //parametros = [req.body.Inicio,req.body.Inicio,req.body.Rut,req.body.fecha]
             }else{
-                
-                parametros = [horaactual,horaactual,req.body.Rut,fechaActual]
+                parametros =[req.body.Rut,req.body.Sala,fechaActual]
+                //parametros = [horaactual,horaactual,req.body.Rut,fechaActual]
             }
-            queryComprobar =`select Rut_Docente,Dia,Inicio,Termino,Hora_Inicio,Hora_Termino,Ramo from Clase Inner JOIN Instancia on Ramo_Nombre = Ramo INNER JOIN Asignacion on Nombre_Ramo = Ramo INNER JOIN Bloque on Bloque = ID where Inicio <= ? and Termino >= ? and Rut_Docente = ? and Dia = ?;`;
+            queryComprobar =`select Ramo_Nombre,Ramo_Inicio,Hora_Inicio,Ramo_Termino,t1.Sala from Clase Inner JOIN Instancia on Ramo_Nombre = Ramo INNER JOIN Asignacion on Nombre_Ramo = Ramo INNER JOIN (SELECT MIN(ID)as BloqueID,MIN(Bloque.Inicio) as Ramo_Inicio, MAX(Bloque.Termino) as Ramo_Termino,Ramo,Sala,Semestre,Dia_Semana FROM Instancia INNER JOIN Bloque on Instancia.Bloque = Bloque.ID INNER JOIN Asignacion on Ramo = Nombre_Ramo GROUP BY Sala,Semestre,Dia_Semana,Ramo) as t1 on t1.BloqueID = Bloque where docente = ? and t1.Sala = Instancia.Sala and t1.Sala = ? and Ramo_Inicio <= Hora_Inicio  and Ramo_Termino >= Hora_Inicio and Dia = ?;`;
             conection.query(queryComprobar,parametros,(error,results)=>{
                 if(error){
                     return res.status(500).json({error: "error en la query"});
