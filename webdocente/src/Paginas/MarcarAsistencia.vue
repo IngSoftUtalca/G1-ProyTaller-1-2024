@@ -1,127 +1,152 @@
-<template> 
-  <center>
-    <div id="app" class="fondo container" >
-      <!-- Imagen en la parte superior -->
-      <div class="row justify-content-center">
-        <img src="../assets/utalca.svg" alt="Logo" class="logo_utalca" style="max-width: 200px; max-height: 200px;">
-      </div>
-      <!-- Contenido principal -->
-      <div class="row d-flex justify-content-center align-items-center text-center">
-        <div class="card-celeste container d-flex justify-content-center">
-          <h3 class="ramos"> {{ramo}}<br><br>{{ bloque }} {{inicio}}-{{ termino }}</h3>
-          <!-- <h3 class="ramos"> {{ramo}}Taller de Software B1 8:30-9:30</h3> -->
+<template>
+  <div id="app" class="fondo container">
+    <!-- Imagen en la parte superior -->
+    <div class="row justify-content-center">
+      <img
+        src="../assets/utalca.svg"
+        alt="Logo"
+        class="logo_utalca"
+        style="max-width: 200px; max-height: 200px"
+      />
+    </div>
+    <!-- Contenido principal -->
+    <div
+      class="row d-flex justify-content-center align-items-center text-center"
+    >
+      <div class="card-celeste container">
+        <div
+          class="row d-flex h-50 justify-content-center align-items-end m-0 py-0"
+        >
+          <p class="ramos">
+            {{ ramo }}
+          </p>
         </div>
-      </div>
-      <div>
-        <button class="btn boton_gris text-white bold" type="button" @click="marcarAsistencia">Confirmar</button>
-      </div>
-      <!-- Botón de asistencia -->
-      <div :hidden="true">
-        <a  class="btn boton_gris" :class="{ 'boton-amarillo': botonC }">
-          <button type="button" @click="marcarAsistencia">Confirmar</button>
-        </a>
+        <div
+          class="row d-flex h-50 justify-content-center align-items-start m-0 py-0"
+        >
+          <p class="ramos">{{ bloque }} {{ inicio }} - {{ termino }}</p>
+        </div>
+        <!-- <h3 class="ramos"> {{ramo}}Taller de Software B1 8:30-9:30</h3> -->
       </div>
     </div>
-  </center>
+    <div>
+      <button
+        class="btn boton_gris text-white bold"
+        type="button"
+        @click="marcarAsistencia"
+      >
+        Confirmar
+      </button>
+    </div>
+    <!-- Botón de asistencia -->
+    <div :hidden="true">
+      <a class="btn boton_gris" :class="{ 'boton-amarillo': botonC }">
+        <button type="button" @click="marcarAsistencia">Confirmar</button>
+      </a>
+    </div>
+  </div>
 </template>
 
 <script>
-import { ref, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
-import axios from 'axios';
-import ENPOINTS from '../../../ENPOINTS.json';
+import axios from "axios";
+import ENPOINTS from "../../../ENPOINTS.json";
+import constantes from "../shared/constances.json";
+import { useRoute } from "vue-router";
 export default {
-  setup() {
-    const route = useRoute()
-    let idSala = ref(route.params.idSala)
-
-    let ramo = ref('Taller de Software');
-    let bloque = ref('');
-    let  inicio = ref('12:00');
-    let termino = ref('14:20');
-
-
-    const botonC = ref(false); // Variable para controlar el color del botón
-
-    onMounted(() => {
-      // Fetch data for this sala here
- 
-      console.log(route.params);
-
-      if(route.params.Ramo){
-        ramo.value = (route.params.Ramo).toUpperCase();
-        ramo.value = ramo.value.substring(0,20) // tiene un maximo de letras en el nombre del ramo
-        bloque.value = "B"+route.params.Bloque;
-        inicio.value = route.params.Inicio.substring(0,5);
-        termino.value = route.params.Termino.substring(0,5);
-      }
-
-
-      console.log('Fetching data for sala', idSala)
-      idSala = "Taller de Software"
-      
-    })
-
-    const cambiarColor = () => {
-      // Cambiar el estado del botón de rojo a otro color y viceversa
-      botonC.value = !botonC.value;
-    }
-
+  data() {
     return {
-      idSala,
-      route,
-      botonC,
-      bloque,
-      ramo,
-      inicio,
-      termino,
-      cambiarColor
+      botonC: false,
+      ramo: "",
+      bloque: "",
+      inicio: "",
+      termino: "",
+      idSala: "",
+    };
+  },
+  async mounted() {
+    const route = useRoute();
+    const dia = new Date().getDay();
+    const moment = require("moment-timezone");
+    const hora = moment().tz("America/Santiago").format("HH:mm:ss");
+    const bloques = constantes.bloques;
+    // en el arreglo json bloques buscaramos el bloque en el que su hora de inicio y termino esté dentro de la hora actual
+    const bloque = () => {
+      for (let i = 0; i < bloques.length; i++) {
+        if (hora >= bloques[i].inicio && hora <= bloques[i].fin) {
+          return bloques[i].id;
+        }
+      }
+    };
+    this.bloque = bloque();
+    this.idSala = route.params.idSala;
+    const res = await axios.get(
+      ENPOINTS["bff-horarios"] +
+        "/instancia?sala=" +
+        this.idSala +
+        "&dia=" +
+        dia +
+        "&bloque=" +
+        this.bloque
+    );
+    this.ramo = res.data.Ramo;
+    this.inicio = res.data.HoraInicio;
+    this.termino = res.data.HoraTermino;
+    // la hora debe ser formato HH:MM
+    this.inicio = this.inicio.slice(0, 5);
+    this.termino = this.termino.slice(0, 5);
+    this.bloque = "B" + this.bloque;
+    // ramo tiene un maximo de 20 caracteres
+    if (this.ramo.length > 35) {
+      this.ramo = this.ramo.slice(0, 35) + "...";
     }
   },
   methods: {
     marcarAsistencia() {
       // Aquí puedes agregar la lógica para marcar la asistencia
 
-      axios.post(ENPOINTS['ms-registroasistencia']+'/registrarinicio', 
-      {
-        "Inicio" : "14:40:00",
-        "diaS": "4",
-        "semestreActual": "Semestre.1-2023",
-        "Rut": "33061234-1",
-        "fecha": "2024-05-14",
-        "test": true
-      },
-      {
-          headers: {
-              'Content-Type': 'application/json',
+      axios
+        .post(
+          ENPOINTS["ms-registroasistencia"] + "/registrarinicio",
+          {
+            Inicio: "14:40:00",
+            diaS: "4",
+            semestreActual: "Semestre.1-2023",
+            Rut: "33061234-1",
+            fecha: "2024-05-14",
+            test: true,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
           }
-      })
-      .then(response => {
-          console.log('Response: ',  response.data);
+        )
+        .then((response) => {
+          console.log("Response: ", response.data);
           this.route.params.Iniciado = response.data.Iniciado;
           console.log("data: ", this.route.params);
-          this.$router.push({name:'ClaseIniciada',params:this.route.params});
-      })
+          this.$router.push({
+            name: "ClaseIniciada",
+            params: this.route.params,
+          });
+        })
 
-      
-      .catch(error => {
-          console.error('Error:', error.response);
+        .catch((error) => {
+          console.error("Error:", error.response);
           //return "malo";
-          this.$router.push('/error');
-      });
+          this.$router.push("/error");
+        });
 
-
-      
-      console.log('Asistencia marcada');
-    }
-  }
-}
+      console.log("Asistencia marcada");
+    },
+  },
+};
 </script>
 
 <style scoped>
-  @import '../assets/estilos.css';
+@import "../assets/estilos.css";
 
-  .boton-amarillo {
-    background-color: #F89D1E;
-  }
+.boton-amarillo {
+  background-color: #f89d1e;
+}
 </style>

@@ -8,11 +8,8 @@
 }
 
 .ramos {
-  width: 254px;
-  height: 30px;
   flex-grow: 0;
-  margin: 100px 0 0;
-  font-size: 32px;
+  font-size: 5vw; /* Ajusta este valor según tus necesidades */
   font-weight: normal;
   font-stretch: normal;
   font-style: normal;
@@ -22,10 +19,23 @@
   color: #fff;
 }
 
+/* Establecer un tamaño de fuente mínimo */
+@media (max-width: 600px) {
+  .ramos {
+    font-size: 24px;
+  }
+}
+
+/* Establecer un tamaño de fuente máximo */
+@media (min-width: 1200px) {
+  .ramos {
+    font-size: 32px;
+  }
+}
+
 .card-celeste {
   width: 100%;
   aspect-ratio: 1/1;
-  flex-grow: 0;
   margin: 5px 0;
   border-radius: 16px;
   box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
@@ -75,8 +85,8 @@
 
 .logo_utalca {
   width: 150px;
-  height: 100px8px;
-  margin: 56px 44px 90px 43px;
+  height: 100px;
+  margin-bottom: 32px;
   padding: 0 0.4px 0 0;
 }
 

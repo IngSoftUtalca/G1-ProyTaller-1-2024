@@ -59,6 +59,9 @@ app.get('/periodos', async (req, res) => {
 });
 
 app.get('/instancia', async (req, res) => {
+    const constantes = require('./constantes.json');
+    let startTime = "";
+    let endTime = "";
     try {
         const connection = mysql.createConnection(dbConfig);
         connection.connect();
@@ -81,8 +84,8 @@ app.get('/instancia', async (req, res) => {
             const bloqueStart = bloques[0].Bloque;
             const bloqueEnd = bloques[bloques.length - 1].Bloque;
             query = `SELECT * FROM Bloque WHERE ID = ?;`
-            let startTime = await runParametrizedQuery(connection, query, [bloqueStart]);
-            let endTime = await runParametrizedQuery(connection, query, [bloqueEnd]);
+            startTime = await runParametrizedQuery(connection, query, [bloqueStart]);
+            endTime = await runParametrizedQuery(connection, query, [bloqueEnd]);
             const response = {
                 Ramo: ramo,
                 HoraInicio: startTime[0].Inicio,
@@ -90,8 +93,19 @@ app.get('/instancia', async (req, res) => {
             }
             return res.status(200).json(response);
         }catch (e) {
-            console.log('Error ejecutando la query: ', e);
-            return res.status(500).json({ message: 'Error: '+e });
+            const bloques = constantes.bloques;
+            for(const b of bloques) {
+                if (b.id == bloque) {
+                    startTime = b.inicio;
+                    endTime = b.fin;
+                }
+            }
+            const response = {
+                Ramo: "No hay clases en la sala",
+                HoraInicio: startTime,
+                HoraTermino: endTime,
+            }
+            return res.status(200).json(response);
         }
         connection.end();
 
