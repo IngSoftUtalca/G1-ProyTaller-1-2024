@@ -1,23 +1,47 @@
-<template> 
+<template>
   <center>
-    <div id="app" class="fondo container" >
+    <div id="app" class="fondo container">
       <!-- Imagen en la parte superior -->
       <div class="row justify-content-center">
-        <img src="../assets/utalca.svg" alt="Logo" class="logo_utalca" style="max-width: 200px; max-height: 200px;">
+        <img
+          src="../assets/utalca.svg"
+          alt="Logo"
+          class="logo_utalca"
+          style="max-width: 200px; max-height: 200px"
+        />
       </div>
       <!-- Contenido principal -->
-      <div class="row d-flex justify-content-center align-items-center text-center">
-        <div class="card-celeste container d-flex justify-content-center">
-          <h3 class="ramos"> {{ramo}}<br><br>{{ bloque }} {{inicio}}-{{ termino }}</h3>
+      <div
+        class="row d-flex justify-content-center align-items-center text-center"
+      >
+        <div class="card-celeste container">
+          <div
+            class="row d-flex h-50 justify-content-center align-items-end m-0 py-0"
+          >
+            <p class="ramos">
+              {{ ramo }}
+            </p>
+          </div>
+          <div
+            class="row d-flex h-50 justify-content-center align-items-start m-0 py-0"
+          >
+            <p class="ramos">{{ bloque }} {{ inicio }} - {{ termino }}</p>
+          </div>
           <!-- <h3 class="ramos"> {{ramo}}Taller de Software B1 8:30-9:30</h3> -->
         </div>
       </div>
       <div>
-        <button class="btn boton_gris text-white bold" type="button" @click="marcarAsistencia">Confirmar</button>
+        <button
+          class="btn boton_gris text-white bold"
+          type="button"
+          @click="marcarAsistencia"
+        >
+          Confirmar
+        </button>
       </div>
       <!-- Botón de asistencia -->
       <div :hidden="true">
-        <a  class="btn boton_gris" :class="{ 'boton-amarillo': botonC }">
+        <a class="btn boton_gris" :class="{ 'boton-amarillo': botonC }">
           <button type="button" @click="marcarAsistencia">Confirmar</button>
         </a>
       </div>
