@@ -70,14 +70,18 @@ export default {
     const hora = moment().tz("America/Santiago").format("HH:mm:ss");
     const bloques = constantes.bloques;
     // en el arreglo json bloques buscaramos el bloque en el que su hora de inicio y termino esté dentro de la hora actual
-    const bloque = () => {
-      for (let i = 0; i < bloques.length; i++) {
-        if (hora >= bloques[i].inicio && hora <= bloques[i].fin) {
-          return bloques[i].id;
-        }
+    this.bloque = "1";
+    for (let i = 0; i < bloques.length; i++) {
+      const horaInicioBloque = moment(bloques[i].inicio, "HH:mm:ss");
+      const horaFinBloque = moment(bloques[i].fin, "HH:mm:ss");
+      const horaActual = moment(hora, "HH:mm:ss");
+
+      if (horaActual.isBetween(horaInicioBloque, horaFinBloque)) {
+        this.bloque = bloques[i].id;
+        break;
       }
-    };
-    this.bloque = bloque();
+    }
+
     this.idSala = route.params.idSala;
     const res = await axios.get(
       ENPOINTS["bff-horarios"] +
