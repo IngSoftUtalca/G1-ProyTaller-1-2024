@@ -47,14 +47,14 @@ app.post('/validar', async (req, res) => {
           }
         })
         .catch((error) => {
-          response.Nombre = 'Error al consultar la base de datos';
+          response.Nombre = 'Error de consulta';
           res.status(501).json(response);
         })
         .finally(() => {
           connection.end();
         });
   } catch (error) {
-    response.Nombre = 'Error al validar el rol';
+    response.Nombre = 'Base de datos no disponible';
     res.status(500).json(response);
   }
 });
