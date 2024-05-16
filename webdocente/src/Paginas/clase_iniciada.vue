@@ -66,6 +66,22 @@ export default {
     this.inicio = moment().tz("America/Santiago").format("HH:mm");
     await new Promise((resolve) => setTimeout(resolve, 2000));
     this.loading = false;
+      // Aquí puedes agregar la lógica para marcar la asistencia
+      
+      axios.post(ENPOINTS["ms-registroasistencia"] + "/registrarinicio",{
+            Rut: "20509736"
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then((response) => {
+          console.log("Response: ", response.data);
+        })
+
+
   },
   methods: {
     claseiniciada() {
@@ -74,9 +90,7 @@ export default {
         .post(
           ENPOINTS["ms-registroasistencia"] + "/registrarfinal",
           {
-            Rut: "33061234-1",
-            fecha: "2024-05-14",
-            test: true,
+            Rut: "20509736"
           },
           {
             headers: {

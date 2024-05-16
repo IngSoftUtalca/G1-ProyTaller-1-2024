@@ -183,7 +183,7 @@ app.post('/registrarinicio', (req, res) => {
                                     
                                     cursolocal.push(results[0]);
 
-                                    return res.status(200).json({Iniciado: horaactual});
+                                    return res.status(200).json({Valido:true,Iniciado: horaactual});
                                 }else{
                                     return res.status(400).json({error: 'el profesor ya tiene una clase iniciada'});
 
