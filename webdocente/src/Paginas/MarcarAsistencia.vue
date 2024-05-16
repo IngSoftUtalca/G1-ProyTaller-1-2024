@@ -12,6 +12,7 @@
     <!-- Contenido principal -->
     <div
       class="row d-flex justify-content-center align-items-center text-center"
+      v-if="!loading"
     >
       <div class="card-celeste container">
         <div
@@ -34,9 +35,18 @@
         class="btn boton_gris text-white bold"
         type="button"
         @click="marcarAsistencia"
+        v-if="!loading"
       >
         Confirmar
       </button>
+    </div>
+    <div
+      class="container h-75 d-flex align-items-center justify-content-center"
+      v-if="loading"
+    >
+      <div class="spinner-grow text-primaryC loading" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
     </div>
     <!-- Botón de asistencia -->
     <div :hidden="true">
@@ -61,16 +71,17 @@ export default {
       inicio: "",
       termino: "",
       idSala: "",
+      loading: true,
     };
   },
   async mounted() {
     const route = useRoute();
-    const dia = new Date().getDay();
+    let dia = new Date().getDay();
     const moment = require("moment-timezone");
     const hora = moment().tz("America/Santiago").format("HH:mm:ss");
     const bloques = constantes.bloques;
     // en el arreglo json bloques buscaramos el bloque en el que su hora de inicio y termino esté dentro de la hora actual
-    this.bloque = "1";
+    this.bloque = "12";
     for (let i = 0; i < bloques.length; i++) {
       const horaInicioBloque = moment(bloques[i].inicio, "HH:mm:ss");
       const horaFinBloque = moment(bloques[i].fin, "HH:mm:ss");
@@ -103,6 +114,7 @@ export default {
     if (this.ramo.length > 35) {
       this.ramo = this.ramo.slice(0, 35) + "...";
     }
+    this.loading = false;
   },
   methods: {
     marcarAsistencia() {
@@ -114,7 +126,7 @@ export default {
           {
             Inicio: "14:40:00",
             diaS: "4",
-            semestreActual: "Semestre.1-2023",
+            semestreActual: "Semestre.1-2024",
             Rut: "33061234-1",
             fecha: "2024-05-14",
             test: true,
