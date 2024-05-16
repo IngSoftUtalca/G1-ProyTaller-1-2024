@@ -1,7 +1,5 @@
 <template>
-    <div class="background">
-        <!-- El contenido de tu template va aquí -->
-    </div>
+   
 </template>
 
 <script>
