@@ -26,7 +26,7 @@ const router = createRouter({
       component: ErrorAsistencia
     },
     {
-      path: '/claseinicio',
+      path: '/claseinicio/:id',
       name: 'ClaseIniciada',
       component: ClaseIniciada
 

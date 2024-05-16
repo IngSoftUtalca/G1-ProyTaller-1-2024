@@ -119,7 +119,7 @@ export default {
   methods: {
     marcarAsistencia() {
       // Aquí puedes agregar la lógica para marcar la asistencia
-
+      /*
       axios
         .post(
           ENPOINTS["ms-registroasistencia"] + "/registrarinicio",
@@ -139,21 +139,15 @@ export default {
         )
         .then((response) => {
           console.log("Response: ", response.data);
-          this.route.params.Iniciado = response.data.Iniciado;
-          console.log("data: ", this.route.params);
-          this.$router.push({
-            name: "ClaseIniciada",
-            params: this.route.params,
-          });
+          window.location.href = ENPOINTS["login-WD"];
         })
 
         .catch((error) => {
           console.error("Error:", error.response);
           //return "malo";
           this.$router.push("/error");
-        });
-
-      console.log("Asistencia marcada");
+        });*/
+        window.location.href = ENPOINTS["login-WD"];
     },
   },
 };
