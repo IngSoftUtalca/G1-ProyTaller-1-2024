@@ -115,7 +115,20 @@ app.get('/instancia', async (req, res) => {
     }
 });
 
-
+app.get('/semestre/activo', async (req, res) => {
+   try {
+        const connection = mysql.createConnection(dbConfig);
+        connection.connect();
+        const query = `SELECT * FROM Periodo WHERE Estado = 'Activo';`;
+        const semestre = await runQuery(connection, query);
+        if (semestre.length == 0) {
+            return res.status(200).json({ message: 'No hay semestre activo' });
+        }
+        return res.status(200).json(semestre);
+    } catch (e) {
+        return res.status(500).json({ message: 'Error: '+e });
+    }
+});
 
 app.listen(PORT, () => {
   console.log('Servidor corriendo en http://localhost:' + PORT);
