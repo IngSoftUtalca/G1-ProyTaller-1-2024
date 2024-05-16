@@ -11,7 +11,7 @@ if (!isset($_SESSION['sso'])) {
     $webdocente = file_get_contents('../ENPOINTS.json');
     $webdocente = json_decode($webdocente, true);
     $webdocente = $webdocente['webdocente'];
-    $webdocente = $webdocente."/qr"."/".$id; // aca podia redirigirse a la pagina qr enviandole el rut 
+    $webdocente = $webdocente."/claseinicio"."/".$id; // aca podia redirigirse a la pagina qr enviandole el rut 
     header("location:".$webdocente);
 }
 ?>

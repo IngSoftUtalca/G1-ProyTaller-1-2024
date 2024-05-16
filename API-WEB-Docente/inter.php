@@ -10,7 +10,7 @@
     $webdocente = $webdocente['webdocente'];
 
     // aca podia redirigirse a la pagina qr enviandole el rut 
-    $webdocente = $webdocente."/qr"."/".$id; 
+    $webdocente = $webdocente."/claseinicio"."/".$id; 
 
 
     if (!$id) {
