@@ -118,6 +118,22 @@
   text-align: center;
   color: white;
 }
+.text-primaryC{
+  color: #55C8C8;
+}
+
+.font-30 {
+  font-size: 30px;
+}
+
+.font-100{
+  font-size: 100px;
+}
+
+.loading {
+  width: 56px;
+  height: 56px;
+}
 
 .bold {
   font-weight: bold;
