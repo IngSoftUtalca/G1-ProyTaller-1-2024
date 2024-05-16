@@ -35,7 +35,7 @@
                 {{ parseFecha(periodo.FechaTermino) }}
             </div>
             <div class="col">
-                <button class="btn-light-50 bold btn-size-150" @click="add">
+                <button class="btn-light-50 bold btn-size-150" @click="add(periodo)">
                     Modificar
                 </button>
             </div>
@@ -53,7 +53,8 @@
         </div>
         <!-- Modificar -->
         <div class="underlay" v-if="OverlayAgregar" @click="close">
-            <AgregarPeriodo class="overlay" v-if="OverlayAgregar" @click.stop @close="close" />
+            <EditarPeriodo :FechaInicio="periodo.FechaInicio" :FechaTermino="periodo.FechaTermino"
+                :Semestre="periodo.ID" class="overlay" v-if="OverlayAgregar" @click.stop @close="close" />
         </div>
     </div>
 </template>
@@ -61,8 +62,8 @@
 <script>
 import axios from 'axios';
 import moment from 'moment';
-import AgregarPeriodo from '@/components/AgregarPeriodo.vue';
-import ENPOINTS from '../../../ENPOINTS.json';
+import EditarPeriodo from '@/components/EditarPeriodo.vue';
+import ENDPOINTS from '../../../ENPOINTS.json';
 
 export default {
     name: 'VerPeriodos',
@@ -70,7 +71,8 @@ export default {
         return {
             loading: true,
             periodos: null,
-            OverlayAgregar: false
+            OverlayAgregar: false,
+            periodo: null
         }
     },
     mounted() {
@@ -79,7 +81,7 @@ export default {
     methods: {
         async getPeriodos() {
             try {
-                const response = await axios.get(ENPOINTS['bff-horarios'] + '/periodos');
+                const response = await axios.get(ENDPOINTS['bff-horarios'] + '/periodos');
                 this.periodos = response.data;
                 this.periodos.sort((a, b) => {
                     const startDateA = new Date(a.FechaInicio);
@@ -106,7 +108,8 @@ export default {
             moment.locale('es');
             return moment(fecha, 'DD/MM/YYYY').format('DD [de] MMMM');
         },
-        add() {
+        add(periodo) {
+            this.periodo = periodo;
             this.OverlayAgregar = true;
         },
         close() {
@@ -114,7 +117,7 @@ export default {
         }
     },
     components: {
-        AgregarPeriodo
+        EditarPeriodo
     }
 }
 

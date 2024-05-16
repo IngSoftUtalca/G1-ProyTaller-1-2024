@@ -13,6 +13,7 @@
   "dependencies": {
     "axios": "^1.6.8",
     "cors": "^2.8.5",
+    "date-holidays": "^3.23.12",
     "express": "^4.19.2",
     "file-saver": "^2.0.5",
     "moment": "^2.30.1",

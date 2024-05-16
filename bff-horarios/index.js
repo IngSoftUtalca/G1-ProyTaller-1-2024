@@ -2,6 +2,7 @@ const express = require('express');
 const mysql = require('mysql');
 const dbConfig = require('../ENPOINTS.json').DB;
 const runQuery = require('./query.js').runQuery;
+const runParametrizedQuery = require('./query.js').runParametrizedQuery;
 const app = express();
 const cors = require('cors');
 const PORT = 3004;
@@ -57,6 +58,77 @@ app.get('/periodos', async (req, res) => {
   }
 });
 
+app.get('/instancia', async (req, res) => {
+    const constantes = require('./constantes.json');
+    let startTime = "";
+    let endTime = "";
+    try {
+        const connection = mysql.createConnection(dbConfig);
+        connection.connect();
+        const {sala, dia, bloque} = req.query;
+        semestre = await runQuery(connection, `SELECT * FROM Periodo WHERE Estado = 'Activo'`);
+        semestre = semestre[0].ID;
+        if (!sala || !dia || !bloque) {
+            return res.status(400).json({ message: 'Faltan parametros' });
+        }else if (dia < 1 || dia > 5) {
+            return res.status(400).json({ message: 'Dia no valido' });
+        }else if (semestre == null) {
+            return res.status(400).json({ message: 'No hay semestre activo' });
+        }
+        try {
+            let query = `SELECT Ramo FROM Instancia WHERE Sala = ? AND Dia_Semana = ? AND Bloque = ? AND Semestre = ?`;
+            let ramo = await runParametrizedQuery(connection, query, [sala, dia, bloque, semestre]);
+            ramo = ramo[0].Ramo;
+            query = `SELECT Bloque FROM Instancia WHERE Ramo = ? AND Semestre = ? AND Dia_Semana = ?;`
+            const bloques = await runParametrizedQuery(connection, query, [ramo, semestre, dia]);
+            const bloqueStart = bloques[0].Bloque;
+            const bloqueEnd = bloques[bloques.length - 1].Bloque;
+            query = `SELECT * FROM Bloque WHERE ID = ?;`
+            startTime = await runParametrizedQuery(connection, query, [bloqueStart]);
+            endTime = await runParametrizedQuery(connection, query, [bloqueEnd]);
+            const response = {
+                Ramo: ramo,
+                HoraInicio: startTime[0].Inicio,
+                HoraTermino: endTime[0].Termino,
+            }
+            return res.status(200).json(response);
+        }catch (e) {
+            const bloques = constantes.bloques;
+            for(const b of bloques) {
+                if (b.id == bloque) {
+                    startTime = b.inicio;
+                    endTime = b.fin;
+                }
+            }
+            const response = {
+                Ramo: "No hay clases en la sala",
+                HoraInicio: startTime,
+                HoraTermino: endTime,
+            }
+            return res.status(200).json(response);
+        }
+        connection.end();
+
+    } catch (e) {
+        console.log('Error conectando a la base de datos: ', e);
+        return res.status(500).json({ message: 'Error: '+e });
+    }
+});
+
+app.get('/semestre/activo', async (req, res) => {
+   try {
+        const connection = mysql.createConnection(dbConfig);
+        connection.connect();
+        const query = `SELECT * FROM Periodo WHERE Estado = 'Activo';`;
+        const semestre = await runQuery(connection, query);
+        if (semestre.length == 0) {
+            return res.status(200).json({ message: 'No hay semestre activo' });
+        }
+        return res.status(200).json(semestre);
+    } catch (e) {
+        return res.status(500).json({ message: 'Error: '+e });
+    }
+});
 
 app.listen(PORT, () => {
   console.log('Servidor corriendo en http://localhost:' + PORT);
