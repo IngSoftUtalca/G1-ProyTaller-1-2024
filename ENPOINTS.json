@@ -23,5 +23,5 @@
     "login-docente": "https://api-main-docente-ymb46wny6a-uc.a.run.app/",
     "login-admin": "https://api-main-admin-ymb46wny6a-uc.a.run.app/",
     "login-WM": "https://api-main-wm-ymb46wny6a-uc.a.run.app/",
-    "login-WD": "http://localhost:81"
+    "login-WD": "https://api-web-docente-ymb46wny6a-uc.a.run.app"
 }
