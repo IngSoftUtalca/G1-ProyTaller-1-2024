@@ -8,7 +8,7 @@ const runQuery = require('./query.js').runQuery;
 const runParametrizedQuery = require('./query.js').runParametrizedQuery;
 const cors = require('cors');
 
-app.use(cors({ origin: '*' }));
+app.use(cors({ origin: [require('../ENPOINTS.json').webdocente, require('../ENPOINTS.json').mainpage, 'localhost'] }));
 app.use(express.json());
 
 app.get('/', (req, res) => {
