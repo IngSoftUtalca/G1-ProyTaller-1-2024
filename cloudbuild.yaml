@@ -119,7 +119,12 @@
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'us-central1-docker.pkg.dev/presente-420701/presente/api-main-wm:api-main-wm'] 
   ##############################################################################################################################
+  ##############################################################################################################################
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/presente-420701/presente/api-web-docente:api-web-docente', '-f', './API-WEB-Docente/Dockerfile','.'] 
 
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'us-central1-docker.pkg.dev/presente-420701/presente/api-web-docente:api-web-docente'] 
 
 
 images:
@@ -139,6 +144,7 @@ images:
   - us-central1-docker.pkg.dev/presente-420701/presente/api-main-wm:api-main-wm
   - us-central1-docker.pkg.dev/presente-420701/presente/api-main-docente:api-main-docente
   - us-central1-docker.pkg.dev/presente-420701/presente/api-main-admin:api-main-admin
+  - us-central1-docker.pkg.dev/presente-420701/presente/api-web-docente:api-web-docente
 
 
   

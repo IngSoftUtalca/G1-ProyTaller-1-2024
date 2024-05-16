@@ -166,7 +166,16 @@ services:
           - api-main-admin
     ports:
       - 3015:3015
-
+  api-web-docente:
+    build: 
+      dockerfile: ./API-WEB-Docente/Dockerfile
+      context: .
+    networks:
+      universidad:
+        aliases: 
+          - api-web-Docente
+    ports:
+      - 3016:3016
 
 networks:
   universidad:
