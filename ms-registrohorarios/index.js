@@ -178,7 +178,7 @@ app.post('/new', async (req, res) => {
     for (let ins of instancia) {
       const inicio = getBloqueId(ins.INICIO);
       const termino = getBloqueId(ins.TERMINO);
-      for (let i = inicio; i < termino; i++) {
+      for (let i = inicio; i <= termino; i++) {
         const params = [ins.SALA, i, ins.DIA, ins.NOMBRE, semestre];
         try {
           await runQuery(connection, query4, params);

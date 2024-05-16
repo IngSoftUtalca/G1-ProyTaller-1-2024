@@ -9,7 +9,7 @@
     "bff-datosadministradores": "https://bff-datosadministradores-ymb46wny6a-uc.a.run.app",
     "bff-datosasistencia": "https://bff-datosasistencia-ymb46wny6a-uc.a.run.app",
     "bff-datosdocentes": "https://bff-datosdocente-ymb46wny6a-uc.a.run.app",
-    "bff-horarios": "https://bff-horarios-ymb46wny6a-uc.a.run.app",
+    "bff-horarios": "https://bff-horarios-ymb46wny6a-uc.a.run.app/",
     "ms-erroresasistencia": "https://ms-erroresasistencia-ymb46wny6a-uc.a.run.app",
     "ms-gestoradmin": "https://ms-gestoradmin-ymb46wny6a-uc.a.run.app",
     "ms-gestorasistencia": "https://ms-gestorasistencia-ymb46wny6a-uc.a.run.app",
@@ -22,5 +22,6 @@
     "mainpage": "https://presente-utalca-dev.web.app",
     "login-docente": "https://api-main-docente-ymb46wny6a-uc.a.run.app/",
     "login-admin": "https://api-main-admin-ymb46wny6a-uc.a.run.app/",
-    "login-WM": "https://api-main-wm-ymb46wny6a-uc.a.run.app/"
+    "login-WM": "https://api-main-wm-ymb46wny6a-uc.a.run.app/",
+    "login-WD": "https://api-web-docente-ymb46wny6a-uc.a.run.app"
 }

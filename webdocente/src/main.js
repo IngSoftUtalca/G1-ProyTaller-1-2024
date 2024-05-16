@@ -16,7 +16,7 @@ const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
-      path: '/sala:idSala',
+      path: '/:idSala',
       name: 'MarcarAsistencia',
       component: MarcarAsistencia,
     },
@@ -26,7 +26,7 @@ const router = createRouter({
       component: ErrorAsistencia
     },
     {
-      path: '/claseinicio',
+      path: '/claseinicio/:id',
       name: 'ClaseIniciada',
       component: ClaseIniciada
 

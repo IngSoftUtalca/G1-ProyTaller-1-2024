@@ -1,18 +1,20 @@
 const bloques = require('./constantes.json').bloques;
+const moment = require("moment-timezone");
 
 function getBloqueId(hora) {
   if (!hora) {
-    return null;
+    return 12;
   }
-  const [horaH, horaM] = hora.split(':').map(Number);
-  for (const bloque of bloques) {
-    const [inicioH, inicioM] = bloque.inicio.split(':').map(Number);
-    const [finH, finM] = bloque.fin.split(':').map(Number);
-    if ((horaH > inicioH || (horaH === inicioH && horaM >= inicioM)) && (horaH < finH || (horaH === finH && horaM <= finM))) {
-      return bloque.id;
+  for (let i = 0; i < bloques.length; i++) {
+    const horaInicioBloque = moment(bloques[i].inicio, "HH:mm:ss");
+    const horaFinBloque = moment(bloques[i].fin, "HH:mm:ss");
+    const horaActual = moment(hora, "HH:mm");
+    // console.log(horaActual.format("HH:mm")+" Bloque: "+bloques[i].id+" | "+bloques[i].inicio+" - "+bloques[i].fin);
+    if (horaActual.isBetween(horaInicioBloque, horaFinBloque, null, '[]')) {
+      return bloques[i].id;
     }
   }
-  return null;
+  return 12;
 }
 
 async function runQuery(connection, query, params) {
