@@ -80,7 +80,7 @@ export default {
         }
       );
     } catch (error) {
-      this.$router.push("/error");
+      await this.$router.push("/error");
     }
     this.loading = false;
   },
@@ -120,8 +120,4 @@ export default {
 
 <style scoped>
 @import "../assets/estilos.css";
-
-.boton-amarillo {
-  background-color: #f89d1e;
-}
 </style>
