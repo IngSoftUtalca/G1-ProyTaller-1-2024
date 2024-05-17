@@ -59,12 +59,29 @@ export default {
       inicio: "",
       loading: true,
       botonC: false,
+      rut: "",
     };
   },
   async mounted() {
     const moment = require("moment-timezone");
     this.inicio = moment().tz("America/Santiago").format("HH:mm");
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    this.rut = this.$route.params.id;
+    try {
+      await axios.post(
+        ENPOINTS["ms-validacionrol"] + "/validar",
+        {
+          rut: this.rut,
+          rol: "docente",
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    } catch (error) {
+      this.$router.push("/error");
+    }
     this.loading = false;
   },
   methods: {
