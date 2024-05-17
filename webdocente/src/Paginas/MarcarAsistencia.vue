@@ -118,35 +118,6 @@ export default {
   },
   methods: {
     marcarAsistencia() {
-      // Aquí puedes agregar la lógica para marcar la asistencia
-      /*
-      axios
-        .post(
-          ENPOINTS["ms-registroasistencia"] + "/registrarinicio",
-          {
-            Inicio: "14:40:00",
-            diaS: "4",
-            semestreActual: "Semestre.1-2024",
-            Rut: "33061234-1",
-            fecha: "2024-05-14",
-            test: true,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        )
-        .then((response) => {
-          console.log("Response: ", response.data);
-          window.location.href = ENPOINTS["login-WD"];
-        })
-
-        .catch((error) => {
-          console.error("Error:", error.response);
-          //return "malo";
-          this.$router.push("/error");
-        });*/
         window.location.href = ENPOINTS["login-WD"];
     },
   },
