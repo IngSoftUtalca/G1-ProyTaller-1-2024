@@ -8,7 +8,12 @@ const runQuery = require('./query.js').runQuery;
 const runParametrizedQuery = require('./query.js').runParametrizedQuery;
 const cors = require('cors');
 
-app.use(cors({ origin: [require('../ENPOINTS.json').webdocente, require('../ENPOINTS.json').mainpage, 'localhost'] }));
+const corsOptions = {
+  origin: ['http://localhost:8080', 'http://localhost:8082', require('../ENPOINTS.json').webdocente, require('../ENPOINTS.json').mainpage],
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 app.get('/', (req, res) => {
@@ -36,23 +41,25 @@ app.post('/validar', async (req, res) => {
     connection.connect();
     const query = `SELECT * FROM ${rol} WHERE RUT = ?`;
     await runParametrizedQuery(connection, query, [rut])
-        .then((result) => {
-          if (result.length === 0) {
-            response.Nombre = 'Usuario sin rol';
-            res.status(400).json(response);
-          } else {
-            response.Nombre = result[0].Nombre;
-            response.Valido = true;
-            res.status(200).json(response);
-          }
-        })
-        .catch((error) => {
-          response.Nombre = 'Error de consulta';
-          res.status(501).json(response);
-        })
-        .finally(() => {
+      .then((result) => {
+        if (result.length === 0) {
+          response.Nombre = 'Usuario sin rol';
+          res.status(400).json(response);
+        } else {
+          response.Nombre = result[0].Nombre;
+          response.Valido = true;
+          res.status(200).json(response);
+        }
+      })
+      .catch((error) => {
+        response.Nombre = 'Error de consulta';
+        res.status(501).json(response);
+      })
+      .finally(() => {
+        if (connection && connection.state !== 'disconnected') {
           connection.end();
-        });
+        }
+      });
   } catch (error) {
     response.Nombre = 'Base de datos no disponible';
     res.status(500).json(response);
