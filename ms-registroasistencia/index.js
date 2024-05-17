@@ -165,6 +165,7 @@ app.post('/registrarinicio', (req, res) => {
                         conection.query(queryComprobar2,parametros,(error,results)=>{
                             conection.end();
                             if(error){
+                                console.log(error);
                                 return res.status(500).json({error: "no hay conexion a la BD 3"});
                                 
                             }
@@ -183,9 +184,18 @@ app.post('/registrarinicio', (req, res) => {
                                     
                                     cursolocal.push(results[0]);
 
-                                    return res.status(200).json({Iniciado: horaactual});
+                                    return res.status(200).json({Valido:true,Iniciado: horaactual});
                                 }else{
-                                    return res.status(400).json({error: 'el profesor ya tiene una clase iniciada'});
+
+                                    if( desc.Ramo == results[0].Ramo){ // no hacec nada ya que es la misma clase 
+                                        //return res.status(400).json({error: 'el profesor ya tiene una clase iniciada misma'});
+                                        return res.status(200).json({Valido:true,Iniciado: desc.Inicio});
+                                    }else{ // 
+
+                                        return res.status(400).json({error: 'el profesor ya tiene una clase iniciada'});
+
+                                    }
+                                    
 
                                 }
                             }else{
