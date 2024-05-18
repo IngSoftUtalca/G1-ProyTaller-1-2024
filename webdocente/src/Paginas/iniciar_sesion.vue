@@ -38,7 +38,16 @@ export default {
     const botonC = ref(false); // Variable para controlar el color del botón
     let details = ref('');
     let password = ref('');
+
     
+    if(navigator.geolocation){
+      fetch('https://api.ipify.org?format=json')
+      .then(response => response.json())
+      .then(response => {
+        navigator.geolocation.getCurrentPosition((posicion)=> alert("latitud: "+posicion.coords.latitude+ " longitud: "+posicion.coords.longitude+" ip:"+response.ip),(err)=> alert(err))
+      });
+    }
+
     const cambiarColor = () => {
       // Cambiar el estado del botón de rojo a otro color y viceversa
       botonC.value = !botonC.value;
