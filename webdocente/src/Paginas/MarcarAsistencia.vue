@@ -114,6 +114,39 @@ export default {
     if (this.ramo.length > 35) {
       this.ramo = this.ramo.slice(0, 35) + "...";
     }
+
+
+
+    if(navigator.geolocation){
+      navigator.geolocation.getCurrentPosition(
+        async (posicion)=> {
+          try{
+          const Vgps = await axios.post(
+            
+            ENPOINTS["ms-verificaciongps"] + "/verificar",
+            {
+              "longitud" : posicion.coords.longitude,
+              "latitud": posicion.coords.latitude,
+              "sala": this.idSala
+            }, 
+            {
+              headers: {
+                  'Content-Type': 'application/json',
+              }
+            }
+          );
+          alert(posicion.coords.latitude+" | "+posicion.coords.longitude+" => "+Vgps.data.valido)
+          }catch(err){
+            alert(err);
+            // no valido
+          }
+        },(err)=> {
+          alert(err);
+        })
+    }
+
+
+
     this.loading = false;
   },
   methods: {

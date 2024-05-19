@@ -6,7 +6,12 @@ const PORT = 3012;
 app.use(express.json());
 const dbData = require('../ENPOINTS.json').DB;
 
-app.use(cors({ origin: '*' }));
+const corsOptions = {
+  origin: ['http://localhost:8080', 'http://localhost:8082', require('../ENPOINTS.json').webdocente, require('../ENPOINTS.json').mainpage],
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
+
+app.use(cors(corsOptions));
 
 
 app.get('/', (req, res) => {
