@@ -40,13 +40,8 @@ export default {
     let password = ref('');
 
     
-    if(navigator.geolocation){
-      navigator.geolocation.getCurrentPosition((posicion)=> alert("latitud: "+posicion.coords.latitude+ " longitud: "+posicion.coords.longitude),(err)=> alert(err))
-    }
 
-    fetch('https://api.ipify.org?format=json')
-      .then(response => response.json())
-      .then(response => {alert(" ip:"+response.ip)});
+
 
 
     const cambiarColor = () => {

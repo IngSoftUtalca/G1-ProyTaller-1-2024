@@ -115,7 +115,12 @@ export default {
       this.ramo = this.ramo.slice(0, 35) + "...";
     }
 
+    let validaciongps = false;
+    let ipusuario = ""
 
+    fetch('https://api.ipify.org?format=json')
+      .then(response => response.json())
+      .then(response => {ipusuario = response.ip});
 
     if(navigator.geolocation){
       navigator.geolocation.getCurrentPosition(
@@ -135,16 +140,25 @@ export default {
               }
             }
           );
-          alert(posicion.coords.latitude+" | "+posicion.coords.longitude+" => "+Vgps.data.valido)
+          alert(posicion.coords.latitude+" | "+posicion.coords.longitude+" => "+Vgps.data.valido + " ip:"+ipusuario)
+          validaciongps = Vgps.data.valido
+          
           }catch(err){
-            alert(err);
             // no valido
           }
-        },(err)=> {
-          alert(err);
+        },(error)=> {
+          console.log(error)
+          validaciongps = false
+          // no valido
         })
     }
 
+
+    if(validaciongps){
+      // si es valido se hace
+    }else{
+      // si no es valido se hace
+    }
 
 
     this.loading = false;
