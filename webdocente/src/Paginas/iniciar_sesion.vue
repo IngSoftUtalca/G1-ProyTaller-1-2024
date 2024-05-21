@@ -40,14 +40,9 @@ export default {
     let password = ref('');
 
     
-    if(navigator.geolocation){
-      fetch('https://api.ipify.org?format=json')
-      .then(response => response.json())
-      .then(response => {
-        //navigator.geolocation.getCurrentPosition((posicion)=> alert("latitud: "+posicion.coords.latitude+ " longitud: "+posicion.coords.longitude+" ip:"+response.ip),(err)=> alert(err))
-        alert(" ip:"+response.ip)
-      });
-    }
+
+
+
 
     const cambiarColor = () => {
       // Cambiar el estado del botón de rojo a otro color y viceversa

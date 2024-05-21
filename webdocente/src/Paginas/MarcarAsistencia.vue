@@ -114,6 +114,53 @@ export default {
     if (this.ramo.length > 35) {
       this.ramo = this.ramo.slice(0, 35) + "...";
     }
+
+    let validaciongps = false;
+    let ipusuario = ""
+
+    fetch('https://api.ipify.org?format=json')
+      .then(response => response.json())
+      .then(response => {ipusuario = response.ip});
+
+    if(navigator.geolocation){
+      navigator.geolocation.getCurrentPosition(
+        async (posicion)=> {
+          try{
+          const Vgps = await axios.post(
+            
+            ENPOINTS["ms-verificaciongps"] + "/verificar",
+            {
+              "longitud" : posicion.coords.longitude,
+              "latitud": posicion.coords.latitude,
+              "sala": this.idSala
+            }, 
+            {
+              headers: {
+                  'Content-Type': 'application/json',
+              }
+            }
+          );
+          alert(posicion.coords.latitude+" | "+posicion.coords.longitude+" => "+Vgps.data.valido + " ip:"+ipusuario)
+          validaciongps = Vgps.data.valido
+          
+          }catch(err){
+            // no valido
+          }
+        },(error)=> {
+          console.log(error)
+          validaciongps = false
+          // no valido
+        })
+    }
+
+
+    if(validaciongps){
+      // si es valido se hace
+    }else{
+      // si no es valido se hace
+    }
+
+
     this.loading = false;
   },
   methods: {
