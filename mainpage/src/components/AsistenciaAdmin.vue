@@ -9,7 +9,7 @@
     <div class="row container-fluid" v-if="!loading">
         <div class="row px-5 rt-50 h-55 font-20 bold primary-bg d-flex align-items-center">
             <div class="col-2 text-center">
-                Ramos
+                Ramo
             </div>
             <div class="col-2 text-center">
                 Asistidos
@@ -26,7 +26,7 @@
         <div class="row h-100 px-5 secondary-bg text-center bold d-flex align-items-center"
             v-for="(ramo, index) in ramos" :key="index">
             <div class="col-2 text-center">
-                {{ getAño(ramo.ID) }}
+                {{ getAño(ramo.Nombre) }}
             </div>
             <div class="col-2 text-center">
                 {{ parseFecha(ramo.FechaInicio) }}
@@ -35,20 +35,6 @@
                 {{ parseFecha(ramo.FechaTermino) }}
             </div>
             <div class="col">
-                <button class="btn-light-50 bold btn-size-150" @click="add(ramo)">
-                    Modificar
-                </button>
-            </div>
-            <div class="col-2 d-flex justify-content-center align-items-center">
-                <div class="pill-yellow pill-size-150" v-if="ramo.Estado == 'Pendiente'">
-                    {{ ramo.Estado }}
-                </div>
-                <div class="pill-green pill-size-150" v-if="ramo.Estado == 'Activo'">
-                    {{ ramo.Estado }}
-                </div>
-                <div class="pill-gray pill-size-150" v-if="ramo.Estado == 'Finalizado'">
-                    {{ ramo.Estado }}
-                </div>
             </div>
         </div>
     </div>
@@ -56,9 +42,8 @@
 
 <script>
     import axios from 'axios';
-import moment from 'moment';
-import EditarRamo from '@/components/EditarRamo.vue';
-import ENDPOINTS from '../../../ENPOINTS.json';
+    import moment from 'moment';
+    import ENDPOINTS from '../../../ENPOINTS.json';
 
 export default {
     name: 'VerRamos',
