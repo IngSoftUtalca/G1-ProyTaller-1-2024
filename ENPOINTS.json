@@ -14,14 +14,14 @@
     "ms-gestoradmin": "https://ms-gestoradmin-ymb46wny6a-uc.a.run.app",
     "ms-gestorasistencia": "https://ms-gestorasistencia-ymb46wny6a-uc.a.run.app",
     "ms-gestordocente": "https://ms-gestordocente-ymb46wny6a-uc.a.run.app",
-    "ms-registroasistencia": "https://ms-registroasistencia-ymb46wny6a-uc.a.run.app",
+    "ms-registroasistencia": "http://localhost:3009",
     "ms-registrohorarios": "https://ms-registrohorarios-ymb46wny6a-uc.a.run.app",
     "ms-validacionrol": "https://ms-validacionrol-ymb46wny6a-uc.a.run.app",
-    "ms-verificaciongps":"https://ms-verificaciongps-ymb46wny6a-uc.a.run.app",
-    "webdocente": "https://web-docente-dev.web.app",
+    "ms-verificaciongps":"http://localhost:3012",
+    "webdocente": "http://localhost:8080",
     "mainpage": "https://presente-utalca-dev.web.app",
     "login-docente": "https://api-main-docente-ymb46wny6a-uc.a.run.app/",
     "login-admin": "https://api-main-admin-ymb46wny6a-uc.a.run.app/",
     "login-WM": "https://api-main-wm-ymb46wny6a-uc.a.run.app/",
-    "login-WD": "https://api-web-docente-ymb46wny6a-uc.a.run.app"
+    "login-WD": "http://localhost:3016/"
 }

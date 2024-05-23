@@ -140,7 +140,7 @@ app.post('/registrarinicio', async (req, res) => {
                 
                 parametros = [horaactual,horaactual,req.body.Rut,fechaActual]
             }
-            queryComprobar =`select Rut_Docente,Dia,Inicio,Termino,Hora_Inicio,Hora_Termino,Ramo from Clase Inner JOIN Instancia on Ramo_Nombre = Ramo INNER JOIN Asignacion on Nombre_Ramo = Ramo INNER JOIN Bloque on Bloque = ID where Inicio <= ? and Termino >= ? and Rut_Docente = ? and Dia = ?;`;
+            queryComprobar =`select Rut_Docente,Dia,Inicio,Termino,Hora_Inicio,Hora_Termino,Ramo from Clase Inner JOIN Instancia on Ramo_Nombre = Ramo INNER JOIN Asignacion on Nombre_Ramo = Ramo INNER JOIN Bloque on Bloque = ID where Inicio <= ? and Termino >= ? and Rut_Docente = ? and Dia = ? and (Estado != 'Pendiente');`;
             conection.query(queryComprobar,parametros,(error,results)=>{
                 if(error){
                     return res.status(500).json({error: "error en la query"});
@@ -162,7 +162,7 @@ app.post('/registrarinicio', async (req, res) => {
                         queryComprobar2 = `SELECT Sala as idSala, RUT_Docente,Ramo,Bloque,Hora_Inicio as Inicio, Hora_Termino as Termino from Asignacion INNER JOIN (SELECT MIN(ID)as Bloque,MIN(Bloque.Inicio) as Hora_Inicio, MAX(Bloque.Termino) as Hora_Termino,Ramo,Sala,Semestre,Dia_Semana FROM Instancia INNER JOIN Bloque on Instancia.Bloque = Bloque.ID INNER JOIN Asignacion on Ramo = Nombre_Ramo GROUP BY Sala,Semestre,Dia_Semana,Ramo) as t1 on Ramo = Nombre_Ramo and Semestre = ? and Hora_Inicio < ? and Hora_Termino > ? and RUT_Docente = ? and (select Sala from Instancia INNER JOIN Asignacion on Nombre_Ramo = Ramo INNER JOIN Bloque on Bloque = ID where Semestre = ? and Hora_Inicio < ? and Hora_Termino > ? and Hora_Inicio <= Inicio and Hora_Termino >= Termino and Rut_Docente = ? and Dia_Semana= ? LIMIT 1) = Sala and Dia_Semana = ?;`;
 
                         conection.query(queryComprobar2,parametros,(error,results)=>{
-                            conection.end();
+                            
                             if(error){
                                 console.log(error);
                                 return res.status(500).json({error: "no hay conexion a la BD 3"});
@@ -171,45 +171,43 @@ app.post('/registrarinicio', async (req, res) => {
                             if(results.length != 0){
                                 valido = true;
                                 var desc = null;
-                                var desc = cursolocal.find(function(e) {
-                                    return e.RUT_Docente == req.body.Rut;
-                                })
-                                if(desc == null){ // se guardara localmente como pendiente
-                                    if(req.body.test){
-                                        results[0].Inicio = req.body.Inicio;
+
+
+                                parametros = [req.body.Rut]
+                                queryComprobar2 = `SELECT * FROM Clase where Estado = 'Pendiente' and docente = ?`;
+
+                                conection.query(queryComprobar2,parametros,async (error,results2)=>{
+                                    conection.end();
+                                    if(error){
+                                        console.log(error);
+                                        return res.status(500).json({error: "no hay conexion a la BD 3"});
+                                        
                                     }else{
-                                        results[0].Inicio = horaactual;
-                                    }
-                                    
-                                    cursolocal.push(results[0]);
-
-                                    return res.status(200).json({Valido:true,Iniciado: horaactual,Ramo:results[0].Ramo,Evento:"iniciado"});
-                                }else{
-
-                                    if( desc.Ramo == results[0].Ramo){ // no hacec nada ya que es la misma clase 
-                                        //return res.status(400).json({error: 'el profesor ya tiene una clase iniciada misma'});
-                                        return res.status(200).json({Valido:true,Iniciado: horaactual,Ramo:results[0].Ramo,Evento:"ya iniciado"});
-                                    }else{ // 
-
-                                        //return res.status(400).json({error: 'el profesor ya tiene una clase iniciada'});
-
-
-                                        if(req.body.test){
-                                            results[0].Inicio = req.body.Inicio;
+                                        if(results2.length == 0){ // se guardara como pendiente
+                                            await IniciarClase([req.body.Rut,fechaActual,horaactual,results[0].Termino,'192.0.0.0','Pendiente',results[0].Ramo,semestreActual]) // (docente, Dia, Hora_Inicio, Hora_Termino, IP, Estado, Ramo_Nombre, Ramo_Periodo)
+                                            return res.status(200).json({Valido:true,Iniciado: horaactual,Ramo:results[0].Ramo,Evento:"iniciado"});
                                         }else{
-                                            results[0].Inicio = horaactual;
+
+                                            if( results2[0].Ramo_Nombre == results[0].Ramo){ // no hacec nada ya que es la misma clase 
+                                                return res.status(200).json({Valido:true,Iniciado: horaactual,Ramo:results[0].Ramo,Evento:"ya iniciado"});
+                                            }else{ // 
+        
+                                                //return res.status(400).json({error: 'el profesor ya tiene una clase iniciada'});
+        
+                  
+                                                await CerrarClaseIniciadaDocente(req.body.Rut,[req.body.Rut,fechaActual,horaactual,results[0].Termino,'192.0.0.0','Pendiente',results[0].Ramo,semestreActual]) // se cierra la clase que ya estaba abierta
+
+
+                                                
+                                                return res.status(200).json({Valido:true,Iniciado: horaactual,Ramo:results[0].Ramo,Evento:"Cerro pendiente e inicio otro"});
+                                            }
                                         }
-                                        
-                                        
-                                        CerrarClaseIniciadaDocente(req,results[0]) // se cierra la clase que ya estaba abierta
-
-
-
-                                        return res.status(200).json({Valido:true,Iniciado: horaactual,Ramo:results[0].Ramo,Evento:"Cerro pendiente e inicio otro"});
                                     }
-                                    
+                                });
 
-                                }
+
+
+
                             }else{
                                 return res.status(400).json({error: 'no se ha encontrado clase para este profesor'});
                             }
@@ -233,7 +231,7 @@ app.post('/registrarfinal', async (req, res) => { // se necesita el rut del doce
         return res.status(500).json({error:"En servidor esta en proceso de cerrado de clases. Intente mas tarde"})
     }
 
-     let resu = await CerrarClaseIniciadaDocente(req,null)
+     let resu = await CerrarClaseIniciadaDocente(req.body.Rut,null)
     if(resu == 200){
         return res.status(200).json({ok: "registar fin de clases"});
     }else if(resu == 400){
@@ -253,67 +251,35 @@ let revisarSemestre = true
 
 
 
-async function  CerrarClaseIniciadaDocente(req,reemplazo){
+async function  CerrarClaseIniciadaDocente(rut,reemplazo){
     return new Promise((resolve,reject) => {
+
         const conection = mysql.createConnection(dbData);
-
         conection.connect((error)=>{
-
             if(error){
-                return reject(500);
+                procesandoClases = false
+                return;
             }else{
-                const horaactual = consultas.GetHoraActual();
-
-                var desc = null
-                desc = cursolocal.find(function(e) {
-                    return e.RUT_Docente == req.body.Rut;
-                })
-                        
-                if(desc != null){
-                    if(cursolocal.length != 0){
-
-                        const formatofecha = consultas.GetFechaHoy();
-
-                        const [horaA, minutoA, segundoA] = horaactual.split(':').map(Number);
-                        const  [horaF, minutoF, segundoF] = desc.Termino.split(':').map(Number);
-
-                        const horafinal = consultas.CompararHoras(horaA, minutoA, segundoA,horaF, minutoF, segundoF)
-
-                        let parametros
-                        let queryInsert
-                        if(req.body.test){
-                            
-                            parametros = [req.body.Rut,req.body.fecha,desc.Inicio,desc.Termino,'192.178.0.0','Asistido',desc.Ramo,semestreActual]
+                parametros = [consultas.GetHoraActual(),rut]
+                let queryUpt = `UPDATE Clase SET Hora_Termino =? ,Estado='Asistido'  WHERE docente = ? and Estado = Pendiente `
+                    conection.query(queryUpt,parametros,(error,results)=>{
+                        if(error){
+                            return reject(500);
                         }else{
-                            
-                            parametros = [req.body.Rut,formatofecha,desc.Inicio,horafinal,'192.178.0.0','Asistido',desc.Ramo,semestreActual]
-                        }
-                        queryInsert = `INSERT INTO Clase (docente, Dia, Hora_Inicio, Hora_Termino, IP,Estado, Ramo_Nombre, Ramo_Periodo) VALUES (?, ?, ?, ?, ?, ?, ?, ?);`
-                        
-                        conection.query(queryInsert,parametros,(error,results)=>{
-                            conection.end();
-                            if(error){
-                                
-                                return reject(500);
-                            }else{
-                                cursolocal = cursolocal.filter(cursosel => cursosel.RUT_Docente != req.body.Rut);
-                                desc.Termino = horafinal;
-                                if(reemplazo != null){
-                                    cursolocal.push(reemplazo)
-                                }
-                                console.log("paso")
-                                return resolve(200);
+                            if(reemplazo != null){
+                                IniciarClase(reemplazo); 
                             }
-                        });
-                    }
-
-
-                }else{
-                    return reject(400);
-                }
+                            resolve(200)
+                        }
+                    })
             }
         });
+        
+        reject(400)
+        
+
     })
+    
 
 }
 
@@ -454,7 +420,7 @@ function CalcularTiempo(){
 
 
 
-function RevisionClasesIniciadas(cursolocal){
+function RevisionClasesIniciadasANTIGUA(cursolocal){
 
 
     procesandoClases = true;
@@ -491,6 +457,54 @@ function RevisionClasesIniciadas(cursolocal){
 
 }
 
+
+
+app.post('/RevisarEstadoClases', async (req, res) => { 
+
+    await CalcularSemestre()
+
+    await RevisionClasesIniciadas();
+    return res.status(200).json({ok: "ok"});
+
+});
+
+
+
+function RevisionClasesIniciadas(){
+
+    new Promise((resolve,reject) => {
+        procesandoClases = true;
+        let fecha = new Date();
+        let fecha2 = new Date(fecha.getTime() - TiempoRezago*60000)
+        var horaactual = fecha2.getHours()+":"+fecha2.getMinutes()+":"+fecha2.getSeconds()
+        var hoyFecha = consultas.GetFechaHoy()
+
+        const conection = mysql.createConnection(dbData);
+        conection.connect((error)=>{
+            if(error){
+                procesandoClases = false
+                return;
+            }else{
+
+                const queryInsert =`UPDATE Clase SET Estado='No Finalizado' WHERE Estado = 'Pendiente'`;
+                conection.query(queryInsert,(error,results)=>{
+                    if(error){
+                        procesandoClases = false
+                        return;
+                    }else{
+                        
+                    }
+                })
+                RevisionClasesNoIniciadas()
+                procesandoClases = false
+            }
+        });
+        resolve();
+    }
+    
+    )};
+
+
 function RevisionClasesNoIniciadas(){
 
 
@@ -499,7 +513,7 @@ function RevisionClasesNoIniciadas(){
     const fecha2 = new Date(fecha.getTime() - TiempoRezago*60000)
     const hoyFecha = consultas.GetFechaHoy()
     const formatohora = fecha2.getHours()+"-"+fecha2.getMinutes()+"-"+fecha2.getSeconds();
-    
+    const disS = fecha.getDay(); 
 
 
     const conection = mysql.createConnection(dbData);
@@ -508,9 +522,10 @@ function RevisionClasesNoIniciadas(){
         if(error){
             return;
         }else{
-            const query = `select Rut_Docente,Nombre_Ramo,Sala,MIN(Inicio) as  Inicio,MAX(Termino) as Termino from Asignacion INNER JOIN Instancia on Ramo = Nombre_Ramo INNER JOIN Bloque on ID = Bloque LEFT JOIN Clase on Ramo_Nombre = Ramo  where Hora_Inicio IS NULL and Dia_Semana = 4 and Semestre = 'Semestre.2-2024' and Termino <= ? GROUP by RUT_Docente,Sala,Nombre_Ramo,Hora_Inicio,Hora_Termino;`
+            console.log(disS + " "+ semestreActual+" "+ horaactual)
+            const query = `select Rut_Docente,Nombre_Ramo,Sala,MIN(Inicio) as  Inicio,MAX(Termino) as Termino from Asignacion INNER JOIN Instancia on Ramo = Nombre_Ramo INNER JOIN Bloque on ID = Bloque LEFT JOIN Clase on Ramo_Nombre = Ramo  where Hora_Inicio IS NULL and Dia_Semana = ? and Semestre = ? and Termino <= ? GROUP by RUT_Docente,Sala,Nombre_Ramo,Hora_Inicio,Hora_Termino;`
             
-            let parametros = [horaactual]
+            let parametros = [disS,semestreActual,horaactual]
 
             conection.query(query,parametros,(error,results)=>{
                 if(error){
@@ -518,14 +533,15 @@ function RevisionClasesNoIniciadas(){
                     return;
                 }else{
 
-
+                    console.log(results);
+                    
                     results.forEach(elementos => {
 
 
                         const queryInsert =`INSERT INTO Clase (docente, Dia, Hora_Inicio, Hora_Termino, IP,Estado, Ramo_Nombre, Ramo_Periodo) VALUES (?,?,?,?,?,?,?,?)`;
                         let parametros = [elementos.Rut_Docente,hoyFecha,elementos.Inicio,horaactual,'192.178.0.0','No Iniciado',elementos.Nombre_Ramo,semestreActual]
 
-                        conection.query(queryInsert,parametros,(error,results)=>{
+                        conection.query(queryInsert,parametros,(error,results1)=>{
                             if(error){
 
                                 procesandoClases = false
@@ -612,4 +628,41 @@ function CalcularSemestre(){
 
         });
     });
+
+
+
+
+}
+
+
+async function IniciarClase(parametros){
+
+
+    const conection = mysql.createConnection(dbData);
+    conection.connect((error)=>{
+        if(error){
+
+            return ;
+            
+        }
+        const query = `INSERT INTO Clase(docente, Dia, Hora_Inicio, Hora_Termino, IP, Estado, Ramo_Nombre, Ramo_Periodo) VALUES (?,?,?,?,?,?,?,?)`
+        conection.query(query,parametros,(error,results)=>{
+            conection.end();
+            
+
+            if(error){
+
+
+            }else{
+
+            }
+
+
+        });
+    });
+}
+
+
+function TerminarClase(){
+
 }
