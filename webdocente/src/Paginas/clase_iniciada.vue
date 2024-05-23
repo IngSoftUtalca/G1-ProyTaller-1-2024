@@ -53,19 +53,60 @@
 <script>
 import axios from "axios";
 import ENPOINTS from "../../../ENPOINTS.json";
+import { useRoute } from "vue-router";
 export default {
   data() {
     return {
       inicio: "",
       loading: true,
       botonC: false,
+      rut: "",
     };
   },
   async mounted() {
+    const route = useRoute();
     const moment = require("moment-timezone");
     this.inicio = moment().tz("America/Santiago").format("HH:mm");
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    this.loading = false;
+    this.rut = route.params.id;
+    try {
+      await axios.post(
+        ENPOINTS["ms-validacionrol"] + "/validar",
+        {
+          rut: this.rut,
+          rol: "docente",
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    } catch (error) {
+      await this.$router.push("/error");
+    }
+    
+      // Aquí puedes agregar la lógica para marcar la asistencia
+      
+      await axios.post(ENPOINTS["ms-registroasistencia"] + "/registrarinicio",{
+            Rut: this.rut
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then((response) => {
+          console.log("Response: ", response.data);
+        })
+        .catch((error) => {
+          console.error("Error:", error.response);
+          //return "malo";
+          this.$router.push("/error");
+        });
+
+        this.loading = false;
+
   },
   methods: {
     claseiniciada() {
@@ -74,9 +115,7 @@ export default {
         .post(
           ENPOINTS["ms-registroasistencia"] + "/registrarfinal",
           {
-            Rut: "33061234-1",
-            fecha: "2024-05-14",
-            test: true,
+            Rut: this.rut
           },
           {
             headers: {
@@ -103,8 +142,4 @@ export default {
 
 <style scoped>
 @import "../assets/estilos.css";
-
-.boton-amarillo {
-  background-color: #f89d1e;
-}
 </style>
