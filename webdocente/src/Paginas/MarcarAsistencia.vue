@@ -114,39 +114,57 @@ export default {
     if (this.ramo.length > 35) {
       this.ramo = this.ramo.slice(0, 35) + "...";
     }
+
+    let validaciongps = false;
+    let ipusuario = ""
+
+    fetch('https://api.ipify.org?format=json')
+      .then(response => response.json())
+      .then(response => {ipusuario = response.ip});
+
+    if(navigator.geolocation){
+      navigator.geolocation.getCurrentPosition(
+        async (posicion)=> {
+          try{
+          const Vgps = await axios.post(
+            
+            ENPOINTS["ms-verificaciongps"] + "/verificar",
+            {
+              "longitud" : posicion.coords.longitude,
+              "latitud": posicion.coords.latitude,
+              "sala": this.idSala
+            }, 
+            {
+              headers: {
+                  'Content-Type': 'application/json',
+              }
+            }
+          );
+          alert(posicion.coords.latitude+" | "+posicion.coords.longitude+" => "+Vgps.data.valido + " ip:"+ipusuario)
+          validaciongps = Vgps.data.valido
+          
+          }catch(err){
+            // no valido
+          }
+        },(error)=> {
+          console.log(error)
+          validaciongps = false
+          // no valido
+        })
+    }
+
+
+    if(validaciongps){
+      // si es valido se hace
+    }else{
+      // si no es valido se hace
+    }
+
+
     this.loading = false;
   },
   methods: {
     marcarAsistencia() {
-      // Aquí puedes agregar la lógica para marcar la asistencia
-      /*
-      axios
-        .post(
-          ENPOINTS["ms-registroasistencia"] + "/registrarinicio",
-          {
-            Inicio: "14:40:00",
-            diaS: "4",
-            semestreActual: "Semestre.1-2024",
-            Rut: "33061234-1",
-            fecha: "2024-05-14",
-            test: true,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        )
-        .then((response) => {
-          console.log("Response: ", response.data);
-          window.location.href = ENPOINTS["login-WD"];
-        })
-
-        .catch((error) => {
-          console.error("Error:", error.response);
-          //return "malo";
-          this.$router.push("/error");
-        });*/
         window.location.href = ENPOINTS["login-WD"];
     },
   },
