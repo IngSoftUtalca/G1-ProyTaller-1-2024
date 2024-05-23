@@ -1,80 +1,64 @@
-
-<template> 
-    <center>
-    <div id="app" class="fondo" >
-
+<template>
+  <div id="app" class="fondo container-fluid d-flex align-items-center w-100 p-0">
+    <div class="container row d-flex justify-content-center align-items-center m-0 p-0">
       <!-- Imagen en la parte superior -->
-      <div class="row justify-content-center">
-        <img src="../assets/error.svg" alt="Logo" class="img_error" style="max-width: 200px; max-height: 200px;">
+      <div class="row justify-content-center mb-5">
+        <img src="../assets/error.svg" alt="Logo" class="img_error" style="max-width: 150px; max-height: 150px">
       </div>
-
       <!-- Contenido principal -->
-      <div class="row justify-content-center">
-        <h3 class="texto"> Revisa tu horario, no se ha logrado marcar la asistencia</h3>
+      <div class="row text-center d-flex align-items-center my-3">
+        <p class="font-24 bold"> Revisa tu horario, no se ha logrado marcar la asistencia</p>
       </div>
-  
       <!-- Botones -->
-      <div> 
-        <button type="button" class="btn boton_celeste" :class="{ 'boton-amarillo': botonC }" @click="reportarError" style="margin-top: 68%;">Reportar error</button>
-        <button type="button" class="btn boton_celeste" :class="{ 'boton-amarillo': botonC }" @click="cambiarColor">Salir</button>
+      <div class="row container d-flex justify-content-center align-items-center w-100 p-0 v-100">
+        <div class="row d-flex justify-content-center align-items-center m-0 p-0">
+          <button type="button" class="btn boton_celeste size-200 bold" :class="{ 'boton-amarillo': botonC }"
+            @click="reportarError">Reportar error</button>
+        </div>
+        <div class="row d-flex justify-content-center align-items-center">
+          <button type="button" class="btn boton_celeste size-120 bold" :class="{ 'boton-amarillo': botonC }"
+          @click="cambiarColor">Salir</button>
+        </div>
       </div>
 
     </div>
-  </center>
-  </template>
-  
-  <script>
-  import { ref } from 'vue'
+  </div>
+</template>
 
-  
-  export default {
-    setup() {
-      const botonC = ref(false); // Variable para controlar el color del botón
+<script>
+import { ref } from 'vue'
 
-  
-      const cambiarColor = () => {
-        // Cambiar el estado del botón de rojo a otro color y viceversa
-        botonC.value = !botonC.value;
-        window.close();
-      }
-  
-      return {
-        cambiarColor
-      }
-    },
-    methods: {
+
+export default {
+  setup() {
+    const botonC = ref(false); // Variable para controlar el color del botón
+
+
+    const cambiarColor = () => {
+      // Cambiar el estado del botón de rojo a otro color y viceversa
+      botonC.value = !botonC.value;
+      window.close();
+    }
+
+    return {
+      cambiarColor
+    }
+  },
+  methods: {
     reportarError() {
       // Aquí puedes agregar la ruta a la que deseas redirigir al usuario
       this.$router.push('/reporte');
     }
   }
-  }
-  </script>
+}
+</script>
 
 
-  
-  <style scoped>
-  @import '../assets/estilos.css';
 
+<style scoped>
+@import '../assets/estilos.css';
 
-  .texto{
-    width: 254px;
-    height: 30px;
-    flex-grow: 0;
-    margin: 100px 0 0;
-    font-size: 32px;
-    font-weight: 0.5px;
-    font-stretch: normal;
-    font-style: normal;
-    line-height: normal;
-    letter-spacing: normal;
-    text-align: center;
-    color: #000000;
-  }
-  .boton-amarillo {
-    background-color: #F89D1E;
-  }
-  
-  
-  </style>
-  
+.boton-amarillo {
+  background-color: #F89D1E;
+}
+</style>
