@@ -1,10 +1,6 @@
 <template>
     <!-- loading-->
-    <div class="container d-flex justify-content-center align-items-center h-450" v-if="loading">
-        <div class="spinner-grow primary-normal div-size-72" role="status">
-            <span class="visually-hidden">Loading...</span>
-        </div>
-    </div>
+   
     <!-- Header -->
     <div class="row container-fluid" v-if="!loading">
         <div class="row px-5 rt-50 h-55 font-20 bold primary-bg d-flex align-items-center">
@@ -17,26 +13,37 @@
             <div class="col-2 text-center">
                 Ausentes
             </div>
-            <div class="col"></div>
+            <div class="col">
+
+            </div>
             <div class="col-2 text-center">
                 Detalle
             </div>
         </div>
-        <!-- Body -->
-        <div class="row h-100 px-5 secondary-bg text-center bold d-flex align-items-center"
-            v-for="(ramo, index) in ramos" :key="index">
+        <div class="row h-100 px-5 secondary-bg text-center bold d-flex align-items-center">
             <div class="col-2 text-center">
-                {{ getAño(ramo.Nombre) }}
+                Taller de Software
             </div>
             <div class="col-2 text-center">
-                {{ parseFecha(ramo.FechaInicio) }}
+                50
             </div>
             <div class="col-2 text-center">
-                {{ parseFecha(ramo.FechaTermino) }}
+                10
             </div>
             <div class="col">
             </div>
+            <div class="col-2 d-flex justify-content-center align-items-center">
+                <button class="btn-light-50 bold btn-size-150" >
+                    Ver
+                </button>
+            </div>
+            
+
         </div>
+
+    
+        
+        <!--  Ver periodos  -->
     </div>
 </template>
 
@@ -44,6 +51,7 @@
     import axios from 'axios';
     import moment from 'moment';
     import ENDPOINTS from '../../../ENPOINTS.json';
+    
 
 export default {
     name: 'VerRamos',
@@ -97,6 +105,7 @@ export default {
         }
     },
     components: {
+    
         
     }
 }
