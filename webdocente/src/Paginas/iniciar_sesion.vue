@@ -38,7 +38,12 @@ export default {
     const botonC = ref(false); // Variable para controlar el color del botón
     let details = ref('');
     let password = ref('');
+
     
+
+
+
+
     const cambiarColor = () => {
       // Cambiar el estado del botón de rojo a otro color y viceversa
       botonC.value = !botonC.value;

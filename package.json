@@ -1,6 +1,8 @@
 {
   "dependencies": {
     "bootstrap": "^5.3.3",
+    "cors": "^2.8.5",
+    "mysql": "^2.18.1",
     "vue-router": "^4.3.2"
   }
 }
