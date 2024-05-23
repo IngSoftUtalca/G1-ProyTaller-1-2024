@@ -7,7 +7,13 @@ app.use(express.json());
 const TiempoRezago = 30; // definida en minutos 
 let procesandoClases = false;
 const cors = require('cors');
-app.use(cors({ origin: '*' }));
+
+const corsOptions = {
+    origin: ['http://localhost:8080', 'http://localhost:8082', require('../ENPOINTS.json').webdocente, require('../ENPOINTS.json').mainpage],
+    optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+  }
+  
+app.use(cors({ origin: corsOptions }));
 
 const consultas = require('./verificaciones.js');
 
@@ -252,30 +258,36 @@ let revisarSemestre = true
 
 
 async function  CerrarClaseIniciadaDocente(rut,reemplazo){
-    return new Promise((resolve,reject) => {
 
+
+    return new Promise((resolve,reject) => {
+        let horaactual = consultas.GetHoraActual()
         const conection = mysql.createConnection(dbData);
         conection.connect((error)=>{
             if(error){
                 procesandoClases = false
                 return;
             }else{
-                parametros = [consultas.GetHoraActual(),rut]
-                let queryUpt = `UPDATE Clase SET Hora_Termino =? ,Estado='Asistido'  WHERE docente = ? and Estado = Pendiente `
-                    conection.query(queryUpt,parametros,(error,results)=>{
-                        if(error){
-                            return reject(500);
-                        }else{
-                            if(reemplazo != null){
-                                IniciarClase(reemplazo); 
-                            }
-                            resolve(200)
+                console.log(horaactual,rut)
+                parametros = [horaactual,rut]
+                let queryUpt = `UPDATE Clase SET Hora_Termino =? ,Estado='Asistido'  WHERE docente = ? and Estado = 'Pendiente' `
+                conection.query(queryUpt,parametros,(error,results)=>{
+                    if(error){
+                        
+                        return reject(500);
+                    }else{
+                        
+                        if(reemplazo != null){
+                            IniciarClase(reemplazo); 
                         }
-                    })
+                        return resolve(200)
+                    }
+                    
+                })
             }
         });
         
-        reject(400)
+        
         
 
     })
