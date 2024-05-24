@@ -48,6 +48,9 @@ export default {
     const moment = require("moment-timezone");
     this.inicio = moment().tz("America/Santiago").format("HH:mm");
     this.rut = route.params.id;
+
+    console.log(this.$route.query.sala);
+
     try {
       await axios.post(
         ENPOINTS["ms-validacionrol"] + "/validar",

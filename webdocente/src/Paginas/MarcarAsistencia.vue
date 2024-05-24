@@ -144,7 +144,7 @@ export default {
   },
   methods: {
     marcarAsistencia() {
-      window.location.href = ENPOINTS["login-WD"];
+      window.location.href = ENPOINTS["login-WD"]+"/?sala="+this.idSala;
     },
   },
 };
