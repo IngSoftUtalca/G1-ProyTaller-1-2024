@@ -4,14 +4,15 @@
     $id = isset($_GET['id']) ? $_GET['id'] : false;
     $v = isset($_GET['v']) ? $_GET['v'] : false;
     /* -------------------------------------- */
-    
+
+    session_start();
+    $sala = $_SESSION['sala']; // se salva la variable
+
     $webdocente = file_get_contents('../ENPOINTS.json');
     $webdocente = json_decode($webdocente, true);
     $webdocente = $webdocente['webdocente'];
-
     // aca podia redirigirse a la pagina qr enviandole el rut 
-    $webdocente = $webdocente."/claseinicio"."/".$id; 
-
+    $webdocente = $webdocente."/claseinicio"."/".$id."?sala=".$sala;
 
     if (!$id) {
         /* Redirección a aplicativo de inicio de sesión - ¡NO MODIFICAR! */
@@ -19,7 +20,7 @@
         header("location: https://huemul.utalca.cl/sso/login.php?url=".$url);
         /* ----------------------------------------------------------- */
     } elseif ($v) {
-
+        session_destroy(); // se termina la sesion especial
         /* Configuración de sesión - Según lo requerido en el sistema, tener en cuenta que sesión del IDP-SP dura 25 min*/
         error_reporting(-1);
         ini_set('display_errors', 'On');
