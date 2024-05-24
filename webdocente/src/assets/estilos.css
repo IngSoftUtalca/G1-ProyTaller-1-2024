@@ -126,6 +126,14 @@
   font-size: 30px;
 }
 
+.font-22 {
+  font-size: 22px;
+}
+
+.font-24 {
+  font-size: 24px;
+}
+
 .font-100{
   font-size: 100px;
 }
@@ -141,4 +149,14 @@
 
 .font-20 {
   font-size: 20px;
+}
+
+.size-200 {
+  width: 200px;
+  height: 45px;
+}
+
+.size-120 {
+  width: 120px;
+  height: 45px;
 }
