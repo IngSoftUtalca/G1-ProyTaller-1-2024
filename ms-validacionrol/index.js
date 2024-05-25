@@ -4,7 +4,6 @@ const PORT = 3011;
 
 const mysql = require('mysql');
 const dbConfig = require('../ENPOINTS.json').DB;
-const runQuery = require('./query.js').runQuery;
 const runParametrizedQuery = require('./query.js').runParametrizedQuery;
 const cors = require('cors');
 
@@ -64,6 +63,48 @@ app.post('/validar', async (req, res) => {
     response.Nombre = 'Base de datos no disponible';
     res.status(500).json(response);
   }
+});
+
+app.post('/validar/ramo', async (req, res) => {
+  const { Rut, Ramo } = req.body;
+  let response = {
+    mensaje: 'consulta no iniciada para el rut: ' + Rut + ' y el ramo: ' + Ramo,
+    Ramo: Ramo,
+    Valido: false
+  };
+
+  try {
+    connection = mysql.createConnection(dbConfig);
+    connection.connect();
+
+    const query = `SELECT * FROM Asignacion WHERE RUT_Docente = ? AND Nombre_Ramo = ? AND Periodo_Ramo IN (SELECT Periodo.ID as Periodo FROM Periodo WHERE Estado = 'Activo');`;
+
+    await runParametrizedQuery(connection, query, [Rut, Ramo])
+      .then((result) => {
+        if (result.length === 0) {
+          response.mensaje = 'El docente no tiene asignado el ramo';
+          res.status(400).json(response);
+        } else {
+          response.mensaje = 'El docente tiene asignado el ramo';
+          response.Valido = true;
+          res.status(200).json(response);
+        }
+      })
+      .catch((error) => {
+        response.mensaje = 'Error en la consulta: ' + error.getMessage();
+        res.status(501).json(response);
+      })
+      .finally(() => {
+        if (connection && connection.state !== 'disconnected') {
+          connection.end();
+        }
+      });
+
+  } catch (error) {
+    response.mensaje = 'Error en la consulta: ' + error.getMessage();
+    res.status(500).json(response);
+  }
+
 });
 
 app.listen(PORT, () => {

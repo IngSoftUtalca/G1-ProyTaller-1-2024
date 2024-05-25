@@ -34,6 +34,8 @@
 import axios from "axios";
 import ENPOINTS from "../../../ENPOINTS.json";
 import { useRoute } from "vue-router";
+import constantes from "../shared/constances.json";
+
 export default {
   data() {
     return {
@@ -41,6 +43,8 @@ export default {
       loading: true,
       botonC: false,
       rut: "",
+      sala: "", 
+      bloque: ""
     };
   },
   async mounted() {
@@ -48,8 +52,39 @@ export default {
     const moment = require("moment-timezone");
     this.inicio = moment().tz("America/Santiago").format("HH:mm");
     this.rut = route.params.id;
+    let dia = new Date().getDay();
+    const bloques = constantes.bloques;
+    // en el arreglo json bloques buscaramos el bloque en el que su hora de inicio y termino esté dentro de la hora actual
+    this.bloque = "12";
+    for (let i = 0; i < bloques.length; i++) {
+      const horaInicioBloque = moment(bloques[i].inicio, "HH:mm:ss");
+      const horaFinBloque = moment(bloques[i].fin, "HH:mm:ss");
+      const horaActual = moment(this.inicio, "HH:mm:ss");
 
-    console.log(this.$route.query.sala);
+      if (horaActual.isBetween(horaInicioBloque, horaFinBloque)) {
+        this.bloque = bloques[i].id;
+        break;
+      }
+    }
+
+    //dia = 1; // borrar esto o comentar
+    //this.bloque = "2"; // borrar esto o comentar
+
+    console.log("dia: ", dia);
+
+    this.sala = this.$route.query.sala;
+
+    const { Ramo } = await axios.get(
+      ENPOINTS["bff-horarios"] +
+      "/instancia?sala=" +
+      this.sala +
+      "&dia=" +
+      dia +
+      "&bloque=" +
+      this.bloque
+    );
+
+    console.log("ramo: ", Ramo);
 
     try {
       await axios.post(
@@ -68,10 +103,11 @@ export default {
       await this.$router.push("/error");
     }
 
-    // Aquí puedes agregar la lógica para marcar la asistencia
-
     await axios.post(ENPOINTS["ms-registroasistencia"] + "/registrarinicio", {
-      Rut: this.rut
+      Rut: this.rut,
+      Ramo: Ramo,
+      Sala: this.sala,
+      Inicio: this.inicio
     },
       {
         headers: {
@@ -84,7 +120,6 @@ export default {
       })
       .catch((error) => {
         console.error("Error:", error.response);
-        //return "malo";
         this.$router.push("/error");
       });
 
