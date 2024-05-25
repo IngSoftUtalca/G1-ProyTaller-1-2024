@@ -67,14 +67,9 @@ export default {
       }
     }
 
-    //dia = 1; // borrar esto o comentar
-    //this.bloque = "2"; // borrar esto o comentar
-
-    console.log("dia: ", dia);
-
     this.sala = this.$route.query.sala;
 
-    const { Ramo } = await axios.get(
+    const res = await axios.get(
       ENPOINTS["bff-horarios"] +
       "/instancia?sala=" +
       this.sala +
@@ -83,6 +78,8 @@ export default {
       "&bloque=" +
       this.bloque
     );
+
+    const Ramo = res.data.Ramo;
 
     console.log("ramo: ", Ramo);
 
@@ -100,6 +97,23 @@ export default {
         }
       );
     } catch (error) {
+      await this.$router.push("/error");
+    }
+
+    try {
+      await axios.post(
+        ENPOINTS["ms-validacionrol"] + "/validar/ramo",
+        {
+          Rut: this.rut,
+          Ramo: Ramo,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    }catch (error) {
       await this.$router.push("/error");
     }
 

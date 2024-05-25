@@ -68,10 +68,6 @@ export default {
       }
     }
 
-    //dia = 1; // borrar esto o comentar
-    //this.bloque = "2"; // borrar esto o comentar
-
-
     this.idSala = route.params.idSala;
     const res = await axios.get(
       ENPOINTS["bff-horarios"] +
