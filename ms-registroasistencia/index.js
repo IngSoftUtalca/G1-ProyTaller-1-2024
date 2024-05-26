@@ -153,13 +153,13 @@ app.post('/registrarinicio', async (req, res) => {
                         
                         let queryComprobar2;
                         if(req.body.test){// VERSION ESTATICA        
-                            parametros = [req.body.semestreActual,req.body.Inicio,req.body.Inicio,req.body.Rut,req.body.semestreActual,req.body.Inicio,req.body.Inicio,req.body.Rut,req.body.diaS,req.body.diaS]
+                            parametros = [req.body.semestreActual,req.body.Inicio,req.body.Inicio,req.body.Rut,req.body.sala,req.body.diaS]
                         }else{ // VERSION REAL
-                            parametros = [semestreActual,horaactual,horaactual,req.body.Rut,semestreActual,horaactual,horaactual,req.body.Rut,diaS,diaS]
+                            parametros = [semestreActual,horaactual,horaactual,req.body.Rut,req.body.sala,diaS]
 
                         }       
 
-                        queryComprobar2 = `SELECT Sala as idSala, RUT_Docente,Ramo,Bloque,Hora_Inicio as Inicio, Hora_Termino as Termino from Asignacion INNER JOIN (SELECT MIN(ID)as Bloque,MIN(Bloque.Inicio) as Hora_Inicio, MAX(Bloque.Termino) as Hora_Termino,Ramo,Sala,Semestre,Dia_Semana FROM Instancia INNER JOIN Bloque on Instancia.Bloque = Bloque.ID INNER JOIN Asignacion on Ramo = Nombre_Ramo GROUP BY Sala,Semestre,Dia_Semana,Ramo) as t1 on Ramo = Nombre_Ramo and Semestre = ? and Hora_Inicio < ? and Hora_Termino > ? and RUT_Docente = ? and (select Sala from Instancia INNER JOIN Asignacion on Nombre_Ramo = Ramo INNER JOIN Bloque on Bloque = ID where Semestre = ? and Hora_Inicio < ? and Hora_Termino > ? and Hora_Inicio <= Inicio and Hora_Termino >= Termino and Rut_Docente = ? and Dia_Semana= ? LIMIT 1) = Sala and Dia_Semana = ?;`;
+                        queryComprobar2 = `SELECT Sala as idSala, RUT_Docente,Ramo,Bloque,Hora_Inicio as Inicio, Hora_Termino as Termino from Asignacion INNER JOIN (SELECT MIN(ID)as Bloque,MIN(Bloque.Inicio) as Hora_Inicio, MAX(Bloque.Termino) as Hora_Termino,Ramo,Sala,Semestre,Dia_Semana FROM Instancia INNER JOIN Bloque on Instancia.Bloque = Bloque.ID INNER JOIN Asignacion on Ramo = Nombre_Ramo GROUP BY Sala,Semestre,Dia_Semana,Ramo) as t1 on Ramo = Nombre_Ramo and Semestre = ? and Hora_Inicio < ? and Hora_Termino > ? and RUT_Docente = ? and ? = Sala and Dia_Semana = ?;`;
 
                         conection.query(queryComprobar2,parametros,(error,results)=>{
                             conection.end();
