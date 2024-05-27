@@ -125,7 +125,7 @@ export default {
 
 
     let ipusuario = ""
-    fetch('https://api.ipify.org?format=json')
+    await fetch('https://api.ipify.org?format=json')
       .then(response => response.json())
       .then(response => { ipusuario = response.ip });
 
