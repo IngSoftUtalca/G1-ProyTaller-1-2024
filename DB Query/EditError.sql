@@ -1,0 +1,9 @@
+ALTER TABLE Error
+    ADD Hora TIME;
+
+CREATE TRIGGER set_hora_before_insert
+    BEFORE INSERT ON Error
+    FOR EACH ROW
+BEGIN
+    SET NEW.Hora = CONVERT_TZ(CURRENT_TIMESTAMP,'+00:00','-03:00');
+END;

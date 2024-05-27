@@ -5,9 +5,13 @@ const cors = require('cors');
 
 let runQuery = require('./querys.js').runQuery;
 
-//ya se puede hacer las querys 
+const corsOptions = {
+  origin: ['http://localhost:8080', 'http://localhost:8082', require('../ENPOINTS.json').webdocente, require('../ENPOINTS.json').mainpage],
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
+
+app.use(cors(corsOptions));
 app.use(express.json());
-app.use(cors({ origin: '*' }));
 
 const dbData = require('../ENPOINTS.json').DB;
 
@@ -20,11 +24,15 @@ app.post('/error', async (req, res) => {
   } catch (error) {
     return res.status(500).json({ message: 'Error al conectar con la base de datos' });
   }
-  const { fecha, hora, rut, detalle, clase_dia, ramo_nombre, ramo_periodo } = req.body;
-  const query = `INSERT INTO Justificacion (Fecha, Hora, Rut, Detalle, Clase_Dia, Ramo_Nombre, Ramo_Periodo) VALUES (?, ?, ?, ?, ?, ?, ?)`; //query para insertar un error
+  const { rut, detalle, clase_dia, ramo_nombre, razon, sala, justificable } = req.body;
+  const justificar = `INSERT INTO Justificacion (RUT, Detalle, Clase_Dia, Ramo_Nombre) VALUES (?, ?, ?, ?);`;
+  const error = `INSERT INTO Error (Razon, Detalle, Docente, Ramo, Sala) VALUES (?, ?, ?, ?, ?);`;
   try {
-    await runQuery(connection, query, [fecha, hora, rut, detalle, clase_dia, ramo_nombre, ramo_periodo]);
-    res.json({ message: 'Error registrado correctamente' });
+    if (justificable){
+      await runQuery(connection, justificar, [rut, detalle, clase_dia, ramo_nombre]);
+    }
+    await runQuery(connection, error, [razon, detalle, rut, ramo_nombre, sala]);
+    res.status(200).json({ message: 'Error registrado' });
   } catch (error) {
     res.status(500).json({ message: 'Error al registrar el error: '+error });
   }
