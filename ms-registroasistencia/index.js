@@ -166,7 +166,7 @@ app.post('/registrarinicio', async (req, res) => {
                                 
                             }else{
                                 if(results2.length == 0){ // se guardara como pendiente
-                                    await IniciarClase([req.body.Rut,fechaActual,horaactual,horaactual,'192.0.0.0','Pendiente',req.body.Ramo,semestreActual]) // (docente, Dia, Hora_Inicio, Hora_Termino, IP, Estado, Ramo_Nombre, Ramo_Periodo)
+                                    await IniciarClase([req.body.Rut,fechaActual,horaactual,horaactual,req.body.IP,'Pendiente',req.body.Ramo,semestreActual]) // (docente, Dia, Hora_Inicio, Hora_Termino, IP, Estado, Ramo_Nombre, Ramo_Periodo)
                                     return res.status(200).json({Valido:true,Iniciado: horaactual,Ramo:req.body.Ramo,Evento:"iniciado"});
                                 }else{
 
@@ -176,7 +176,7 @@ app.post('/registrarinicio', async (req, res) => {
 
                                         //return res.status(400).json({error: 'el profesor ya tiene una clase iniciada'});
 
-                                        await CerrarClaseIniciadaDocente(req.body.Rut,[req.body.Rut,fechaActual,horaactual,horaactual,'192.0.0.0','Pendiente',req.body.Ramo,semestreActual]) // se cierra la clase que ya estaba abierta
+                                        await CerrarClaseIniciadaDocente(req.body.Rut,[req.body.Rut,fechaActual,horaactual,horaactual,req.body.IP,'Pendiente',req.body.Ramo,semestreActual]) // se cierra la clase que ya estaba abierta
                                         
                                         return res.status(200).json({Valido:true,Iniciado: horaactual,Ramo:req.body.Ramo,Evento:"Cerro pendiente e inicio otro"});
                                     }
@@ -416,7 +416,7 @@ function RevisionClasesIniciadasANTIGUA(cursolocal){
         }else{
             const queryInsert =`INSERT INTO Clase (docente, Dia, Hora_Inicio, Hora_Termino, IP,Estado, Ramo_Nombre, Ramo_Periodo) VALUES (? ,? ,? ,? ,? ,? ,? ,? )`;
             Acerrar.forEach(elementos => {
-                let parametros = [elementos.RUT_Docente,hoyFecha,elementos.Inicio,horaactual,'192.178.0.0','No Terminado',elementos.Ramo,semestreActual]
+                let parametros = [elementos.RUT_Docente,hoyFecha,elementos.Inicio,horaactual,'0.0.0.0','Ausente',elementos.Ramo,semestreActual]
                 conection.query(queryInsert,parametros,(error,results)=>{
                     if(error){
                         procesandoClases = false
@@ -516,7 +516,7 @@ function RevisionClasesNoIniciadas(){
 
 
                         const queryInsert =`INSERT INTO Clase (docente, Dia, Hora_Inicio, Hora_Termino, IP,Estado, Ramo_Nombre, Ramo_Periodo) VALUES (?,?,?,?,?,?,?,?)`;
-                        let parametros = [elementos.Rut_Docente,hoyFecha,elementos.Inicio,horaactual,'192.178.0.0','No Iniciado',elementos.Nombre_Ramo,semestreActual]
+                        let parametros = [elementos.Rut_Docente,hoyFecha,elementos.Inicio,elementos.Termino,'0.0.0.0','Ausente',elementos.Nombre_Ramo,semestreActual]
 
                         conection.query(queryInsert,parametros,(error,results1)=>{
                             if(error){
