@@ -71,14 +71,20 @@ export default {
           title: 'Reporte enviado',
           text: 'Tu reporte ha sido enviado con éxito',
           icon: 'success',
-          confirmButtonText: 'Aceptar'
+          confirmButtonText: 'Aceptar',
+          willClose: () => {
+            this.$router.push({ path: '/' });
+          }
         });
       }).catch(() => {
         Swal.fire({
           title: 'Error',
           text: 'Ha ocurrido un error al enviar el reporte',
           icon: 'error',
-          confirmButtonText: 'Aceptar'
+          confirmButtonText: 'Aceptar',
+          willClose: () => {
+            this.$router.push({ path: '/' });
+          }
         });
       })
     }
