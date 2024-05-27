@@ -107,7 +107,9 @@ export default {
               {
                 "longitud": posicion.coords.longitude,
                 "latitud": posicion.coords.latitude,
-                "sala": this.idSala
+                "sala": this.idSala,
+                "IP": ipusuario
+
               },
               {
                 headers: {

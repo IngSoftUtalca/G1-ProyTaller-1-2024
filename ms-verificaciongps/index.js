@@ -39,9 +39,11 @@ app.post('/verificar', async (req, res) => {
 
     if(req.body.IP){
       if(verificacionIP.test(req.body.IP)){
+        
         console.log(true)
       }else{
         console.log(false)
+        return res.status(200).json({valido: false,error:"ip no valida"});
       }
 
 
@@ -91,7 +93,7 @@ app.post('/verificar', async (req, res) => {
           if(modulo <= tolerancia){
             return res.status(200).json({valido: true});
           }else{
-            return res.status(200).json({valido: false});
+            return res.status(200).json({valido: false,error:"fuera de rango"});
           }
         }
       })
