@@ -28,23 +28,33 @@
 </template>
 
 <script>
-import { ref } from 'vue'
-
 export default {
-  setup() {
-    const selectedOption = ref('error_de_red')
-    const details = ref('')
-
-    const enviarReporte = () => {
-      // Aquí puedes agregar la lógica para enviar el reporte
-      console.log('Opción seleccionada:', selectedOption.value)
-      console.log('Detalles:', details.value)
-    }
-
+  data() {
     return {
-      selectedOption,
-      details,
-      enviarReporte
+      selectedOption: 'error_de_red',
+      details: '',
+      mensaje: '', // Mensaje de error
+      justificable: false, // Variable para saber si el error es justificable
+      ramo: "", // Nombre del ramo
+      sala: "", // Nombre de la sala
+      clase_dia: "" // Nombre de la clase
+    }
+  },
+  mounted() {
+    const route = this.$route;
+    const { mensaje, jusificable, ramo, sala, clase_dia } = route.params;
+    this.mensaje = mensaje;
+    this.justificable = jusificable;
+    this.ramo = ramo;
+    this.sala = sala;
+    this.clase_dia = clase_dia;
+    console.log(route.params);
+  },
+  methods: {
+    enviarReporte() {
+      // Aquí puedes agregar la lógica para enviar el reporte
+      console.log('Opción seleccionada:', this.selectedOption)
+      console.log('Detalles:', this.details)
     }
   }
 }

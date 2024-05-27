@@ -43,13 +43,15 @@ export default {
       loading: true,
       botonC: false,
       rut: "",
-      sala: "", 
-      bloque: ""
+      sala: "",
+      bloque: "",
+      ramo: "",
     };
   },
   async mounted() {
     let routeError = false;
     let mensajeError = "";
+    let justificacion = false;
     const route = useRoute();
     const moment = require("moment-timezone");
     this.inicio = moment().tz("America/Santiago").format("HH:mm");
@@ -83,7 +85,7 @@ export default {
 
     const Ramo = res.data.Ramo;
 
-    console.log("ramo: ", Ramo);
+    this.ramo = Ramo;
 
     try {
       await axios.post(
@@ -116,7 +118,7 @@ export default {
           },
         }
       );
-    }catch (error) {
+    } catch (error) {
       mensajeError = error.response.data.mensaje;
       routeError = true;
     }
@@ -134,18 +136,34 @@ export default {
       }
     )
       .then((response) => {
-        console.log("Response: ", response.data);
+        response.data;
       })
       .catch((error) => {
         mensajeError = error.response.data.error;
         routeError = true;
+        justificacion = true;
       });
 
-    routeError ? await this.$router.push({path: '/error', params: {mensaje: mensajeError}}) : this.loading = false;
+    if (routeError) {
+      this.$router.push({
+        name: 'ErrorAsistencia',
+        params: {
+          mensaje: mensajeError,
+          jusificable: justificacion,
+          ramo: this.ramo,
+          sala: this.sala,
+          clase_dia: new Date(new Date().toLocaleString("en-US", { timeZone: "America/Santiago" })).toISOString().slice(0, 10),
+        }
+      });
+    } else {
+      this.loading = false;
+    }
   },
   methods: {
     claseiniciada() {
-      // Aquí puedes agregar la lógica para marcar la asistencia
+      /**
+       * Aqui el parametro de error de justificacion va a ser true en el router push
+       */
       axios
         .post(
           ENPOINTS["ms-registroasistencia"] + "/registrarfinal",
@@ -159,17 +177,22 @@ export default {
           }
         )
         .then((response) => {
-          console.log("Response: ", response.data);
+          response.data;
           window.location.href = ENPOINTS["webdocente"];
         })
 
         .catch((error) => {
-          console.error("Error:", error.response);
-          //return "malo";
-          this.$router.push("/error");
+          this.$router.push({
+            name: 'ErrorAsistencia',
+            params: {
+              mensaje: error.getMessage,
+              jusificable: true,
+              ramo: this.ramo,
+              sala: this.sala,
+              clase_dia: new Date(new Date().toLocaleString("en-US", { timeZone: "America/Santiago" })).toISOString().slice(0, 10),
+            }
+          });
         });
-
-      console.log("Asistencia marcada");
     },
   },
 };
