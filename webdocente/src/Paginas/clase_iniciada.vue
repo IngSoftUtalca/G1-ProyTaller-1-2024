@@ -123,7 +123,7 @@ export default {
       routeError = true;
     }
 
-    await axios.post(ENPOINTS["ms-registroasistencia"] + "/registrarinicio", {
+    !routeError ? await axios.post(ENPOINTS["ms-registroasistencia"] + "/registrarinicio", {
       Rut: this.rut,
       Ramo: Ramo,
       Sala: this.sala,
@@ -142,12 +142,13 @@ export default {
         mensajeError = error.response.data.error;
         routeError = true;
         justificacion = true;
-      });
+      }) : justificacion = false;
 
     if (routeError) {
       this.$router.push({
         name: 'ErrorAsistencia',
         params: {
+          rut: this.rut,
           mensaje: mensajeError,
           jusificable: justificacion,
           ramo: this.ramo,
@@ -185,6 +186,7 @@ export default {
           this.$router.push({
             name: 'ErrorAsistencia',
             params: {
+              rut: this.rut,
               mensaje: error.getMessage,
               jusificable: true,
               ramo: this.ramo,
