@@ -120,7 +120,7 @@ export default {
     await axios.post(ENPOINTS["ms-registroasistencia"] + "/registrarinicio", {
       Rut: this.rut,
       Ramo: Ramo,
-      Sala: this.sala,
+      sala: this.sala,
       Inicio: this.inicio
     },
       {

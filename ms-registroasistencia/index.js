@@ -154,68 +154,33 @@ app.post('/registrarinicio', async (req, res) => {
                     if(results.length != 0){
                         return res.status(400).json({error: "ya marcaste tu asistencia en esta hora"})
                     }else{
-                        // VERSION ESTATICA     
-                     
-                        
-                        let queryComprobar2;
-                        if(req.body.test){// VERSION ESTATICA        
-                            parametros = [req.body.semestreActual,req.body.Inicio,req.body.Inicio,req.body.Rut,req.body.sala,req.body.diaS]
-                        }else{ // VERSION REAL
-                            parametros = [semestreActual,horaactual,horaactual,req.body.Rut,req.body.sala,diaS]
 
-                        }       
+                        parametros = [req.body.Rut]
+                        queryComprobar2 = `SELECT * FROM Clase where Estado = 'Pendiente' and docente = ?`;
 
-                        queryComprobar2 = `SELECT Sala as idSala, RUT_Docente,Ramo,Bloque,Hora_Inicio as Inicio, Hora_Termino as Termino from Asignacion INNER JOIN (SELECT MIN(ID)as Bloque,MIN(Bloque.Inicio) as Hora_Inicio, MAX(Bloque.Termino) as Hora_Termino,Ramo,Sala,Semestre,Dia_Semana FROM Instancia INNER JOIN Bloque on Instancia.Bloque = Bloque.ID INNER JOIN Asignacion on Ramo = Nombre_Ramo GROUP BY Sala,Semestre,Dia_Semana,Ramo) as t1 on Ramo = Nombre_Ramo and Semestre = ? and Hora_Inicio < ? and Hora_Termino > ? and RUT_Docente = ? and ? = Sala and Dia_Semana = ?;`;
-
-                        conection.query(queryComprobar2,parametros,(error,results)=>{
-                            
+                        conection.query(queryComprobar2,parametros,async (error,results2)=>{
+                            conection.end();
                             if(error){
                                 console.log(error);
                                 return res.status(500).json({error: "no hay conexion a la BD 3"});
                                 
-                            }
-                            if(results.length != 0){
-                                valido = true;
-                                var desc = null;
-
-
-                                parametros = [req.body.Rut]
-                                queryComprobar2 = `SELECT * FROM Clase where Estado = 'Pendiente' and docente = ?`;
-
-                                conection.query(queryComprobar2,parametros,async (error,results2)=>{
-                                    conection.end();
-                                    if(error){
-                                        console.log(error);
-                                        return res.status(500).json({error: "no hay conexion a la BD 3"});
-                                        
-                                    }else{
-                                        if(results2.length == 0){ // se guardara como pendiente
-                                            await IniciarClase([req.body.Rut,fechaActual,horaactual,results[0].Termino,'192.0.0.0','Pendiente',results[0].Ramo,semestreActual]) // (docente, Dia, Hora_Inicio, Hora_Termino, IP, Estado, Ramo_Nombre, Ramo_Periodo)
-                                            return res.status(200).json({Valido:true,Iniciado: horaactual,Ramo:results[0].Ramo,Evento:"iniciado"});
-                                        }else{
-
-                                            if( results2[0].Ramo_Nombre == results[0].Ramo){ // no hacec nada ya que es la misma clase 
-                                                return res.status(200).json({Valido:true,Iniciado: horaactual,Ramo:results[0].Ramo,Evento:"ya iniciado"});
-                                            }else{ // 
-        
-                                                //return res.status(400).json({error: 'el profesor ya tiene una clase iniciada'});
-        
-                  
-                                                await CerrarClaseIniciadaDocente(req.body.Rut,[req.body.Rut,fechaActual,horaactual,results[0].Termino,'192.0.0.0','Pendiente',results[0].Ramo,semestreActual]) // se cierra la clase que ya estaba abierta
-
-
-                                                
-                                                return res.status(200).json({Valido:true,Iniciado: horaactual,Ramo:results[0].Ramo,Evento:"Cerro pendiente e inicio otro"});
-                                            }
-                                        }
-                                    }
-                                });
-
-
-
-
                             }else{
-                                return res.status(400).json({error: 'no se ha encontrado clase para este profesor'});
+                                if(results2.length == 0){ // se guardara como pendiente
+                                    await IniciarClase([req.body.Rut,fechaActual,horaactual,horaactual,'192.0.0.0','Pendiente',req.body.Ramo,semestreActual]) // (docente, Dia, Hora_Inicio, Hora_Termino, IP, Estado, Ramo_Nombre, Ramo_Periodo)
+                                    return res.status(200).json({Valido:true,Iniciado: horaactual,Ramo:req.body.Ramo,Evento:"iniciado"});
+                                }else{
+
+                                    if( results2[0].Ramo_Nombre == req.body.Ramo){ // no hacec nada ya que es la misma clase 
+                                        return res.status(200).json({Valido:true,Iniciado: horaactual,Ramo:req.body.Ramo,Evento:"ya iniciado"});
+                                    }else{ // 
+
+                                        //return res.status(400).json({error: 'el profesor ya tiene una clase iniciada'});
+
+                                        await CerrarClaseIniciadaDocente(req.body.Rut,[req.body.Rut,fechaActual,horaactual,horaactual,'192.0.0.0','Pendiente',req.body.Ramo,semestreActual]) // se cierra la clase que ya estaba abierta
+                                        
+                                        return res.status(200).json({Valido:true,Iniciado: horaactual,Ramo:req.body.Ramo,Evento:"Cerro pendiente e inicio otro"});
+                                    }
+                                }
                             }
                         });
                     }
