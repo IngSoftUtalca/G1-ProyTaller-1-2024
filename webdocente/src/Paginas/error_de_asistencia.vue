@@ -17,7 +17,7 @@
         </div>
         <div class="row d-flex justify-content-center align-items-center">
           <button type="button" class="btn boton_celeste size-120 bold" :class="{ 'boton-amarillo': botonC }"
-          @click="cambiarColor">Salir</button>
+            @click="cambiarColor">Salir</button>
         </div>
       </div>
 
@@ -26,28 +26,47 @@
 </template>
 
 <script>
-import { ref } from 'vue'
-
 
 export default {
-  setup() {
-    const botonC = ref(false); // Variable para controlar el color del botón
-
-
-    const cambiarColor = () => {
-      // Cambiar el estado del botón de rojo a otro color y viceversa
-      botonC.value = !botonC.value;
-      window.close();
-    }
-
+  data() {
     return {
-      cambiarColor
+      botonC: false, // Variable para controlar el color del botón
+      mensaje: "", // Mensaje de error
+      justificable: false, // Variable para saber si el error es justificable
+      ramo: "", // Nombre del ramo
+      sala: "", // Nombre de la sala
+      clase_dia: "", // Nombre de la clase
+      rut: "", // Rut del usuario
     }
+  },
+  mounted() {
+    const route = this.$route;
+    const { rut, mensaje, jusificable, ramo, sala, clase_dia } = route.params;
+    this.mensaje = mensaje;
+    this.justificable = jusificable;
+    this.ramo = ramo;
+    this.sala = sala;
+    this.clase_dia = clase_dia;
+    this.rut = rut;
   },
   methods: {
     reportarError() {
-      // Aquí puedes agregar la ruta a la que deseas redirigir al usuario
-      this.$router.push('/reporte');
+      this.$router.push({
+        name: 'ReporteError',
+        params: {
+          rut: this.rut,
+          mensaje: this.mensaje,
+          jusificable: this.justificable,
+          ramo: this.ramo,
+          sala: this.sala,
+          clase_dia: this.clase_dia,
+        }
+      });
+    },
+    cambiarColor() {
+      // Cambiar el estado del botón de rojo a otro color y viceversa
+      this.botonC = !this.botonC;
+      window.close();
     }
   }
 }
