@@ -35,23 +35,26 @@ export default {
       justificable: false, // Variable para saber si el error es justificable
       ramo: "", // Nombre del ramo
       sala: "", // Nombre de la sala
-      clase_dia: "" // Nombre de la clase
+      clase_dia: "", // Nombre de la clase
+      rut: "", // Rut del usuario
     }
   },
   mounted() {
     const route = this.$route;
-    const { mensaje, jusificable, ramo, sala, clase_dia } = route.params;
+    const { rut, mensaje, jusificable, ramo, sala, clase_dia } = route.params;
     this.mensaje = mensaje;
     this.justificable = jusificable;
     this.ramo = ramo;
     this.sala = sala;
     this.clase_dia = clase_dia;
+    this.rut = rut;
   },
   methods: {
     reportarError() {
       this.$router.push({
         name: 'ReporteError',
         params: {
+          rut: this.rut,
           mensaje: this.mensaje,
           jusificable: this.justificable,
           ramo: this.ramo,
