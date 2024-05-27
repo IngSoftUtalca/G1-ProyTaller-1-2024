@@ -48,6 +48,8 @@ export default {
     };
   },
   async mounted() {
+    let routeError = false;
+    let mensajeError = "";
     const route = useRoute();
     const moment = require("moment-timezone");
     this.inicio = moment().tz("America/Santiago").format("HH:mm");
@@ -97,7 +99,8 @@ export default {
         }
       );
     } catch (error) {
-      await this.$router.push("/error");
+      mensajeError = error.response.data.Nombre;
+      routeError = true;
     }
 
     try {
@@ -114,7 +117,8 @@ export default {
         }
       );
     }catch (error) {
-      await this.$router.push("/error");
+      mensajeError = error.response.data.mensaje;
+      routeError = true;
     }
 
     await axios.post(ENPOINTS["ms-registroasistencia"] + "/registrarinicio", {
@@ -133,12 +137,11 @@ export default {
         console.log("Response: ", response.data);
       })
       .catch((error) => {
-        console.error("Error:", error.response);
-        this.$router.push("/error");
+        mensajeError = error.response.data.error;
+        routeError = true;
       });
 
-    this.loading = false;
-
+    routeError ? await this.$router.push({path: '/error', params: {mensaje: mensajeError}}) : this.loading = false;
   },
   methods: {
     claseiniciada() {

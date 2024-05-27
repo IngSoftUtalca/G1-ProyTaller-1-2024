@@ -5,9 +5,13 @@ const cors = require('cors');
 
 let runQuery = require('./querys.js').runQuery;
 
-//ya se puede hacer las querys 
+const corsOptions = {
+  origin: ['http://localhost:8080', 'http://localhost:8082', require('../ENPOINTS.json').webdocente, require('../ENPOINTS.json').mainpage],
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
+
+app.use(cors(corsOptions));
 app.use(express.json());
-app.use(cors({ origin: '*' }));
 
 const dbData = require('../ENPOINTS.json').DB;
 
@@ -24,7 +28,7 @@ app.post('/error', async (req, res) => {
   const query = `INSERT INTO Justificacion (Fecha, Hora, Rut, Detalle, Clase_Dia, Ramo_Nombre, Ramo_Periodo) VALUES (?, ?, ?, ?, ?, ?, ?)`; //query para insertar un error
   try {
     await runQuery(connection, query, [fecha, hora, rut, detalle, clase_dia, ramo_nombre, ramo_periodo]);
-    res.json({ message: 'Error registrado correctamente' });
+    res.status(200).json({ message: 'Error registrado correctamente' });
   } catch (error) {
     res.status(500).json({ message: 'Error al registrar el error: '+error });
   }
