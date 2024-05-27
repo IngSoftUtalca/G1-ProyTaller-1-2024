@@ -129,6 +129,8 @@ export default {
       .then(response => response.json())
       .then(response => { ipusuario = response.ip });
 
+      
+
     !routeError ? await axios.post(ENPOINTS["ms-registroasistencia"] + "/registrarinicio", {
 
       Rut: this.rut,
