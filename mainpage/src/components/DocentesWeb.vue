@@ -1,100 +1,101 @@
 <template>
-   
-    <div class="col w-120">
-                     <button class="btn-primary-16 btn-size-120" @click.prevent="add">
-                         <span class="bold">
-                             Agregar
-                         </span>
-                         <img src="@/assets/plus.svg" alt="Agregar">
-                     </button>
-                 </div>
-     <div class="underlay" v-if="OverlayAgregar" @click="close">
-             <AgregarDocente class="overlay" v-if="OverlayAgregar" @click.stop @close="close"/>
-     </div>
-     <!-- loading-->
-     <div class="container d-flex justify-content-center align-items-center h-450" v-if="loading">
-         <div class="spinner-grow primary-normal div-size-72" role="status">
-             <span class="visually-hidden">Loading...</span>
-         </div>
-     </div>
-     <!-- Header -->
-     <div class="row container-fluid" v-if="!loading">
-         <div class="row px-5 rt-50 h-55 font-20 bold primary-bg d-flex align-items-center">
-             <div class="col-2 text-center">
-                 R.U.T
-             </div>
-             <div class="col-2 text-center">
-                 Nombre
-             </div>
-             <div class="col-2 text-center">
-                 Facultad
-             </div>
-             
-             <div class="col-2 text-center">
-                 Campus
-             </div>
-             <div class="col-2 text-center">
-                 
-             </div>
-         </div>
-         <!-- Body -->
-         <div class="row h-100 px-5 secondary-bg text-center bold d-flex align-items-center"
-             v-for="(periodo, index) in periodos" :key="index">
-             <div class="col-2 text-center">
-                 {{ getAño(periodo.ID) }}
-             </div>
-             <div class="col-2 text-center">
-                 {{ parseFecha(periodo.FechaInicio) }}
-             </div>
-             <div class="col-2 text-center">
-                 {{ parseFecha(periodo.FechaTermino) }}
-             </div>
-             <div class="col">
-                 <button class="btn-light-50 bold btn-size-150" @click="add">
-                     Modificar
-                 </button>
-             </div>
-             <div class="col-2 d-flex justify-content-center align-items-center">
-                 <div class="pill-yellow pill-size-150" v-if="periodo.Estado == 'Pendiente'">
-                     {{ periodo.Estado }}
-                 </div>
-                 <div class="pill-green pill-size-150" v-if="periodo.Estado == 'Activo'">
-                     {{ periodo.Estado }}
-                 </div>
-                 <div class="pill-gray pill-size-150" v-if="periodo.Estado == 'Finalizado'">
-                     {{ periodo.Estado }}
-                 </div>
-             </div>
-         </div>
-         <!-- Modificar -->
-         <div class="underlay" v-if="OverlayAgregar" @click="close">
-             <AgregarDocente class="overlay" v-if="OverlayAgregar" @click.stop @close="close" />
-         </div>
-     </div>
- </template>
- 
- <script>
- import AgregarDocente from '@/components/AgregarDocente.vue';
-  export default {
-         name: 'AdministradoresWeb',
-         data() {
-             return {
-                 
-                 OverlayAgregar: false
-             }
-         },
-         methods: {
-             add() {
-                 this.OverlayAgregar = true;
-             },
-             close() {
-                 this.OverlayAgregar = false;
-             }
-         },
-         components: {
-             AgregarDocente
-         }
-     }
- </script>
- 
- 
+    <div class="container-fluid w-90">
+        <div class="row container-fluid my-14 d-flex justify-content-end">
+            <button class="btn-primary-16 btn-size-120" @click.prevent="add">
+                <span class="bold">
+                    Agregar
+                </span>
+                <img src="@/assets/plus.svg" alt="Agregar">
+            </button>
+        </div>
+        <div class="underlay" v-if="OverlayAgregar" @click="close">
+            <AgregarDocente class="overlay" v-if="OverlayAgregar" @click.stop @close="close" />
+        </div>
+        <!-- loading-->
+        <div class="container d-flex justify-content-center align-items-center h-450" v-if="loading">
+            <div class="spinner-grow primary-normal div-size-72" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+        <!-- Header -->
+        <table class="primary-bg text-center w-100">
+            <thead>
+                <tr>
+                    <th>R.U.T</th>
+                    <th>Nombre</th>
+                    <th>Facultad</th>
+                    <th>Campus</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(docente, index) in docentes" :key="index">
+                    <td>{{ docente.Rut }}</td>
+                    <td>{{ docente.Nombre }}</td>
+                    <td>{{ docente.Facultad }}</td>
+                    <td>{{ docente.Campus }}</td>
+                    <td>
+                        <button class="btn-light-50 bold btn-size-150" @click="borrar(index)">
+                            Eliminar
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="row" v-for="(docente, index) in docentes" :key="index">
+            <p>{{ docente.Rut }}</p>
+        </div>
+    </div>
+</template>
+
+<script>
+import AgregarDocente from '@/components/AgregarDocente.vue';
+export default {
+    name: 'AdministradoresWeb',
+    data() {
+        return {
+            OverlayAgregar: false,
+            docentes: null,
+        }
+    },
+    async onmounted() {
+        await this.getDocentes();
+    },
+    methods: {
+        async getDocentes() {
+            this.docentes = [
+            {
+                Rut: '12345678-9',
+                Nombre: 'Juan Perez',
+                Facultad: 'Facultad de Ingenieria',
+                Campus: 'Santiago'
+            },
+            {
+                Rut: '12345678-9',
+                Nombre: 'Juan Perez',
+                Facultad: 'Facultad de Ingenieria',
+                Campus: 'Santiago'
+            },
+            {
+                Rut: '12345678-9',
+                Nombre: 'Juan Perez',
+                Facultad: 'Facultad de Ingenieria',
+                Campus: 'Santiago'
+            }
+        ];
+        },
+        add() {
+            this.OverlayAgregar = true;
+        },
+        close() {
+            this.OverlayAgregar = false;
+        },
+        borrar(i){
+            this.docentes.splice(i, 1);
+        }
+    },
+    components: {
+        AgregarDocente
+    }
+}
+</script>
