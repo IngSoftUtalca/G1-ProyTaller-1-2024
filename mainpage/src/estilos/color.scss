@@ -89,6 +89,13 @@ $text-dark: #fff; // Un color claro para contrastar con el color oscuro
     }
 }
 
+.dark-border {
+    border: 1px solid $dark-color;
+}
+
+.gray-border {
+    border: 1px solid $gray;
+}   
 
 .debug{
     border: 1px solid red;
