@@ -119,7 +119,24 @@ export default {
         }
       );
     } catch (error) {
-      mensajeError = error.response.data.mensaje;
+      mensajeError += ' | '+error.response.data.mensaje;
+      routeError = true;
+    }
+
+    try {
+      await axios.post(
+        ENPOINTS["ms-validacionrol"] + "/horario",
+        {
+          Rut: this.rut
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    } catch (error) {
+      mensajeError += ' | '+error.response.data.mensaje;
       routeError = true;
     }
 
