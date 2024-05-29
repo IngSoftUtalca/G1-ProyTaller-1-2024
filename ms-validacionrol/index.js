@@ -39,7 +39,7 @@ app.post('/horario', async (req, res) => {
           res.status(400).json(response);
         } else {
           response.Horario = result;
-          response.Valido = true;
+          response.Valido = result[0].Estado === 'aprobado' ? true : false;
           mensaje = 'Consulta exitosa';
           res.status(200).json(response);
         }
