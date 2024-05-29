@@ -20,7 +20,7 @@ app.get('/', (req, res) => {
 });
 
 app.post('/horario', async (req, res) => {
-  const Rut = req.body.rut;
+  const Rut = req.body.Rut;
   let response = {
     Horario: [],
     Valido: false,
