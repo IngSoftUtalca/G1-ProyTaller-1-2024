@@ -127,7 +127,7 @@ export default {
       await axios.post(
         ENPOINTS["ms-validacionrol"] + "/horario",
         {
-          rut: this.rut
+          Rut: this.rut
         },
         {
           headers: {
