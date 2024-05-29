@@ -20,18 +20,18 @@ app.get('/', (req, res) => {
 });
 
 app.post('/horario', async (req, res) => {
-  const rut = req.body.rut;
+  const Rut = req.body.rut;
   let response = {
     Horario: [],
     Valido: false,
-    mensaje: 'consulta no iniciada para el rut: ' + rut
+    mensaje: 'consulta no iniciada para el rut: ' + Rut
   };
 
   try {
     connection = mysql.createConnection(dbConfig);
     connection.connect();
     const query = `SELECT Estado FROM Docente join Horario ON Docente.Horario = Horario.ID AND Docente.RUT = ?;`;
-    await runParametrizedQuery(connection, query, [rut])
+    await runParametrizedQuery(connection, query, [Rut])
       .then((result) => {
         if (result.length === 0) {
           response.Horario = result;
