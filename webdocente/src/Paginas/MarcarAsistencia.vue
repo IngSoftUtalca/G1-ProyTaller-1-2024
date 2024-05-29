@@ -93,7 +93,7 @@ export default {
     let validaciongps = false;
     let ipusuario = ""
 
-    fetch('https://api.ipify.org?format=json')
+    await fetch('https://api.ipify.org?format=json')
       .then(response => response.json())
       .then(response => { ipusuario = response.ip });
 
@@ -107,7 +107,9 @@ export default {
               {
                 "longitud": posicion.coords.longitude,
                 "latitud": posicion.coords.latitude,
-                "sala": this.idSala
+                "sala": this.idSala,
+                "IP": ipusuario
+
               },
               {
                 headers: {

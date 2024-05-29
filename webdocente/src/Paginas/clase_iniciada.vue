@@ -123,11 +123,21 @@ export default {
       routeError = true;
     }
 
+
+    let ipusuario = ""
+    await fetch('https://api.ipify.org?format=json')
+      .then(response => response.json())
+      .then(response => { ipusuario = response.ip });
+
+      
+
     !routeError ? await axios.post(ENPOINTS["ms-registroasistencia"] + "/registrarinicio", {
+
       Rut: this.rut,
       Ramo: Ramo,
-      Sala: this.sala,
-      Inicio: this.inicio
+      sala: this.sala,
+      Inicio: this.inicio,
+      IP: ipusuario
     },
       {
         headers: {
