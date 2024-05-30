@@ -16,6 +16,32 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
+app.get('/cargo/:rut', async (req, res) => {
+  try {
+    const rut = req.params.rut;
+    connection = mysql.createConnection(dbConfig);
+    connection.connect();
+    const query = `SELECT * FROM Docente WHERE RUT IN (SELECT Docente FROM Cargo WHERE Administrador = ?);`;
+    await runParametrizedQuery(connection, query, [rut])
+      .then((result) => {
+        if (result.length === 0) {
+          res.status(404).json({ message: 'No se encontraron datos' });
+        }
+        res.status(200).json(result);
+      })
+      .catch((error) => {
+        res.status(501).json({ message: 'Error de consulta' });
+      })
+      .finally(() => {
+        if (connection && connection.state !== 'disconnected') {
+          connection.end();
+        }
+      });
+  } catch (error) {
+    res.status(500).json({ message: 'Error en el servidor' });
+  }
+});
+
 app.get('/all-docentes', async (req, res) => {
   try {
     connection = mysql.createConnection(dbConfig);

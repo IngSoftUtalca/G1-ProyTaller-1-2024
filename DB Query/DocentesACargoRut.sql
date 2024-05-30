@@ -1,0 +1,1 @@
+SELECT * FROM Docente WHERE RUT IN (SELECT Docente FROM Cargo WHERE Administrador = '20509736');
