@@ -117,7 +117,7 @@ export default {
                 }
               }
             );
-            console.log(posicion.coords.latitude + " | " + posicion.coords.longitude + " => " + Vgps.data.valido + " ip:" + ipusuario)
+            //console.log(posicion.coords.latitude + " | " + posicion.coords.longitude + " => " + Vgps.data.valido + " ip:" + ipusuario)
 
             validaciongps = Vgps.data.valido
 
@@ -133,8 +133,21 @@ export default {
 
 
     if (validaciongps) {
+      
       // si es valido se hace
     } else {
+      window.location.href = ENPOINTS["webdocente"]+"/error";
+      this.$router.push({
+            name: 'ErrorAsistencia',
+            params: {
+              rut: "",
+              mensaje: "area no permitida (ip o coordenadas)",
+              jusificable: true,
+              ramo: this.ramo,
+              sala: this.idSala,
+              clase_dia: new Date(new Date().toLocaleString("en-US", { timeZone: "America/Santiago" })).toISOString().slice(0, 10),
+            }
+          });
       // si no es valido se hace
     }
 
