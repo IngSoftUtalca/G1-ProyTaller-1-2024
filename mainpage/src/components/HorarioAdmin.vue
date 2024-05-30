@@ -1,5 +1,5 @@
 <template>
-    <div class="container-fluid w-95 mx-0 mt-5" v-if="allinfo">
+    <div class="container-fluid w-95 mx-0 mt-5" v-if="allinfo && !loading">
         <!--- Header --->
         <div class="row rt-50 h-55 mx-0 font-20 bold primary-bg d-flex align-items-center"></div>
         <!--- Body --->
@@ -34,31 +34,34 @@
             </div>
         </div>
     </div>
-    <div class="container-fluid w-95 mx-0 mt-5" v-if="!allinfo">
-        <div class="row contaiter d-flex justify-content-center align-items-center primary-border h-60 r-18">
-            <div class="col container d-flex justify-content-start align-items-cente">
-                <button class="btn-primary-16 btn-size-120" @click="dejardever()">
-                    <span class="bold">
-                        volver
-                    </span>
-                </button>
+    <div class="container-fluid w-95 mx-0 mt-5" v-if="!allinfo && !loading">
+        <div class="row contaiter d-flex justify-content-center align-items-center primary-border px-4 h-60 r-18">
+            <div class="col-1 container d-flex justify-content-start align-items-cente" @click="dejardever()">
+                <img src="@/assets/backarrow.svg" alt="arrow-left">
             </div>
             <div class="col d-flex justify-content-center align-items-center">
                 <p class="m-0 align-middle bold font-22">Horario {{ docente.Nombre }}</p>
             </div>
-            <div class="col d-flex justify-content-end align-items-center ">
-                <div class="green-bg size-170-45 r-16 d-flex align-items-center justify-content-center">
-                    <p class="m-0 align-middle bold font-20">aprobar</p>
+            <div class="col-3 container d-flex">
+                <div class="col d-flex justify-content-end align-items-center">
+                    <div class="green-bg size-170-45 r-16 d-flex align-items-center justify-content-center">
+                        <p class="m-0 align-middle bold font-20">aprobar</p>
+                    </div>
                 </div>
-            </div>
-            <div class="col d-flex justify-content-end align-items-center">
-                <div class="red-bg size-170-45 r-16 d-flex align-items-center justify-content-center">
-                    <p class="m-0 align-middle bold font-20">rechazar</p>
+                <div class="col d-flex justify-content-end align-items-center">
+                    <div class="red-bg size-170-45 r-16 d-flex align-items-center justify-content-center">
+                        <p class="m-0 align-middle bold font-20">rechazar</p>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="row">
             <VerHorarioDocente :rut="docente.RUT"></VerHorarioDocente>
+        </div>
+    </div>
+    <div class="container-fluid h-450 d-flex justify-content-center align-items-center" v-if="loading">
+        <div class="spinner-grow primary-normal div-size-72" role="status">
+            <span class="visually-hidden">Loading...</span>
         </div>
     </div>
 </template>
@@ -75,7 +78,8 @@ export default {
             semestre: '',
             horarios: [],
             allinfo: true,
-            docente: {}
+            docente: {},
+            loading: true
         }
     },
     async mounted() {
@@ -129,7 +133,7 @@ export default {
         } catch (error) {
             console.log(error);
         }
-
+        this.loading = false;
     },
     methods: {
         VerHorarioDocente(docente) {
