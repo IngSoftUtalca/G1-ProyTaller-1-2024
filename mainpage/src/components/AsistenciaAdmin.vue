@@ -1,5 +1,5 @@
 <template>
-    <!-- loading-->
+   
    
     <!-- Header -->
     <div class="row container-fluid" v-if="!loading">
@@ -39,7 +39,6 @@
             </div>
         </div>
 
-<<<<<<< Updated upstream
 
 
         <div class="row h-100 px-5 secondary-bg text-center bold d-flex align-items-center">
@@ -64,11 +63,6 @@
         <div class="row h-100 px-5 secondary-bg text-center bold d-flex align-items-center">
             <div class="col-2 text-center">
                 Construccion de Software
-=======
-        <div class="row h-100 px-5 secondary-bg text-center bold d-flex align-items-center">
-            <div class="col-2 text-center">
-                Sistemas Operativos
->>>>>>> Stashed changes
             </div>
             <div class="col-2 text-center">
                 30
@@ -84,7 +78,6 @@
                 </button>
             </div>
         </div>
-<<<<<<< Updated upstream
 
         <div class="row h-100 px-5 secondary-bg text-center bold d-flex align-items-center">
             <div class="col-2 text-center">
@@ -92,50 +85,6 @@
             </div>
             <div class="col-2 text-center">
                 50
-=======
-        <div class="row h-100 px-5 secondary-bg text-center bold d-flex align-items-center">
-            <div class="col-2 text-center">
-                Modelos Discretos
-            </div>
-            <div class="col-2 text-center">
-                60
-            </div>
-            <div class="col-2 text-center">
-                0
-            </div>
-            <div class="col">
-            </div>
-            <div class="col-2 d-flex justify-content-center align-items-center">
-                <button class="btn-light-50 bold btn-size-150" >
-                    Ver
-                </button>
-            </div>
-        </div>
-        <div class="row h-100 px-5 secondary-bg text-center bold d-flex align-items-center">
-            <div class="col-2 text-center">
-                Construccion de Software
-            </div>
-            <div class="col-2 text-center">
-                40
-            </div>
-            <div class="col-2 text-center">
-                30
-            </div>
-            <div class="col">
-            </div>
-            <div class="col-2 d-flex justify-content-center align-items-center">
-                <button class="btn-light-50 bold btn-size-150" >
-                    Ver
-                </button>
-            </div>
-        </div>
-        <div class="row h-100 px-5 secondary-bg text-center bold d-flex align-items-center">
-            <div class="col-2 text-center">
-                Energia Nuclear 2
-            </div>
-            <div class="col-2 text-center">
-                30
->>>>>>> Stashed changes
             </div>
             <div class="col-2 text-center">
                 10
