@@ -47,6 +47,26 @@ $text-dark: #fff; // Un color claro para contrastar con el color oscuro
     color: $text-dark;
 }
 
+.yellow-bg {
+    background-color: $yellow;
+    color: $text-light;
+}
+
+.green-bg {
+    background-color: $green;
+    color: $text-light;
+}
+
+.red-bg {
+    background-color: $red;
+    color: $text-dark;
+}
+
+.gray-bg {
+    background-color: $gray;
+    color: $text-dark;
+}
+
 .secondary-bg-simple {
     background-color: $secondary-color;
 }
@@ -89,6 +109,22 @@ $text-dark: #fff; // Un color claro para contrastar con el color oscuro
     }
 }
 
+.primary-border {
+    border: 2px solid $primary-color;
+}
+
+.primary-border-16 {
+    border: 2px solid $primary-color;
+    border-radius: 16px;
+}
+
+.dark-border {
+    border: 1px solid $dark-color;
+}
+
+.gray-border {
+    border: 1px solid $gray;
+}   
 
 .debug{
     border: 1px solid red;

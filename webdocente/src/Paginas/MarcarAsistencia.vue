@@ -2,57 +2,31 @@
   <div id="app" class="fondo container">
     <!-- Imagen en la parte superior -->
     <div class="row justify-content-center">
-      <img
-        src="../assets/utalca.svg"
-        alt="Logo"
-        class="logo_utalca"
-        style="max-width: 200px; max-height: 200px"
-      />
+      <img src="../assets/utalca.svg" alt="Logo" class="logo_utalca" style="max-width: 200px; max-height: 200px" />
     </div>
     <!-- Contenido principal -->
-    <div
-      class="row d-flex justify-content-center align-items-center text-center"
-      v-if="!loading"
-    >
+    <div class="row d-flex justify-content-center align-items-center text-center" v-if="!loading">
       <div class="card-celeste container">
-        <div
-          class="row d-flex h-50 justify-content-center align-items-end m-0 py-0"
-        >
+        <div class="row d-flex h-50 justify-content-center align-items-end m-0 py-0">
           <p class="ramos">
             {{ ramo }}
           </p>
         </div>
-        <div
-          class="row d-flex h-50 justify-content-center align-items-start m-0 py-0"
-        >
+        <div class="row d-flex h-50 justify-content-center align-items-start m-0 py-0">
           <p class="ramos">{{ bloque }} {{ inicio }} - {{ termino }}</p>
         </div>
         <!-- <h3 class="ramos"> {{ramo}}Taller de Software B1 8:30-9:30</h3> -->
       </div>
     </div>
     <div>
-      <button
-        class="btn boton_gris text-white bold"
-        type="button"
-        @click="marcarAsistencia"
-        v-if="!loading"
-      >
+      <button class="btn boton_gris text-white bold" type="button" @click="marcarAsistencia" v-if="!loading && valido">
         Confirmar
       </button>
     </div>
-    <div
-      class="container h-75 d-flex align-items-center justify-content-center"
-      v-if="loading"
-    >
+    <div class="container h-75 d-flex align-items-center justify-content-center" v-if="loading">
       <div class="spinner-grow text-primaryC loading" role="status">
         <span class="visually-hidden">Loading...</span>
       </div>
-    </div>
-    <!-- Botón de asistencia -->
-    <div :hidden="true">
-      <a class="btn boton_gris" :class="{ 'boton-amarillo': botonC }">
-        <button type="button" @click="marcarAsistencia">Confirmar</button>
-      </a>
     </div>
   </div>
 </template>
@@ -66,6 +40,7 @@ export default {
   data() {
     return {
       botonC: false,
+      valido: false,
       ramo: "",
       bloque: "",
       inicio: "",
@@ -96,12 +71,12 @@ export default {
     this.idSala = route.params.idSala;
     const res = await axios.get(
       ENPOINTS["bff-horarios"] +
-        "/instancia?sala=" +
-        this.idSala +
-        "&dia=" +
-        dia +
-        "&bloque=" +
-        this.bloque
+      "/instancia?sala=" +
+      this.idSala +
+      "&dia=" +
+      dia +
+      "&bloque=" +
+      this.bloque
     );
     this.ramo = res.data.Ramo;
     this.inicio = res.data.HoraInicio;
@@ -118,35 +93,38 @@ export default {
     let validaciongps = false;
     let ipusuario = ""
 
-    fetch('https://api.ipify.org?format=json')
+    await fetch('https://api.ipify.org?format=json')
       .then(response => response.json())
-      .then(response => {ipusuario = response.ip});
+      .then(response => { ipusuario = response.ip });
 
-    if(navigator.geolocation){
+    if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        async (posicion)=> {
-          try{
-          const Vgps = await axios.post(
-            
-            ENPOINTS["ms-verificaciongps"] + "/verificar",
-            {
-              "longitud" : posicion.coords.longitude,
-              "latitud": posicion.coords.latitude,
-              "sala": this.idSala
-            }, 
-            {
-              headers: {
+        async (posicion) => {
+          try {
+            const Vgps = await axios.post(
+
+              ENPOINTS["ms-verificaciongps"] + "/verificar",
+              {
+                "longitud": posicion.coords.longitude,
+                "latitud": posicion.coords.latitude,
+                "sala": this.idSala,
+                "IP": ipusuario
+
+              },
+              {
+                headers: {
                   'Content-Type': 'application/json',
+                }
               }
-            }
-          );
-          alert(posicion.coords.latitude+" | "+posicion.coords.longitude+" => "+Vgps.data.valido + " ip:"+ipusuario)
-          validaciongps = Vgps.data.valido
-          
-          }catch(err){
+            );
+            console.log(posicion.coords.latitude + " | " + posicion.coords.longitude + " => " + Vgps.data.valido + " ip:" + ipusuario)
+
+            validaciongps = Vgps.data.valido
+
+          } catch (err) {
             // no valido
           }
-        },(error)=> {
+        }, (error) => {
           console.log(error)
           validaciongps = false
           // no valido
@@ -154,18 +132,21 @@ export default {
     }
 
 
-    if(validaciongps){
+    if (validaciongps) {
       // si es valido se hace
-    }else{
+    } else {
       // si no es valido se hace
     }
 
+    this.valido = this.ramo != "No hay clases en la sala";
+
+    console.log("valido: " + this.valido);
 
     this.loading = false;
   },
   methods: {
     marcarAsistencia() {
-        window.location.href = ENPOINTS["login-WD"];
+      window.location.href = ENPOINTS["login-WD"]+"/?sala="+this.idSala;
     },
   },
 };
@@ -176,5 +157,9 @@ export default {
 
 .boton-amarillo {
   background-color: #f89d1e;
+}
+
+.disabled-cursor:disabled {
+  cursor: not-allowed;
 }
 </style>
