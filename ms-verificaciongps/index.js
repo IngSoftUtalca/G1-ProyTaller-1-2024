@@ -37,24 +37,16 @@ app.post('/verificar', async (req, res) => {
 
 
 
-    if(req.body.IP){
-      if(verificacionIP.test(req.body.IP)){
-        
-        console.log(true)
-      }else{
-        console.log(false)
-        return res.status(200).json({valido: false,error:"ip no valida"});
-      }
-
-
+    if(VerificarIp(req.body.IP)){
+    
+    }else{
+      return res.status(400).json({valido: false,error:"ip no valida"});
     }
-
 
     const rango = 0.0002; // este es el rango de tolerancia a la hora de verificar si esta en la ubicacion
 
     if(!req.body.latitud || !req.body.longitud || !req.body.sala){
       return res.status(400).json({error: "faltan datos"})
-
     }
     try {
       const connection = mysql.createConnection(dbData);
@@ -102,3 +94,24 @@ app.post('/verificar', async (req, res) => {
       return res.status(500).json({error: "error en la base de datos1"})
     }
 });
+
+app.post('/verificarIP',async (req,res) => {
+  if(VerificarIp(req.body.IP)){
+    return res.status(200).json({valido:true,ok:"valida la IP"})
+  }else{
+    return res.status(400).json({valido: false,error:"ip no valida"});
+  }
+
+});
+
+function VerificarIp(IP){
+  if(IP){
+    if(verificacionIP.test(IP)){
+      return true
+    }else{
+      return false
+    }
+
+
+  }
+}

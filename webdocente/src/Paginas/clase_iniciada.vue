@@ -192,6 +192,20 @@ export default {
       /**
        * Aqui el parametro de error de justificacion va a ser true en el router push
        */
+
+
+       axios
+        .post(
+          ENPOINTS["ms-verificaciongps"]+ "/verificarIP",
+          {
+            IP:"19919"
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        )
       axios
         .post(
           ENPOINTS["ms-registroasistencia"] + "/registrarfinal",
