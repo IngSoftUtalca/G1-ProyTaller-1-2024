@@ -32,28 +32,28 @@
             </div>
         </div>
         <!-- Body -->
-        <div class="row h-100 mx-0 font-20 bold secondary-bg mb-1 d-flex align-items-center" v-for="(bloque, index) in bloques"
-            :key="index">
+        <div class="row h-100 mx-0 font-20 bold secondary-bg mb-1 d-flex align-items-center"
+            v-for="(bloque, index) in bloques" :key="index">
             <div class="col-1 px-0 text-center">
                 {{ formatTime(bloque.inicio) }}-{{ formatTime(bloque.fin) }}
             </div>
             <div class="col text-center">
-                <p>Ramo 1</p>
+                <p>{{ getAsignacion(1, index + 1).Ramo }}</p>
             </div>
             <div class="col text-center">
-                <p>Ramo 2</p>
+                <p>{{ getAsignacion(2, index + 1).Ramo }}</p>
             </div>
             <div class="col text-center">
-                <p>Ramo 3</p>
+                <p>{{ getAsignacion(3, index + 1).Ramo }}</p>
             </div>
             <div class="col text-center">
-                <p>Ramo 4</p>
+                <p>{{ getAsignacion(4, index + 1).Ramo }}</p>
             </div>
             <div class="col text-center">
-                <p>Ramo 5</p>
-            </div> 
+                <p>{{ getAsignacion(5, index + 1).Ramo }}</p>
+            </div>
             <div class="col text-center">
-                <p>Ramo 6</p>
+                <p>{{ getAsignacion(6, index + 1).Ramo }}</p>
             </div>
         </div>
     </div>
@@ -61,15 +61,33 @@
 
 <script>
 import constances from '@/shared/constances.json';
+import ENDPOINTS from '../../../ENPOINTS.json';
+import axios from 'axios';
+
 export default {
     name: 'VerHorarioDocente',
     data() {
         return {
             bloques: constances.bloques,
             asignaciones: [],
+            rut: this.$route.params.rut,
         }
     },
-    mounted() {
+    async mounted() {
+        try {
+            await axios.get(
+                ENDPOINTS["bff-horarios"] + "/asignaciones/" + this.rut,
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
+            ).then((response) => {
+                this.asignaciones = response.data;
+            })
+        } catch (error) {
+            console.log(error);
+        }
         console.log(this.asignaciones);
         this.loading = false;
     },
@@ -79,6 +97,16 @@ export default {
             let hours = date.getUTCHours();
             let minutes = date.getUTCMinutes();
             return `${hours}:${minutes.toString().padStart(2, '0')}`;
+        },
+        getAsignacion(dia, bloque) {
+            try {
+                let asignacion = this.asignaciones.find(asignacion => {
+                    return asignacion.Dia_Semana === dia.toString() && asignacion.Bloque === bloque;
+                });
+                return asignacion ? asignacion : ' ';
+            } catch (error) {
+                return error.message;
+            }
         }
     }
 }

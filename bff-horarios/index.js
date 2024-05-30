@@ -18,7 +18,7 @@ app.get('/asignaciones/:rut', async (req, res) => {
     const rut = req.params.rut;
     const connection = mysql.createConnection(dbConfig);
     connection.connect();
-    const query = `SELECT * FROM Instancia WHERE Ramo = (SELECT Nombre_Ramo FROM Asignacion WHERE RUT_Docente = ?) AND Semestre = (SELECT Periodo.ID FROM Periodo WHERE Estado = 'Activo');`;
+    const query = `SELECT * FROM Instancia WHERE Ramo IN (SELECT Nombre_Ramo FROM Asignacion WHERE RUT_Docente = '20509736') AND Semestre IN (SELECT Periodo.ID FROM Periodo WHERE Estado = 'Activo');`;
     await runParametrizedQuery(connection, query, [rut]).then((results) => {
       res.status(200).json(results);
     }).catch((e) => {
