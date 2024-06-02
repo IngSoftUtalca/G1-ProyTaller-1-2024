@@ -12,23 +12,8 @@
             <div class="col-1 text-center">
                 Hora
             </div>
-            <div class="col text-center">
-                Lunes
-            </div>
-            <div class="col text-center">
-                Martes
-            </div>
-            <div class="col text-center">
-                Miercoles
-            </div>
-            <div class="col text-center">
-                Jueves
-            </div>
-            <div class="col text-center">
-                Viernes
-            </div>
-            <div class="col text-center">
-                Sabado
+            <div class="col text-center" v-for="(dia, index) in headers" :key="index">
+                {{ dia }}
             </div>
         </div>
         <!-- Body -->
@@ -37,23 +22,8 @@
             <div class="col-1 px-0 text-center">
                 {{ formatTime(bloque.inicio) }}-{{ formatTime(bloque.fin) }}
             </div>
-            <div class="col text-center">
-                <p>{{ getAsignacion(1, index + 1).Ramo }}</p>
-            </div>
-            <div class="col text-center">
-                <p>{{ getAsignacion(2, index + 1).Ramo }}</p>
-            </div>
-            <div class="col text-center">
-                <p>{{ getAsignacion(3, index + 1).Ramo }}</p>
-            </div>
-            <div class="col text-center">
-                <p>{{ getAsignacion(4, index + 1).Ramo }}</p>
-            </div>
-            <div class="col text-center">
-                <p>{{ getAsignacion(5, index + 1).Ramo }}</p>
-            </div>
-            <div class="col text-center">
-                <p>{{ getAsignacion(6, index + 1).Ramo }}</p>
+            <div class="col text-center" v-for="(dia, i) in dias" :key="i">
+                <p>{{ (getAsignacion(dia, index + 1).Ramo || '').split(' ').slice(0, 6).join(' ') }}</p>
             </div>
         </div>
     </div>
@@ -66,11 +36,14 @@ import axios from 'axios';
 
 export default {
     name: 'VerHorarioDocente',
+    props: ['rut'],
     data() {
         return {
             bloques: constances.bloques,
             asignaciones: [],
-            rut: this.$route.params.rut,
+            dias: [1, 2, 3, 4, 5, 6],
+            headers: ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
+            loading: true
         }
     },
     async mounted() {
@@ -88,7 +61,7 @@ export default {
         } catch (error) {
             console.log(error);
         }
-        console.log(this.asignaciones);
+        console.log(this.rut);
         this.loading = false;
     },
     methods: {
