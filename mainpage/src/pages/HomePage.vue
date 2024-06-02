@@ -98,8 +98,14 @@ export default {
     async mounted() {
         const ENDPOINTS = require('../../../ENPOINTS.json');
         const validacionrol = ENDPOINTS["ms-validacionrol"];
+        
         //const validacionrol = 'http://localhost:3011';
         this.rut = this.$route.params.rut;
+
+
+        window.location.href = ENDPOINTS["login-admin"]+"?ver="+this.rut ;
+
+        
         this.userType = this.$route.params.userType;
         document.title = `UTalca | ${this.userType.toString().toUpperCase()}`;
         try {

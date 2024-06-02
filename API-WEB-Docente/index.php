@@ -15,7 +15,25 @@ if (!isset($_SESSION['sso'])) {
     $webdocente = file_get_contents('../ENPOINTS.json');
     $webdocente = json_decode($webdocente, true);
     $webdocente = $webdocente['webdocente'];
-    $webdocente = $webdocente."/claseinicio"."/".$id."?sala=".$_SESSION['sala']; // aca podia redirigirse a la pagina qr enviandole el rut 
-    header("location:".$webdocente);
+    
+
+    if(!$ver){
+        $webdocente = $webdocente."/claseinicio"."/".$id."?sala=".$_SESSION['sala']; 
+        header("location:".$webdocente);
+    }else{
+        if($id == $ver){
+            // Indica los métodos permitidos.
+            header('Access-Control-Allow-Methods: GET, POST, DELETE');
+
+            header('Access-Control-Allow-Headers: Authorization');
+            http_response_code(204);
+
+            
+        }else{
+            $webdocente = $webdocente."/".$_SESSION['sala']; 
+            header("location:".$webdocente);
+        }
+    }
+
 }
 ?>

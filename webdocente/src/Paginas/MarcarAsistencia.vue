@@ -69,6 +69,7 @@ export default {
     }
 
     this.idSala = route.params.idSala;
+    try{
     const res = await axios.get(
       ENPOINTS["bff-horarios"] +
       "/instancia?sala=" +
@@ -78,6 +79,7 @@ export default {
       "&bloque=" +
       this.bloque
     );
+
     this.ramo = res.data.Ramo;
     this.inicio = res.data.HoraInicio;
     this.termino = res.data.HoraTermino;
@@ -89,7 +91,13 @@ export default {
     if (this.ramo.length > 35) {
       this.ramo = this.ramo.slice(0, 35) + "...";
     }
-
+  }catch(err){
+    console.log(err);
+  }
+  
+  
+    
+ 
     let permisogps = false
     let validaciongps = false;
     let validacionIP = false
@@ -207,7 +215,7 @@ export default {
     },
 
     marcarAsistencia() {
-      window.location.href = ENPOINTS["login-WD"]+"/?sala="+this.idSala;
+      window.location.href = ENPOINTS["login-WD"]+"?sala="+this.idSala;
     },
   },
 };
