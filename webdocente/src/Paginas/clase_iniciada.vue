@@ -46,6 +46,7 @@ export default {
       sala: "",
       bloque: "",
       ramo: "",
+ 
     };
   },
   async mounted() {
@@ -140,13 +141,27 @@ export default {
       routeError = true;
     }
 
-
-    let ipusuario = ""
-    await fetch('https://api.ipify.org?format=json')
+    let ipusuario = "";
+    
+    try {
+      await fetch('https://api.ipify.org?format=json')
       .then(response => response.json())
       .then(response => { ipusuario = response.ip });
 
-      
+
+    await axios.post(ENPOINTS["ms-verificaciongps"]+ "/verificarIP",{
+          IP:ipusuario
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
+    }catch(error){
+      routeError = true;
+    }
+
 
     !routeError ? await axios.post(ENPOINTS["ms-registroasistencia"] + "/registrarinicio", {
 
@@ -192,20 +207,6 @@ export default {
       /**
        * Aqui el parametro de error de justificacion va a ser true en el router push
        */
-
-
-       axios
-        .post(
-          ENPOINTS["ms-verificaciongps"]+ "/verificarIP",
-          {
-            IP:"19919"
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        )
       axios
         .post(
           ENPOINTS["ms-registroasistencia"] + "/registrarfinal",
