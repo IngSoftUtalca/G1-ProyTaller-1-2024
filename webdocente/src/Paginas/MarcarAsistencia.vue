@@ -126,7 +126,8 @@ export default {
         }
       
     }else {
-      errorMensaje = "La geolocalización no es compatible con este navegador.";
+      errorMensaje = ""
+      //errorMensaje = "La geolocalización no es compatible con este navegador."; // comentar en desarrollo
     }
 
     try {
@@ -154,11 +155,17 @@ export default {
       validaciongps = Vgps.data.validoGPS;
       validacionIP = Vgps.data.validoIP;
 
+      
+
     } catch (err) {
       console.error(err)
 
     }
 
+    // de momento siempre sera verdadero en desarrollo
+    permisogps = true
+    validacionIP = true;
+    validaciongps = true;
 
     if (!(validacionIP && validaciongps) || !permisogps) {
       // si no es valido se hace
@@ -188,7 +195,6 @@ export default {
         }
       });*/
     }
-    console.log(errorMensaje)
     this.valido = (this.ramo != "No hay clases en la sala") && (errorMensaje == "");
   
     console.log("valido: " + this.valido);

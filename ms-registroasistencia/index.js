@@ -446,7 +446,7 @@ app.post('/RevisarEstadoClases', async (req, res) => {
 });
 
 // 
-function RevisionClasesIniciadas(){
+function RevisionClasesIniciadas2(){
 
     new Promise((resolve,reject) => {
         procesandoClases = true;
@@ -480,7 +480,7 @@ function RevisionClasesIniciadas(){
     
     )};
 
-    function RevisionClasesIniciadas2(){
+    function RevisionClasesIniciadas(){
 
 
         const horaactual = consultas.GetHoraActual()
