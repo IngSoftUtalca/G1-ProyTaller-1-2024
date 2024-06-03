@@ -445,8 +445,7 @@ app.post('/RevisarEstadoClases', async (req, res) => {
 
 });
 
-
-
+// 
 function RevisionClasesIniciadas(){
 
     new Promise((resolve,reject) => {
@@ -480,6 +479,63 @@ function RevisionClasesIniciadas(){
     }
     
     )};
+
+    function RevisionClasesIniciadas2(){
+
+
+        const horaactual = consultas.GetHoraActual()
+        const fecha = new Date();
+        const fecha2 = new Date(fecha.getTime() - TiempoRezago*60000)
+        const hoyFecha = consultas.GetFechaHoy()
+        const formatohora = fecha2.getHours()+"-"+fecha2.getMinutes()+"-"+fecha2.getSeconds();
+        const disS = fecha.getDay(); 
+    
+    
+        const conection = mysql.createConnection(dbData);
+    
+        conection.connect((error)=>{
+            if(error){
+                return;
+            }else{
+                console.log(disS + " "+ semestreActual+" "+ horaactual)
+                //const query = `select Rut_Docente,Nombre_Ramo,Sala,MIN(Inicio) as  Inicio,MAX(Termino) as Termino from Asignacion INNER JOIN Instancia on Ramo = Nombre_Ramo INNER JOIN Bloque on ID = Bloque LEFT JOIN Clase on Ramo_Nombre = Ramo  where Hora_Inicio IS NULL and Dia_Semana = ? and Semestre = ? and Termino <= ? GROUP by RUT_Docente,Sala,Nombre_Ramo,Hora_Inicio,Hora_Termino;`
+                const query = `select Rut_Docente,Nombre_Ramo,Sala,MIN(Inicio) as  Inicio,MAX(Termino) as Termino, Estado from Asignacion INNER JOIN Instancia on Ramo = Nombre_Ramo INNER JOIN Bloque on ID = Bloque INNER JOIN Clase on Ramo_Nombre = Ramo where Estado = 'Pendiente' and Dia_Semana = ? and Semestre = ? and Termino <= ? GROUP by RUT_Docente,Sala,Nombre_Ramo,Hora_Inicio,Hora_Termino,Estado;`
+                
+                let parametros = [disS,semestreActual,horaactual]
+    
+                conection.query(query,parametros,(error,results)=>{
+                    if(error){
+                        procesandoClases = false
+                        return;
+                    }else{
+    
+                        console.log(results);
+                        
+                        results.forEach(elementos => {
+    
+                            let parametros = [elementos.Rut_Docente,elementos.Nombre_Ramo]
+
+                            const queryInsert =`UPDATE Clase SET Estado='Asistido' WHERE Estado = 'Pendiente' and docente = ? and Ramo_Nombre = ?`;
+                            conection.query(queryInsert,parametros,(error,results)=>{
+                                if(error){
+                                    procesandoClases = false
+                                    return;
+                                }else{
+                                    
+                                }
+                            })
+                            
+    
+    
+                        });
+                    }
+        
+                })
+            }
+        });
+    }
+
+
 
 
 function RevisionClasesNoIniciadas(){

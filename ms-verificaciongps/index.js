@@ -35,15 +35,13 @@ app.post('/verificar', async (req, res) => {
     let validaIP = false
     let validaGPS = false
 
-    
-
-
-
-    if(VerificarIp(req.body.IP)){
-      validaIP = true
-    }else{
-      validaIP = false
-      
+    if(req.body.IP){
+      const verificacionIP = new RegExp(ipValida[0]);
+      if(verificacionIP.test(req.body.IP)){
+        validaIP = true
+      }else{
+        validaIP = false
+      }
     }
 
     const rango = 0.0002; // este es el rango de tolerancia a la hora de verificar si esta en la ubicacion
@@ -109,10 +107,16 @@ app.post('/verificar', async (req, res) => {
 });
 
 app.post('/verificarIP',async (req,res) => {
-  if(VerificarIp(req.body.IP)){
-    return res.status(200).json({valido:true,ok:"valida la IP"})
-  }else{
-    return res.status(200).json({valido: false,error:"ip no valida"});
+
+  if(req.body.IP){
+    const verificacionIP = new RegExp(ipValida[0]);
+    if(verificacionIP.test(req.body.IP)){
+      return res.status(200).json({valido:true,ok:"valida la IP"})
+      //return true
+    }else{
+      return res.status(400).json({valido: false,error:"ip no valida"});
+      //return false
+    }
   }
 
 });
@@ -125,7 +129,5 @@ function VerificarIp(IP){
     }else{
       return false
     }
-
-
   }
 }
