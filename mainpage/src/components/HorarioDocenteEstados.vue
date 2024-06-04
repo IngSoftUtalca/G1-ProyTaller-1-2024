@@ -1,4 +1,8 @@
 <template>
+    <!-- pop up agregar ramo -->
+    <div class="underlay" v-if="OverlayAgregar" @click="close">
+        <AgregarRamo class="overlay" v-if="OverlayAgregar" @click.stop @close="close" />
+    </div>
     <div class="container-fluid">
         <div class="row contaiter d-flex justify-content-center align-items-center primary-border h-60 r-18">
             <div class="col container d-flex justify-content-start align-items-cente">
@@ -33,6 +37,7 @@
 </template>
 
 <script>
+import AgregarRamo from '@/components/AgregarRamo.vue';
 import axios from "axios";
 import ENPOINTS from "../../../ENPOINTS.json";
 
@@ -42,6 +47,7 @@ export default {
         return {
             estado: 'Estado',
             semestre: 'Semestre',
+            OverlayAgregar: true
         }
     },
     async mounted() {
@@ -84,6 +90,15 @@ export default {
     },
     methods: {
         // Aquí puedes agregar los métodos que necesites
+        add() {
+            this.OverlayAgregar = true;
+        },
+        close() {
+            this.OverlayAgregar = false;
+        }
+    },
+    components: {
+        AgregarRamo
     }
 }
 
