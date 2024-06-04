@@ -33,10 +33,30 @@
                 </div>
                 
                 <div class="col-2 text-center">
-                    <!--Columna para el botn justificar-->
+                    
                 </div>
 
+
+            <!--
+                BOTON AGREGAR JUSTIFICACION
+            -->
             </div>
+            <div class="col-2 text-center">
+                            <div class="col-1 container-fluid mt-24 d-flex justify-content-end" v-if="!loading">
+                            <button class="btn-primary-16 btn-size-120" @click.prevent="add">
+                                <span class="bold">
+                                    Agregar
+                                </span>
+                                <img src="@/assets/plus.svg" alt="Agregar">
+                            </button>
+                            </div>
+                            <div class="underlay" v-if="OverlayJustificar" @click="close">
+                                 <JustificarInasistencia class="overlay" v-if="OverlayJustificar" @click.stop @close="close" />
+                            </div>
+            </div>
+            <!--
+        BOTON AGREGAR JUSTIFICACION
+             -->
         </div>
 
         <!--
@@ -78,18 +98,20 @@
                 </div>
                 
             </div>
-            
+         <!-- Hay que cambiar este Boton de Justificar con el que va desde la linea 40 a la 52-->
             <div class="col">
                 <button class="btn-light-50 bold btn-size-150" @click="add(justificacion)">
-                    Justificar
+                    Justificar 
                 </button>
             </div>
             
         </div>
     </div>
+    
 </template>
 
 <script>    
+    import JustificarInasistencia from '@/components/JustificarInasistencia.vue';
     //import moment from 'moment';    
     //import axios from 'axios';
     //import ENDPOINTS from '../../../ENPOINTS.json';   
@@ -99,7 +121,7 @@
             return {
                 loading: true,
                 asistencias: null,
-                OverlayAgregar: false,
+                OverlayJustificar: false,
                 periodo: null
             }
         },
@@ -115,13 +137,17 @@
                     this.loading = false;
                 }
             },
-            add(justificacion) {
-                this.justificacion = justificacion;
-                this.OverlayJustificacion = true;
+            add() {
+                
+                this.OverlayJustificar = true;
             },
             close() {
-                this.OverlayJustificacion = false;
+                this.OverlayJustificar = false;
             }
-        }
+            
+        },
+        components: {
+        JustificarInasistencia
+    }
     }
 </script>
