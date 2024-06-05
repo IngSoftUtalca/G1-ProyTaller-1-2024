@@ -30,6 +30,34 @@ app.use(express.json({ limit: '50mb' }));
 
 const dbData = require('../ENPOINTS.json').DB;
 
+app.post('/cambiar-estado', async (req, res) => {
+  const { rut, estado } = req.body;
+  try {
+    const connection = mysql.createConnection(dbData);
+
+    connection.connect(error => {
+      if (error) {
+        console.error('No se a podido conectar la base de datos: ', error);
+        return res.status(500).json({ error: 'No se ha podido conectar la base de datos' });
+      }
+    });
+
+    const query = `UPDATE Horario SET Estado = ? WHERE ID IN (SELECT Docente.Horario FROM Docente WHERE RUT = ?);`;
+
+    try {
+      await runQuery(connection, query, [estado, rut]);
+    } catch (error) {
+      return res.status(500).json({ error: 'Error: ' + error.message });
+    }
+
+    connection.end();
+
+    res.json({ message: 'Operación terminada con exito' });
+  } catch (error) {
+    return res.status(500).json({ error: 'Error: ' + error.message });
+  }
+});
+
 app.post('/asignar', async (req, res) => {
   const { Ramo, Docente } = req.body;
   try {
@@ -44,7 +72,7 @@ app.post('/asignar', async (req, res) => {
 
     const horario = `UPDATE Horario SET Estado = 'pendiente' WHERE ID IN (SELECT Docente.Horario FROM Docente WHERE RUT = ?);`;
     const asignar = `INSERT INTO Asignacion (RUT_Docente, Nombre_Ramo, Periodo_Ramo) VALUES (?, ?, (SELECT ID FROM Periodo WHERE Estado = 'Activo'));`;
-    
+
     try {
       await runQuery(connection, horario, [Docente]);
       await runQuery(connection, asignar, [Docente, Ramo]);
@@ -78,7 +106,7 @@ app.post('/desasignar', async (req, res) => {
     try {
       await runQuery(connection, horario, [Docente]);
       await runQuery(connection, desasignar, [Docente, Ramo]);
-    }catch (error) {
+    } catch (error) {
       return res.status(500).json({ error: 'Error: ' + error.message });
     }
 
