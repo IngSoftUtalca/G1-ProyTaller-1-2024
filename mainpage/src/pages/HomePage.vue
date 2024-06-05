@@ -95,7 +95,7 @@
       <AdministradoresWeb v-if="admin" />
       <PeriodosWeb v-if="periodos" />
       <HorarioDocente v-if="horarios && userType == 'docente'" />
-      <HorarioAdmin v-if="horarios && userType == 'administrador'" />
+      <HorarioAdmin v-if="horarios && userType == 'administrador'" :key="childKey" @refresh="refresh"/>
       <AsistenciaDocente v-if="asistencia && userType == 'docente'" />
       <AsistenciaAdmin v-if="asistencia && userType == 'administrador'" />
     </div>
@@ -130,6 +130,7 @@ export default {
       asistencia: false,
       valido: false,
       loading: true,
+      childKey: 0,
     };
   },
   async mounted() {
@@ -216,6 +217,9 @@ export default {
         this.admin = false;
         this.periodos = false;
       }
+    },
+    refresh() {
+      this.childKey += 1;
     },
   },
   components: {
