@@ -18,6 +18,25 @@ app.get('/', (req, res) => {
   res.json({ message: 'Micro servicio para horarios' });
 });
 
+app.get('/ramos', async (req, res) => {
+  try {
+    const connection = mysql.createConnection(dbConfig);
+    connection.connect();
+    const query = 'SELECT * FROM Ramo';
+    await runQuery(connection, query)
+      .then((results) => {
+        res.status(200).json(results);
+      })
+      .catch((e) => {
+        console.error('Error ejecutando la query: ', e);
+        return res.status(500).json({ message: 'Error' });
+      });
+  } catch (e) {
+    console.error('Error conectando a la base de datos: ', e);
+    return res.status(500).json({ message: 'Error' });
+  }
+});
+
 app.get('/asignaciones/:rut', async (req, res) => {
   try {
     const rut = req.params.rut;
