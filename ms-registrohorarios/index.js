@@ -5,12 +5,12 @@ const cors = require('cors');
 const moment = require('moment');
 const ProgressBar = require('progress');
 
-let funciones 
-try{
-   funciones = require('./shared/funciones.js');
+let funciones
+try {
+  funciones = require('./shared/funciones.js');
 
-}catch{
-   funciones = require('./funciones.js');
+} catch {
+  funciones = require('./funciones.js');
 }
 
 
@@ -19,11 +19,76 @@ const runQuery = funciones.runQuery;
 const getBloqueId = funciones.getBloqueId;
 const getInstancia = funciones.getInstancia;
 
-app.use(cors({ origin: '*' }));
+const corsOptions = {
+  origin: ['http://localhost:8080', 'http://localhost:8082', require('../ENPOINTS.json').webdocente, require('../ENPOINTS.json').mainpage],
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
+
+app.use(cors(corsOptions));
 
 app.use(express.json({ limit: '50mb' }));
 
 const dbData = require('../ENPOINTS.json').DB;
+
+app.post('/asignar', async (req, res) => {
+  const { Ramo, Docente } = req.body;
+  try {
+    const connection = mysql.createConnection(dbData);
+
+    connection.connect(error => {
+      if (error) {
+        console.error('No se a podido conectar la base de datos: ', error);
+        return res.status(500).json({ error: 'No se ha podido conectar la base de datos' });
+      }
+    });
+
+    const horario = `UPDATE Horario SET Estado = 'pendiente' WHERE ID IN (SELECT Docente.Horario FROM Docente WHERE RUT = ?);`;
+    const asignar = `INSERT INTO Asignacion (RUT_Docente, Nombre_Ramo, Periodo_Ramo) VALUES (?, ?, (SELECT ID FROM Periodo WHERE Estado = 'Activo'));`;
+    
+    try {
+      await runQuery(connection, horario, [Docente]);
+      await runQuery(connection, asignar, [Docente, Ramo]);
+    } catch (error) {
+      return res.status(500).json({ error: 'Error: ' + error.message });
+    }
+
+    connection.end();
+
+    res.json({ message: 'Operación terminada con exito' });
+  } catch (error) {
+    return res.status(500).json({ error: 'Error: ' + error.message });
+  }
+});
+
+app.post('/desasignar', async (req, res) => {
+  const { Ramo, Docente } = req.body;
+  try {
+    const connection = mysql.createConnection(dbData);
+
+    connection.connect(error => {
+      if (error) {
+        console.error('No se a podido conectar la base de datos: ', error);
+        return res.status(500).json({ error: 'No se ha podido conectar la base de datos' });
+      }
+    });
+
+    const horario = `UPDATE Horario SET Estado = 'pendiente' WHERE ID IN (SELECT Docente.Horario FROM Docente WHERE RUT = ?);`;
+    const desasignar = `DELETE FROM Asignacion WHERE RUT_Docente = ? AND Nombre_Ramo = ? AND Periodo_Ramo = (SELECT ID FROM Periodo WHERE Estado = 'Activo');`;
+
+    try {
+      await runQuery(connection, horario, [Docente]);
+      await runQuery(connection, desasignar, [Docente, Ramo]);
+    }catch (error) {
+      return res.status(500).json({ error: 'Error: ' + error.message });
+    }
+
+    connection.end();
+
+    res.json({ message: 'Operación terminada con exito' });
+  } catch (error) {
+    return res.status(500).json({ error: 'Error: ' + error.message });
+  }
+});
 
 app.post('/new', async (req, res) => {
   try {

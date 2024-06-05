@@ -47,7 +47,7 @@ export default {
         return {
             estado: 'Estado',
             semestre: 'Semestre',
-            OverlayAgregar: true
+            OverlayAgregar: false
         }
     },
     async mounted() {
