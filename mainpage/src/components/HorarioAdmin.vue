@@ -36,7 +36,7 @@
     </div>
     <div class="container-fluid w-95 mx-0 mt-5" v-if="!allinfo && !loading">
         <div class="row contaiter d-flex justify-content-center align-items-center primary-border px-4 h-60 r-18">
-            <div class="col-1 container d-flex justify-content-start align-items-cente" @click="dejardever()">
+            <div class="pointer col-1 container d-flex justify-content-start align-items-cente" @click="dejardever()">
                 <img src="@/assets/backarrow.svg" alt="arrow-left">
             </div>
             <div class="col d-flex justify-content-center align-items-center">
@@ -44,11 +44,11 @@
             </div>
             <div class="col-3 container d-flex">
                 <div class="col d-flex justify-content-end align-items-center">
-                    <div class="green-bg size-170-45 r-16 d-flex align-items-center justify-content-center">
+                    <div class="pointer green-bg size-170-45 r-16 d-flex align-items-center justify-content-center">
                         <p class="m-0 align-middle bold font-20">aprobar</p>
                     </div>
                 </div>
-                <div class="col d-flex justify-content-end align-items-center">
+                <div class="pointer col d-flex justify-content-end align-items-center">
                     <div class="red-bg size-170-45 r-16 d-flex align-items-center justify-content-center">
                         <p class="m-0 align-middle bold font-20">rechazar</p>
                     </div>

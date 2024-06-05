@@ -22,7 +22,7 @@ app.get('/ramos', async (req, res) => {
   try {
     const connection = mysql.createConnection(dbConfig);
     connection.connect();
-    const query = 'SELECT * FROM Ramo';
+    const query = 'SELECT * FROM Ramo WHERE Periodo IN (SELECT ID FROM Periodo WHERE Estado = "Activo")';
     await runQuery(connection, query)
       .then((results) => {
         res.status(200).json(results);
