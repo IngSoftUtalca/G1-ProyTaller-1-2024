@@ -48,6 +48,29 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     height: 135px;
 }
 
+.hover {
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.hover:hover {
+    $original-color: $primary-color;
+    background-color: lighten($original-color, 30%); 
+}
+
+.hover-scale {
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.hover-scale:hover {
+    transform: scale(1.1);
+}
+
+.pointer {
+    cursor: pointer;
+}
+
 body {
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
