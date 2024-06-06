@@ -101,7 +101,9 @@ export default {
       return rut.split("-")[0].replace(/\./g, "");
     },
     async cargarDocente() {
-      const docenteIngresado = this.desformatearRut(this.Ramo.split(" : ")[1]);
+      const docenteIngresado = this.desformatearRut(
+        (this.Ramo + " : ").split(" : ")[1]
+      );
       const docenteEncontrado = this.docentes.find(
         (docente) => docente.RUT === docenteIngresado
       );

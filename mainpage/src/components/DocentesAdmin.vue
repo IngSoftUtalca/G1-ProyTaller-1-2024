@@ -110,16 +110,7 @@ export default {
       this.OverlayAgregar = true;
     },
     async close() {
-      await axios
-        .get(
-          ENDPOINTS["bff-datosdocentes"] + "/cargo/" + this.$route.params.rut
-        )
-        .then((response) => {
-          this.docentes = response.data;
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      await this.getDocentes();
       this.counter += 1;
       this.OverlayAgregar = false;
     },
@@ -137,16 +128,7 @@ export default {
           },
         }
       );
-      await axios
-        .get(
-          ENDPOINTS["bff-datosdocentes"] + "/cargo/" + this.$route.params.rut
-        )
-        .then((response) => {
-          this.docentes = response.data;
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      await this.getDocentes();
       this.loading = false;
       this.counter += 1;
     },

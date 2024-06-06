@@ -1,7 +1,11 @@
 <template>
   <div class="container-fluid d-flex w-90">
     <div class="col d-flex justify-content-end">
-      <table class="w-90 mx-4 mt-3 text-center gray-border" v-if="!loading">
+      <table
+        class="w-90 mx-4 mt-3 text-center gray-border"
+        v-if="!loading"
+        :key="count"
+      >
         <thead class="primary-bg h-40">
           <tr>
             <th>R.U.T</th>
@@ -22,9 +26,17 @@
             >
               <button
                 class="btn-gray btn-size-85 bold font-12"
-                @click="borrar(index)"
+                @click="deshabilitar(index)"
+                v-if="docente.Estado === 'activo'"
               >
                 Deshabilitar
+              </button>
+              <button
+                class="btn-gray btn-size-85 bold font-12"
+                @click="habilitar(index)"
+                v-if="docente.Estado === 'inactivo'"
+              >
+                Habilitar
               </button>
             </td>
           </tr>
@@ -48,14 +60,14 @@
         @close="close"
       />
     </div>
-    <!-- loading-->
-    <div
-      class="container d-flex justify-content-center align-items-center h-450"
-      v-if="loading"
-    >
-      <div class="spinner-grow primary-normal div-size-72" role="status">
-        <span class="visually-hidden">Loading...</span>
-      </div>
+  </div>
+  <!-- loading-->
+  <div
+    class="container d-flex justify-content-start align-items-center h-450"
+    v-if="loading"
+  >
+    <div class="spinner-grow primary-normal div-size-72" role="status">
+      <span class="visually-hidden">Loading...</span>
     </div>
   </div>
 </template>
@@ -71,6 +83,7 @@ export default {
       OverlayAgregar: false,
       docentes: null,
       loading: true,
+      count: 0,
     };
   },
   async mounted() {
@@ -105,11 +118,44 @@ export default {
     add() {
       this.OverlayAgregar = true;
     },
-    close() {
+    async close() {
+      await this.getDocentes();
       this.OverlayAgregar = false;
+      this.count += 1;
     },
-    borrar(i) {
-      this.docentes.splice(i, 1);
+    async habilitar(i) {
+      this.loading = true;
+      await axios.post(
+        ENDPOINTS["ms-gestordocente"] + "/habilitar",
+        {
+          rut: this.docentes[i].RUT,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      await this.getDocentes();
+      this.loading = false;
+      this.count += 1;
+    },
+    async deshabilitar(i) {
+      this.loading = true;
+      await axios.post(
+        ENDPOINTS["ms-gestordocente"] + "/deshabilitar",
+        {
+          rut: this.docentes[i].RUT,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      await this.getDocentes();
+      this.loading = false;
+      this.count += 1;
     },
   },
   components: {
