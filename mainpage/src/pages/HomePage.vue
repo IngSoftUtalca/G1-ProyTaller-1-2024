@@ -91,11 +91,16 @@
       :class="{ 'background-color': isPeriodosSelected }"
     >
       <HomeText v-if="home" />
-      <DocentesWeb v-if="docentes" />
-      <AdministradoresWeb v-if="admin" />
-      <PeriodosWeb v-if="periodos" />
+      <DocentesWeb v-if="docentes && userType == 'webmaster'" />
+      <DocentesAdmin v-if="docentes && userType == 'administrador'" />
+      <AdministradoresWeb v-if="admin && userType == 'webmaster'" />
+      <PeriodosWeb v-if="periodos && userType == 'webmaster'" />
       <HorarioDocente v-if="horarios && userType == 'docente'" />
-      <HorarioAdmin v-if="horarios && userType == 'administrador'" :key="childKey" @refresh="refresh"/>
+      <HorarioAdmin
+        v-if="horarios && userType == 'administrador'"
+        :key="childKey"
+        @refresh="refresh"
+      />
       <AsistenciaDocente v-if="asistencia && userType == 'docente'" />
       <AsistenciaAdmin v-if="asistencia && userType == 'administrador'" />
     </div>
@@ -111,6 +116,7 @@ import PeriodosWeb from "@/components/PeriodosWeb.vue";
 import HomeText from "@/components/HomeText.vue";
 import AdministradoresWeb from "@/components/AdministradoresWeb.vue";
 import DocentesWeb from "@/components/DocentesWeb.vue";
+import DocentesAdmin from "@/components/DocentesAdmin.vue";
 import HorarioDocente from "@/components/HorarioDocente.vue";
 import HorarioAdmin from "@/components/HorarioAdmin.vue";
 import AsistenciaDocente from "@/components/AsistenciaDocente.vue";
@@ -229,6 +235,7 @@ export default {
     HomeText,
     AdministradoresWeb,
     DocentesWeb,
+    DocentesAdmin,
     HorarioDocente,
     HorarioAdmin,
     AsistenciaDocente,
