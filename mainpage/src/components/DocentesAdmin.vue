@@ -41,7 +41,7 @@
       </button>
     </div>
     <div class="underlay" v-if="OverlayAgregar" @click="close">
-      <AgregarDocente
+      <AgregarDocenteCargo
         class="overlay"
         v-if="OverlayAgregar"
         @click.stop
@@ -61,7 +61,7 @@
 </template>
 
 <script>
-import AgregarDocente from "@/components/AgregarDocente.vue";
+import AgregarDocenteCargo from "@/components/AgregarDocenteCargo.vue";
 import ENDPOINTS from "../../../ENPOINTS.json";
 import axios from "axios";
 export default {
@@ -80,7 +80,9 @@ export default {
   methods: {
     async getDocentes() {
       await axios
-        .get(ENDPOINTS["bff-datosdocentes"] + "/all-docentes")
+        .get(
+          ENDPOINTS["bff-datosdocentes"] + "/cargo/" + this.$route.params.rut
+        )
         .then((response) => {
           this.docentes = response.data;
         })
@@ -113,7 +115,7 @@ export default {
     },
   },
   components: {
-    AgregarDocente,
+    AgregarDocenteCargo,
   },
 };
 </script>
