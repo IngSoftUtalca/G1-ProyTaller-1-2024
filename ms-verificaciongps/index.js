@@ -32,29 +32,22 @@ app.listen(PORT, () => {
 
 app.post('/verificar', async (req, res) => {
 
-
-    const verificacionIP = new RegExp(ipValida[0]);
-
-
+    let validaIP = false
+    let validaGPS = false
 
     if(req.body.IP){
+      const verificacionIP = new RegExp(ipValida[0]);
       if(verificacionIP.test(req.body.IP)){
-        
-        console.log(true)
+        validaIP = true
       }else{
-        console.log(false)
-        return res.status(200).json({valido: false,error:"ip no valida"});
+        validaIP = false
       }
-
-
     }
-
 
     const rango = 0.0002; // este es el rango de tolerancia a la hora de verificar si esta en la ubicacion
 
     if(!req.body.latitud || !req.body.longitud || !req.body.sala){
       return res.status(400).json({error: "faltan datos"})
-
     }
     try {
       const connection = mysql.createConnection(dbData);
@@ -79,7 +72,7 @@ app.post('/verificar', async (req, res) => {
 
 
           
-          return res.status(200).json({valido:false});
+          return res.status(400).json({error: "no existe la sala"});
         }else{
           
           console.log(results[0])
@@ -91,10 +84,20 @@ app.post('/verificar', async (req, res) => {
 
           console.log(modulo+' | '+tolerancia);
           if(modulo <= tolerancia){
-            return res.status(200).json({valido: true});
+            validaGPS = true
+            //return res.status(200).json({valido: true});
           }else{
-            return res.status(200).json({valido: false,error:"fuera de rango"});
+            validaGPS = false
+            //return res.status(200).json({valido: false,error:"fuera de rango"});
           }
+
+          if(validaGPS && validaIP){
+            return res.status(200).json({validoIP: validaIP,validoGPS: validaGPS})
+          }else{
+            return res.status(200).json({validoIP: validaIP,validoGPS: validaGPS})
+          }
+          
+
         }
       })
 
@@ -102,3 +105,29 @@ app.post('/verificar', async (req, res) => {
       return res.status(500).json({error: "error en la base de datos1"})
     }
 });
+
+app.post('/verificarIP',async (req,res) => {
+
+  if(req.body.IP){
+    const verificacionIP = new RegExp(ipValida[0]);
+    if(verificacionIP.test(req.body.IP)){
+      return res.status(200).json({valido:true,ok:"valida la IP"})
+      //return true
+    }else{
+      return res.status(400).json({valido: false,error:"ip no valida"});
+      //return false
+    }
+  }
+
+});
+
+function VerificarIp(IP){
+  if(IP){
+    const verificacionIP = new RegExp(ipValida[0]);
+    if(verificacionIP.test(IP)){
+      return true
+    }else{
+      return false
+    }
+  }
+}

@@ -6,7 +6,7 @@
         </div>
     </div>
     <!-- Tabla de horario -->
-    <div class="row container-fluid w-100 mx-0 mt-3" v-if="!loading">
+    <div class="row container-fluid w-100 mx-0 mt-3" v-if="!loading" :key="componentKey">
         <!-- Header -->
         <div class="row rt-50 h-55 mx-0 font-20 bold primary-bg d-flex align-items-center">
             <div class="col-1 text-center">
@@ -17,20 +17,27 @@
             </div>
         </div>
         <!-- Body -->
-        <div class="row h-100 mx-0 font-20 bold secondary-bg mb-1 d-flex align-items-center"
+        <div class="row hover h-100 mx-0 font-16 bold secondary-bg mb-1 d-flex align-items-center"
             v-for="(bloque, index) in bloques" :key="index">
             <div class="col-1 px-0 text-center">
                 {{ formatTime(bloque.inicio) }}-{{ formatTime(bloque.fin) }}
             </div>
-            <div class="col text-center" v-for="(dia, i) in dias" :key="i">
-                <p>{{ (getAsignacion(dia, index + 1).Ramo || '').split(' ').slice(0, 6).join(' ') }}</p>
+            <div class="col container hover-scale text-center" v-for="(dia, i) in dias" :key="i"
+                @click="ver(getAsignacion(dia, index + 1))">
+                <p class="row">{{ (getAsignacion(dia, index + 1).Ramo || '').split(' ').slice(0, 6).join(' ') }}</p>
             </div>
         </div>
+    </div>
+    <!-- pop up detalle ramo -->
+    <div class="underlay" v-if="OverlayDetalle" @click="close">
+        <DetalleInstancia :instancia="instancia" :rut="rut" class="overlay" v-if="OverlayDetalle" @click.stop
+            @close="close" />
     </div>
 </template>
 
 <script>
 import constances from '@/shared/constances.json';
+import DetalleInstancia from '@/components/DetalleInstancia.vue';
 import ENDPOINTS from '../../../ENPOINTS.json';
 import axios from 'axios';
 
@@ -41,9 +48,12 @@ export default {
         return {
             bloques: constances.bloques,
             asignaciones: [],
+            instancia: {},
             dias: [1, 2, 3, 4, 5, 6],
             headers: ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
-            loading: true
+            loading: true,
+            OverlayDetalle: false,
+            componentKey: 0
         }
     },
     async mounted() {
@@ -80,7 +90,32 @@ export default {
             } catch (error) {
                 return error.message;
             }
+        },
+        ver(instancia) {
+            this.instancia = instancia;
+            this.OverlayDetalle = true;
+        },
+        async close() {
+            try {
+                await axios.get(
+                    ENDPOINTS["bff-horarios"] + "/asignaciones/" + this.rut,
+                    {
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                    }
+                ).then((response) => {
+                    this.asignaciones = response.data;
+                })
+            } catch (error) {
+                console.log(error);
+            }
+            this.componentKey += 1;
+            this.OverlayDetalle = false;
         }
+    },
+    components: {
+        DetalleInstancia
     }
 }
 

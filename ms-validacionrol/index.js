@@ -30,7 +30,7 @@ app.post('/horario', async (req, res) => {
   try {
     connection = mysql.createConnection(dbConfig);
     connection.connect();
-    const query = `SELECT Estado FROM Docente join Horario ON Docente.Horario = Horario.ID AND Docente.RUT = ?;`;
+    const query = `SELECT Horario.Estado FROM Docente join Horario ON Docente.Horario = Horario.ID AND Docente.RUT = ?;`;
     await runParametrizedQuery(connection, query, [Rut])
       .then((result) => {
         if (result.length === 0) {
