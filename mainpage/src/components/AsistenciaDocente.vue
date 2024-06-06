@@ -1,13 +1,4 @@
-<template>
-    <!-- loading-->
-    <div class="container d-flex justify-content-center align-items-center h-450" v-if="loading">
-        
-        <div class="spinner-grow primary-normal div-size-72" role="status">
-            <span class="visually-hidden">Loading...</span>
-        </div>
-    
-    </div>
-    
+<template>    
     <div class="background">
         <div class="row container-fluid" v-if="!loading">
             <div class="row px-5 rt-50 h-55 font-20 bold primary-bg d-flex align-items-center">
@@ -37,26 +28,8 @@
                 </div>
 
 
-            <!--
-                BOTON AGREGAR JUSTIFICACION
-            -->
+           
             </div>
-            <div class="col-2 text-center">
-                            <div class="col-1 container-fluid mt-24 d-flex justify-content-end" v-if="!loading">
-                            <button class="btn-primary-16 btn-size-120" @click.prevent="add">
-                                <span class="bold">
-                                    Agregar
-                                </span>
-                                <img src="@/assets/plus.svg" alt="Agregar">
-                            </button>
-                            </div>
-                            <div class="underlay" v-if="OverlayJustificar" @click="close">
-                                 <JustificarInasistencia class="overlay" v-if="OverlayJustificar" @click.stop @close="close" />
-                            </div>
-            </div>
-            <!--
-        BOTON AGREGAR JUSTIFICACION
-             -->
         </div>
 
         <!--
@@ -98,11 +71,21 @@
                 </div>
                 
             </div>
-         <!-- Hay que cambiar este Boton de Justificar con el que va desde la linea 40 a la 52-->
+            
             <div class="col">
-                <button class="btn-light-50 bold btn-size-150" @click="add(justificacion)">
-                    Justificar 
-                </button>
+                <div class="pill-yellow pill-size-150" v-if="asistecia.justificacion == null">
+                    <div class="col-2 text-center">
+                            <div class="col-1 container-fluid mt-24 d-flex justify-content-end" v-if="!loading">
+                                <button class="btn-primary-16 btn-size-120" @click.prevent="add">
+                                    <span class="bold">Agregar</span>
+                                    <img src="@/assets/plus.svg" alt="Agregar">
+                                </button>
+                            </div>
+                            <div class="underlay" v-if="OverlayJustificar" @click="close">
+                                <JustificarInasistencia class="overlay" v-if="OverlayJustificar" @click.stop @close="close" />
+                            </div>
+                    </div>
+                </div>
             </div>
             
         </div>
