@@ -3,19 +3,11 @@ const PORT = 3002;
 const app = express();
 const mysql = require('mysql');
 const dbData = require('../ENPOINTS.json').DB;
-
-const runQuery = require('./query.js').runQuery;
 const runParametrizedQuery = require('./query.js').runParametrizedQuery;
-
 app.use(express.json());
-
 const cors = require('cors');
 const moment = require('moment');
-
 app.use(cors({ origin: '*'}));
-
-
-
 app.get('/', (req, res) => {
   res.json({ message: 'Micro servicio para datos de asistencia' });
 });
@@ -23,14 +15,7 @@ app.listen(PORT, () => {
   console.log('Servidor corriendo en http://localhost:' + PORT);
 });
 
-
-
-
 app.post ('/datosasistenciageneral',async (req,res) =>{ // req/body.admin
-
-
-  
-  
   const coneccion = mysql.createConnection(dbData);
   const query = `select Clase.docente, count(Estado) as Inasistencia, Ramo_Nombre from Clase INNER JOIN Cargo On Cargo.Docente = Clase.docente where Estado = 'Ausente' and Cargo.Administrador = ? GROUP BY Clase.docente, Ramo_Nombre,Cargo.Administrador`
   coneccion.connect();
@@ -38,8 +23,6 @@ app.post ('/datosasistenciageneral',async (req,res) =>{ // req/body.admin
     if (result.length === 0) {
       res.status(404).json({ message: 'No se encontraron datos' });
     }
-
-
     const query2 = `select Clase.docente, count(Estado) as Asistido, Ramo_Nombre from Clase INNER JOIN Cargo On Cargo.Docente = Clase.docente where Estado = 'Asistido' and Cargo.Administrador = ? GROUP BY Clase.docente, Ramo_Nombre,Cargo.Administrador`
     await runParametrizedQuery(coneccion,query2,[req.body.rut]).then((resultasistencia) =>{
       if (resultasistencia.length === 0) {
@@ -54,36 +37,18 @@ app.post ('/datosasistenciageneral',async (req,res) =>{ // req/body.admin
       console.log(error)
       res.status(500).json({error:'error en la base de datos2'})
     })
-
-
-  
-
-
-
-
   }).catch((error) => {
     res.status(500).json({error:'error en la base de datos1'})
   })
 
 })
 
-
-
-
 app.post ('/datosasistenciasemanas',async (req,res) =>{ // req/body.admin
-
-  
-
-
-
   const query = `select Clase.docente, Estado, Ramo_Nombre,Dia from Clase INNER JOIN Cargo On Cargo.Docente = Clase.docente where Cargo.Administrador = ? and Ramo_Nombre = ? ;`
-
   const coneccion = mysql.createConnection(dbData);
   coneccion.connect();
   await runParametrizedQuery(coneccion,query,[req.body.rut,req.body.ramo]).then(async (result) =>{
-
     const agrupados = {};
-
     result.forEach(dato => {
         const fecha = moment(moment(dato.Dia).format('YYYY-MM-DD'));
         const semana = fecha.isoWeek();
@@ -97,13 +62,31 @@ app.post ('/datosasistenciasemanas',async (req,res) =>{ // req/body.admin
         agrupados[clave].push(dato);
     });
     return res.status(200).json(agrupados)
-
-
   }
-
   ).catch((error) => {
     res.status(500).json({error:'error en la base de datos1'})
   })
+})
 
+app.post ('/datoEnsemana',async (req,res) =>{ 
+  const año = req.body.Nano;
+  const numeroSemana = req.body.NSemana
+  const fechaInicioSemana = moment().year(año).isoWeek(numeroSemana).startOf('isoWeek').format('YYYY-MM-DD');
+  const fechaFinSemana = moment().year(año).isoWeek(numeroSemana).endOf('isoWeek').format('YYYY-MM-DD');
+  // Obtener el número de días en la semana
+  //return res.status(200).json({fechaInicioSemana,fechaFinSemana})
+  console.log(fechaInicioSemana+ " | "+fechaFinSemana)
+  const query = `select Clase.docente, Estado, Ramo_Nombre,Dia from Clase INNER JOIN Cargo On Cargo.Docente = Clase.docente where Cargo.Administrador = ? and Ramo_Nombre = ? and Dia >= ? and Dia <= ?;`
+  const coneccion = mysql.createConnection(dbData);
+  await runParametrizedQuery(coneccion,query,[req.body.rut,req.body.ramo,fechaInicioSemana,fechaFinSemana]).then(async (result) =>{
+    if (result.length === 0) {
+      return  res.status(404).json({ message: 'No se encontraron datos' });
+    }
+
+    return res.status(200).json({result})
+    
+  }).catch((error) => {
+    return res.status(500).json({error:'error en la base de datos1'})
+  })
 
 })
