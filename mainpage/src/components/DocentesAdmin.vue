@@ -1,7 +1,11 @@
 <template>
   <div class="container-fluid d-flex w-90">
     <div class="col d-flex justify-content-end">
-      <table class="w-90 mx-4 mt-3 text-center gray-border" v-if="!loading">
+      <table
+        class="w-90 mt-3 mx-4text-center gray-border"
+        v-if="!loading"
+        :key="counter"
+      >
         <thead class="primary-bg h-40">
           <tr>
             <th>R.U.T</th>
@@ -24,7 +28,7 @@
                 class="btn-gray btn-size-85 bold font-12"
                 @click="borrar(index)"
               >
-                Deshabilitar
+                Quitar
               </button>
             </td>
           </tr>
@@ -32,7 +36,7 @@
       </table>
     </div>
     <div
-      class="col-1 container-fluid mt-24 d-flex justify-content-end"
+      class="col-1 ms-4 container-fluid mt-24 d-flex justify-content-end"
       v-if="!loading"
     >
       <button class="btn-primary-16 btn-size-120" @click.prevent="add">
@@ -48,14 +52,11 @@
         @close="close"
       />
     </div>
-    <!-- loading-->
-    <div
-      class="container d-flex justify-content-center align-items-center h-450"
-      v-if="loading"
-    >
-      <div class="spinner-grow primary-normal div-size-72" role="status">
-        <span class="visually-hidden">Loading...</span>
-      </div>
+  </div>
+  <!-- loading-->
+  <div class="container d-flex start align-items-center h-450" v-if="loading">
+    <div class="spinner-grow primary-normal div-size-72" role="status">
+      <span class="visually-hidden">Loading...</span>
     </div>
   </div>
 </template>
@@ -71,6 +72,7 @@ export default {
       OverlayAgregar: false,
       docentes: null,
       loading: true,
+      counter: 0,
     };
   },
   async mounted() {
@@ -107,11 +109,46 @@ export default {
     add() {
       this.OverlayAgregar = true;
     },
-    close() {
+    async close() {
+      await axios
+        .get(
+          ENDPOINTS["bff-datosdocentes"] + "/cargo/" + this.$route.params.rut
+        )
+        .then((response) => {
+          this.docentes = response.data;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      this.counter += 1;
       this.OverlayAgregar = false;
     },
-    borrar(i) {
-      this.docentes.splice(i, 1);
+    async borrar(i) {
+      this.loading = true;
+      await axios.post(
+        ENDPOINTS["ms-gestordocente"] + "/desasignar",
+        {
+          adminRut: this.$route.params.rut,
+          docenteRut: this.docentes[i].RUT,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      await axios
+        .get(
+          ENDPOINTS["bff-datosdocentes"] + "/cargo/" + this.$route.params.rut
+        )
+        .then((response) => {
+          this.docentes = response.data;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      this.loading = false;
+      this.counter += 1;
     },
   },
   components: {
