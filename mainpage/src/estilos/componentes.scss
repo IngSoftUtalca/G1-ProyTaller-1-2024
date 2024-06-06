@@ -48,6 +48,29 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     height: 135px;
 }
 
+.hover {
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.hover:hover {
+    $original-color: $primary-color;
+    background-color: lighten($original-color, 30%); 
+}
+
+.hover-scale {
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.hover-scale:hover {
+    transform: scale(1.1);
+}
+
+.pointer {
+    cursor: pointer;
+}
+
 body {
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
@@ -85,6 +108,10 @@ body {
 .size-24 {
     height: 24px !important;
     width: 24px !important;
+}
+
+.mt-216 {
+    margin-top: 216px;
 }
 
 .mt-108 {
@@ -195,6 +222,10 @@ body {
     height: 55px;
 }
 
+.h-60{
+    height: 60px;
+}
+
 .h-75 {
     height: 75px;
 }
@@ -236,9 +267,34 @@ body {
     border-bottom-right-radius: 4px;
 }
 
+.r-16{
+    border-radius: 16px;
+}
+
+.r-17{
+    border-radius: 17px;
+}
+
+.r-18{
+    border-radius: 18px;
+}
+
+.r-20{
+    border-radius: 20px;
+}
+
+.r-24{
+    border-radius: 24px;
+}
+
 .rt-50 {
     border-top-right-radius: 50px;
     border-top-left-radius: 50px;
+}
+
+.size-170-45 {
+    height: 45px;
+    width: 170px;
 }
 
 .underlay {

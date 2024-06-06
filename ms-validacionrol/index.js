@@ -19,6 +19,49 @@ app.get('/', (req, res) => {
   res.json({ message: 'Micro servicio para validacion de rol' });
 });
 
+app.post('/horario', async (req, res) => {
+  const Rut = req.body.Rut;
+  let response = {
+    Horario: [],
+    Valido: false,
+    mensaje: 'consulta no iniciada para el rut: ' + Rut
+  };
+
+  try {
+    connection = mysql.createConnection(dbConfig);
+    connection.connect();
+    const query = `SELECT Horario.Estado FROM Docente join Horario ON Docente.Horario = Horario.ID AND Docente.RUT = ?;`;
+    await runParametrizedQuery(connection, query, [Rut])
+      .then((result) => {
+        if (result.length === 0) {
+          response.Horario = result;
+          response.Valido = false;
+          res.status(400).json(response);
+        } else {
+          response.Horario = result;
+          response.Valido = result[0].Estado === 'aprobado' ? true : false;
+          mensaje = 'Consulta exitosa';
+          res.status(200).json(response);
+        }
+      })
+      .catch((error) => {
+        response.Horario = [];
+        response.Valido = false;
+        response.mensaje = 'Error de consulta: ' + error.getMessage();
+        res.status(501).json(response);
+      })
+      .finally(() => {
+        if (connection && connection.state !== 'disconnected') {
+          connection.end();
+        }
+      });
+  } catch (error) {
+    response.Horario = [];
+    response.Valido = false;
+    res.status(500).json(response);
+  }
+});
+
 app.post('/validar', async (req, res) => {
   const rut = req.body.rut;
   let rol = req.body.rol;
