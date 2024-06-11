@@ -553,9 +553,7 @@ function RevisionClasesIniciadas2(){
     let formatohora = fecha2.getHours()+"-"+fecha2.getMinutes()+"-"+fecha2.getSeconds();
     let disS = fecha.getDay(); 
 
-    hoyFecha = '2024-06-22'
-    disS =  5
-    horaactual = "20:00:00"
+
 
 
 
