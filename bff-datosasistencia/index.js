@@ -93,27 +93,26 @@ app.post ('/datoEnsemana',async (req,res) =>{
   }).catch((error) => {
     return res.status(500).json({error:'error en la base de datos1'})
   })
+})
 
-  app.post ('/getClases',async (req,res) =>{
-    const { rut } = req.body;
-    const getClases = `
-      SELECT distinct Clase.Hora_Inicio, Clase.Hora_Termino, Clase.Ramo_Nombre as Curso, Clase.Dia as Fecha, Clase.Estado, COALESCE(Justificacion.Detalle, 'NULL') as Justificacion
-      FROM Clase
-             LEFT JOIN Justificacion ON Clase.Ramo_Nombre = Justificacion.Ramo_Nombre AND Clase.Dia = Justificacion.Clase_Dia
-      WHERE Clase.docente = ?;
-    `;
-    const coneccion = mysql.createConnection(dbData);
-    coneccion.connect();
-    await runParametrizedQuery(coneccion,getClases,[rut]).then(async (result) =>{
-      if (result.length === 0) {
-        return  res.status(404).json({ message: 'No se encontraron clases' });
-      }
-        return res.status(200).json({result})
-    }).catch((error) => {
-      return res.status(500).json({error:'error en la base de datos1'})
-    })
-
-
+app.post ('/getClases',async (req,res) =>{
+  const { rut } = req.body;
+  const getClases = `
+    SELECT distinct Clase.Hora_Inicio, Clase.Hora_Termino, Clase.Ramo_Nombre as Curso, Clase.Dia as Fecha, Clase.Estado, COALESCE(Justificacion.Detalle, 'NULL') as Justificacion
+    FROM Clase
+           LEFT JOIN Justificacion ON Clase.Ramo_Nombre = Justificacion.Ramo_Nombre AND Clase.Dia = Justificacion.Clase_Dia
+    WHERE Clase.docente = ?;
+  `;
+  const coneccion = mysql.createConnection(dbData);
+  coneccion.connect();
+  await runParametrizedQuery(coneccion,getClases,[rut]).then(async (result) =>{
+    if (result.length === 0) {
+      return  res.status(404).json({ message: 'No se encontraron clases' });
+    }
+      return res.status(200).json({result})
+  }).catch((error) => {
+    return res.status(500).json({error:'error en la base de datos1'})
   })
+
 
 })
