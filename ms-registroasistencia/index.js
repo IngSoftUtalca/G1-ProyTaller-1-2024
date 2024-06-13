@@ -441,13 +441,15 @@ app.post('/RevisarEstadoClases', async (req, res) => {
     await CalcularSemestre()
 
     await RevisionClasesIniciadas();
+
+    await  RevisionClasesNoIniciadas();
+
     return res.status(200).json({ok: "ok"});
 
 });
 
-
-
-function RevisionClasesIniciadas(){
+// 
+function RevisionClasesIniciadas2(){
 
     new Promise((resolve,reject) => {
         procesandoClases = true;
@@ -481,16 +483,79 @@ function RevisionClasesIniciadas(){
     
     )};
 
+    async function RevisionClasesIniciadas(){
+        new Promise((resolve,reject) => {
 
-function RevisionClasesNoIniciadas(){
+        const horaactual = consultas.GetHoraActual()
+        const fecha = new Date();
+        const fecha2 = new Date(fecha.getTime() - TiempoRezago*60000)
+        const hoyFecha = consultas.GetFechaHoy()
+        const formatohora = fecha2.getHours()+"-"+fecha2.getMinutes()+"-"+fecha2.getSeconds();
+        const disS = fecha.getDay(); 
+    
+    
+        const conection = mysql.createConnection(dbData);
+    
+        conection.connect((error)=>{
+            if(error){
+                return;
+            }else{
+                console.log(disS + " "+ semestreActual+" "+ horaactual)
+                //const query = `select Rut_Docente,Nombre_Ramo,Sala,MIN(Inicio) as  Inicio,MAX(Termino) as Termino from Asignacion INNER JOIN Instancia on Ramo = Nombre_Ramo INNER JOIN Bloque on ID = Bloque LEFT JOIN Clase on Ramo_Nombre = Ramo  where Hora_Inicio IS NULL and Dia_Semana = ? and Semestre = ? and Termino <= ? GROUP by RUT_Docente,Sala,Nombre_Ramo,Hora_Inicio,Hora_Termino;`
+                const query = `select Rut_Docente,Nombre_Ramo,Sala,MIN(Inicio) as  Inicio,MAX(Termino) as Termino, Estado from Asignacion INNER JOIN Instancia on Ramo = Nombre_Ramo INNER JOIN Bloque on ID = Bloque INNER JOIN Clase on Ramo_Nombre = Ramo where Estado = 'Pendiente' and Dia_Semana = ? and Semestre = ? and Termino <= ? GROUP by RUT_Docente,Sala,Nombre_Ramo,Hora_Inicio,Hora_Termino,Estado;`
+                
+                let parametros = [disS,semestreActual,horaactual]
+    
+                conection.query(query,parametros,(error,results)=>{
+                    if(error){
+                        procesandoClases = false
+                        return;
+                    }else{
+    
+                        //console.log(results);
+                        
+                        results.forEach(elementos => {
+    
+                            let parametros = [elementos.Rut_Docente,elementos.Nombre_Ramo]
+
+                            const queryInsert =`UPDATE Clase SET Estado='Asistido' WHERE Estado = 'Pendiente' and docente = ? and Ramo_Nombre = ?`;
+                            conection.query(queryInsert,parametros,(error,results)=>{
+                                if(error){
+                                    procesandoClases = false
+                                    return;
+                                }else{
+                                    
+                                }
+                            })
+                            
+    
+    
+                        });
+                    }
+        
+                })
+            }
+        });
+        resolve();
+    })
+    }
 
 
-    const horaactual = consultas.GetHoraActual()
-    const fecha = new Date();
-    const fecha2 = new Date(fecha.getTime() - TiempoRezago*60000)
-    const hoyFecha = consultas.GetFechaHoy()
-    const formatohora = fecha2.getHours()+"-"+fecha2.getMinutes()+"-"+fecha2.getSeconds();
-    const disS = fecha.getDay(); 
+
+
+    async function RevisionClasesNoIniciadas(){
+
+    new Promise((resolve,reject) => {
+    let horaactual = consultas.GetHoraActual()
+    let fecha = new Date();
+    let fecha2 = new Date(fecha.getTime() - TiempoRezago*60000)
+    let hoyFecha = consultas.GetFechaHoy()
+    let formatohora = fecha2.getHours()+"-"+fecha2.getMinutes()+"-"+fecha2.getSeconds();
+    let disS = fecha.getDay(); 
+
+
+
+
 
 
     const conection = mysql.createConnection(dbData);
@@ -500,12 +565,15 @@ function RevisionClasesNoIniciadas(){
             return;
         }else{
             console.log(disS + " "+ semestreActual+" "+ horaactual)
-            const query = `select Rut_Docente,Nombre_Ramo,Sala,MIN(Inicio) as  Inicio,MAX(Termino) as Termino from Asignacion INNER JOIN Instancia on Ramo = Nombre_Ramo INNER JOIN Bloque on ID = Bloque LEFT JOIN Clase on Ramo_Nombre = Ramo  where Hora_Inicio IS NULL and Dia_Semana = ? and Semestre = ? and Termino <= ? GROUP by RUT_Docente,Sala,Nombre_Ramo,Hora_Inicio,Hora_Termino;`
-            
-            let parametros = [disS,semestreActual,horaactual]
-
+            //const query = `select Rut_Docente,Nombre_Ramo,Sala,MIN(Inicio) as  Inicio,MAX(Termino) as Termino from Asignacion INNER JOIN Instancia on Ramo = Nombre_Ramo INNER JOIN Bloque on ID = Bloque LEFT JOIN Clase on Ramo_Nombre = Ramo  where Hora_Inicio IS NULL and Dia_Semana = ? and Semestre = ? and Termino <= ? GROUP by RUT_Docente,Sala,Nombre_Ramo,Hora_Inicio,Hora_Termino;`
+            const query  = `select Rut_Docente,Nombre_Ramo,Sala,Inicio,Termino from (select Asignacion.RUT_Docente, Instancia.Dia_Semana,Nombre_Ramo,Sala,MIN(Inicio) as Inicio,MAX(Termino) as Termino,? as DiaActual from Asignacion INNER JOIN Instancia on Ramo = Nombre_Ramo INNER JOIN Bloque on ID = Bloque where Instancia.Semestre = ? GROUP by Asignacion.RUT_Docente, Sala,Nombre_Ramo,Instancia.Dia_Semana ) as THora LEFT JOIN (Select * from Clase where Clase.Dia = ? ) as TClase on THora.Nombre_Ramo = TClase.Ramo_Nombre where THora.Dia_Semana = ? and (THora.DiaActual != TClase.Dia or TClase.Dia IS NULL) and Termino < ?`;   
+            //let parametros = [disS,semestreActual,horaactual]
+            let parametros = [hoyFecha,semestreActual,hoyFecha,disS,horaactual]
+            //let parametros = ['2024-06-15','Semestre.1-2024','2024-06-18',5,"20:00:00"]
+  
             conection.query(query,parametros,(error,results)=>{
                 if(error){
+                    console.log(error);
                     procesandoClases = false
                     return;
                 }else{
@@ -537,6 +605,8 @@ function RevisionClasesNoIniciadas(){
             })
         }
     });
+    resolve();
+})
 }
 
 //monitorearHorario(); 
@@ -572,7 +642,7 @@ function EsDiaLibre(){
 
 
 
-function CalcularSemestre(){
+async function CalcularSemestre(){
 
 
     const fechaActual = new Date();

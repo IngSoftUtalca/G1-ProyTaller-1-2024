@@ -57,9 +57,23 @@ $text-dark: #fff; // Un color claro para contrastar con el color oscuro
     color: $text-light;
 }
 
+.green-bg-hover {
+    &:hover {
+        background-color: darken($green, 10%);
+        color: $text-light;
+    }
+}
+
 .red-bg {
     background-color: $red;
-    color: $text-dark;
+    color: $text-light;
+}
+
+.red-bg-hover {
+    &:hover {
+        background-color: darken($red, 10%);
+        color: $text-light;
+    }
 }
 
 .gray-bg {

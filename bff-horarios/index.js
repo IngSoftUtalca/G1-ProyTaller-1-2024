@@ -7,10 +7,34 @@ const app = express();
 const cors = require('cors');
 const PORT = 3004;
 
-app.use(cors({ origin: '*' }));
+const corsOptions = {
+  origin: ['http://localhost:8080', 'http://localhost:8082', require('../ENPOINTS.json').webdocente, require('../ENPOINTS.json').mainpage],
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
+
+app.use(cors(corsOptions));
 
 app.get('/', (req, res) => {
   res.json({ message: 'Micro servicio para horarios' });
+});
+
+app.get('/ramos', async (req, res) => {
+  try {
+    const connection = mysql.createConnection(dbConfig);
+    connection.connect();
+    const query = 'SELECT * FROM Ramo WHERE Periodo IN (SELECT ID FROM Periodo WHERE Estado = "Activo")';
+    await runQuery(connection, query)
+      .then((results) => {
+        res.status(200).json(results);
+      })
+      .catch((e) => {
+        console.error('Error ejecutando la query: ', e);
+        return res.status(500).json({ message: 'Error' });
+      });
+  } catch (e) {
+    console.error('Error conectando a la base de datos: ', e);
+    return res.status(500).json({ message: 'Error' });
+  }
 });
 
 app.get('/asignaciones/:rut', async (req, res) => {
@@ -18,7 +42,7 @@ app.get('/asignaciones/:rut', async (req, res) => {
     const rut = req.params.rut;
     const connection = mysql.createConnection(dbConfig);
     connection.connect();
-    const query = `SELECT * FROM Instancia WHERE Ramo IN (SELECT Nombre_Ramo FROM Asignacion WHERE RUT_Docente = '20509736') AND Semestre IN (SELECT Periodo.ID FROM Periodo WHERE Estado = 'Activo');`;
+    const query = `SELECT * FROM Instancia WHERE Ramo IN (SELECT Nombre_Ramo FROM Asignacion WHERE RUT_Docente = ?) AND Semestre IN (SELECT Periodo.ID FROM Periodo WHERE Estado = 'Activo');`;
     await runParametrizedQuery(connection, query, [rut]).then((results) => {
       res.status(200).json(results);
     }).catch((e) => {

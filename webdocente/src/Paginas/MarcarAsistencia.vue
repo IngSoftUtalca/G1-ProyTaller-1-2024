@@ -90,61 +90,128 @@ export default {
       this.ramo = this.ramo.slice(0, 35) + "...";
     }
 
+    let permisogps = false
     let validaciongps = false;
+    let validacionIP = false
+    let errorMensaje = ""
     let ipusuario = ""
 
     await fetch('https://api.ipify.org?format=json')
       .then(response => response.json())
       .then(response => { ipusuario = response.ip });
 
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        async (posicion) => {
-          try {
-            const Vgps = await axios.post(
 
-              ENPOINTS["ms-verificaciongps"] + "/verificar",
-              {
-                "longitud": posicion.coords.longitude,
-                "latitud": posicion.coords.latitude,
-                "sala": this.idSala,
-                "IP": ipusuario
-
-              },
-              {
-                headers: {
-                  'Content-Type': 'application/json',
-                }
-              }
-            );
-            console.log(posicion.coords.latitude + " | " + posicion.coords.longitude + " => " + Vgps.data.valido + " ip:" + ipusuario)
-
-            validaciongps = Vgps.data.valido
-
-          } catch (err) {
-            // no valido
+    let posicionG 
+    if ( navigator.geolocation) {
+      
+        try{    
+          const position = await this.ObtenerCoordenadas();
+          permisogps = true;
+          posicionG = position     
+        }catch(error) {
+          switch (error.code) {
+            case error.PERMISSION_DENIED:
+            errorMensaje = "Permiso denegado por el usuario.";
+              break;
+            case error.POSITION_UNAVAILABLE:
+            errorMensaje = "La información de ubicación no está disponible.";
+              break;
+            case error.TIMEOUT:
+            errorMensaje = "La solicitud de ubicación ha caducado.";
+              break;
+            case error.UNKNOWN_ERROR:
+            errorMensaje = "Se ha producido un error desconocido.";
+              break;
           }
-        }, (error) => {
-          console.log(error)
-          validaciongps = false
-          // no valido
-        })
+        }
+      
+    }else {
+      errorMensaje = ""
+      //errorMensaje = "La geolocalización no es compatible con este navegador."; // comentar en desarrollo
     }
 
+    try {
+   
+      const Vgps = await axios.post(
 
-    if (validaciongps) {
-      // si es valido se hace
-    } else {
+        ENPOINTS["ms-verificaciongps"] + "/verificar",
+        {
+          "sala": this.idSala,
+
+          "longitud": posicionG.coords.longitude,
+          "latitud": posicionG.coords.latitude,
+          "IP": ipusuario
+
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        }
+      )
+
+      console.log(posicionG.coords.latitude + "," + posicionG.coords.longitude + " => " + Vgps.data.validoGPS + " | ip:" + ipusuario + " => " + Vgps.data.validoIP);
+
+      validaciongps = Vgps.data.validoGPS;
+      validacionIP = Vgps.data.validoIP;
+
+      
+
+    } catch (err) {
+      console.error(err)
+
+    }
+
+    // de momento siempre sera verdadero en desarrollo
+    //permisogps = true
+    //validacionIP = true;
+    //validaciongps = true;
+
+    if (!(validacionIP && validaciongps) || !permisogps) {
       // si no es valido se hace
+      
+      if(permisogps){
+        if((!validacionIP && !validaciongps)){
+          errorMensaje = "Geolocalizacion e IP no valida"
+        }else if(!validacionIP){
+          errorMensaje = "IP no valida"
+        }
+        else if(!validaciongps){
+          errorMensaje = "Geolocalizacion no valida"
+        }
+      }
+
+/*
+      window.location.href = ENPOINTS["webdocente"]+"/error";
+      this.$router.push({
+        name: 'ErrorAsistencia',
+        params: {
+          rut: "",
+          mensaje: errorMensaje,
+          jusificable: true,
+          ramo: this.ramo,
+          sala: this.idSala,
+          clase_dia: new Date(new Date().toLocaleString("en-US", { timeZone: "America/Santiago" })).toISOString().slice(0, 10),
+        }
+      });*/
     }
-
-    this.valido = this.ramo != "No hay clases en la sala";
-
+    this.valido = (this.ramo != "No hay clases en la sala") && (errorMensaje == "");
+  
     console.log("valido: " + this.valido);
 
     this.loading = false;
   },
   methods: {
+
+    async ObtenerCoordenadas(){
+      return new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(
+          (position) => resolve(position),
+          (error) => reject(error)
+        );
+      });
+    },
+
     marcarAsistencia() {
       window.location.href = ENPOINTS["login-WD"]+"/?sala="+this.idSala;
     },

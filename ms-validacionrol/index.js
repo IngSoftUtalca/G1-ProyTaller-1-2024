@@ -30,7 +30,7 @@ app.post('/horario', async (req, res) => {
   try {
     connection = mysql.createConnection(dbConfig);
     connection.connect();
-    const query = `SELECT Estado FROM Docente join Horario ON Docente.Horario = Horario.ID AND Docente.RUT = ?;`;
+    const query = `SELECT Horario.Estado FROM Docente join Horario ON Docente.Horario = Horario.ID AND Docente.RUT = ?;`;
     await runParametrizedQuery(connection, query, [Rut])
       .then((result) => {
         if (result.length === 0) {
@@ -89,7 +89,7 @@ app.post('/validar', async (req, res) => {
           res.status(400).json(response);
         } else {
           response.Nombre = result[0].Nombre;
-          response.Valido = true;
+          response.Valido = rol === 'Docente' ? result[0].Estado === 'activo' : true;
           res.status(200).json(response);
         }
       })
