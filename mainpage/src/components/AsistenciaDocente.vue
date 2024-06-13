@@ -4,15 +4,16 @@
             <div class="row px-5 rt-50 h-55 font-20 bold primary-bg d-flex align-items-center">
 
                 <div class="col-2 text-center">
-                    Bloque
-                </div>
-                
-                <div class="col-2 text-center">
                     Curso
+                    
                 </div>
                 
                 <div class="col-2 text-center">
                     Fecha
+                </div>
+                
+                <div class="col-2 text-center">
+                    Bloque
                 </div>
                 
                 <div class="col-2 text-center">
@@ -36,9 +37,6 @@
         Tuplas
         -->
         <div class="row h-100 px-5 secondary-bg text-center bold d-flex align-items-center" v-for="(asistencia, index) in asistencias" :key="index">
-            <div class="col-2 text-center">
-                {{ getBloque(asistencia.bloque) }}
-            </div>
             
             <div class="col-2 text-center">
                 {{ getCurso(asistencia.curso) }}
@@ -47,6 +45,10 @@
             <div class="col-2 text-center">
                 {{ parseFecha(asistecia.fecha) }}
             </div>
+            
+            <div class="col-2 text-center">
+                {{ getBloque(asistencia.bloque) }}
+            </div>            
             
             <div class="col-2 d-flex justify-content-center align-items-center">
 
@@ -131,6 +133,6 @@
         },
         components: {
         JustificarInasistencia
-    }
+        }
     }
 </script>
