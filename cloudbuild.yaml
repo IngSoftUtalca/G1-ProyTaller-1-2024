@@ -1,150 +1,148 @@
+
   steps:
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'us-central1-docker.pkg.dev/presente-420701/presente/bff-asistencia:bff-asistencia','-f',  './bff-asistencia/Dockerfile','.'] 
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/presente-420701/produccion/bff-asistencia:bff-asistencia','-f',  './bff-asistencia/Dockerfile','.'] 
 
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'us-central1-docker.pkg.dev/presente-420701/presente/bff-asistencia:bff-asistencia'] 
+    args: ['push', 'us-central1-docker.pkg.dev/presente-420701/produccion/bff-asistencia:bff-asistencia'] 
 
 
   ##############################################################################################################################
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'us-central1-docker.pkg.dev/presente-420701/presente/bff-datosadministradores:bff-datosadministradores', '-f', './bff-datosadministradores/Dockerfile','.'] 
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/presente-420701/produccion/bff-datosadministradores:bff-datosadministradores', '-f', './bff-datosadministradores/Dockerfile','.'] 
 
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'us-central1-docker.pkg.dev/presente-420701/presente/bff-datosadministradores:bff-datosadministradores'] 
+    args: ['push', 'us-central1-docker.pkg.dev/presente-420701/produccion/bff-datosadministradores:bff-datosadministradores'] 
 
 
   ##############################################################################################################################
 
 
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'us-central1-docker.pkg.dev/presente-420701/presente/bff-datosasistencia:bff-datosasistencia','-f',  './bff-datosasistencia/Dockerfile','.'] 
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/presente-420701/produccion/bff-datosasistencia:bff-datosasistencia','-f',  './bff-datosasistencia/Dockerfile','.'] 
 
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'us-central1-docker.pkg.dev/presente-420701/presente/bff-datosasistencia:bff-datosasistencia'] 
+    args: ['push', 'us-central1-docker.pkg.dev/presente-420701/produccion/bff-datosasistencia:bff-datosasistencia'] 
   ##############################################################################################################################
 
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'us-central1-docker.pkg.dev/presente-420701/presente/bff-datosdocente:bff-datosdocente','-f',  './bff-datosdocente/Dockerfile','.'] 
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/presente-420701/produccion/bff-datosdocente:bff-datosdocente','-f',  './bff-datosdocente/Dockerfile','.'] 
 
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'us-central1-docker.pkg.dev/presente-420701/presente/bff-datosdocente:bff-datosdocente'] 
-  ##############################################################################################################################
-
-
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'us-central1-docker.pkg.dev/presente-420701/presente/bff-horarios:bff-horarios','-f',  './bff-horarios/Dockerfile','.'] 
-
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'us-central1-docker.pkg.dev/presente-420701/presente/bff-horarios:bff-horarios'] 
+    args: ['push', 'us-central1-docker.pkg.dev/presente-420701/produccion/bff-datosdocente:bff-datosdocente'] 
   ##############################################################################################################################
 
 
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'us-central1-docker.pkg.dev/presente-420701/presente/ms-erroresasistencia:ms-erroresasistencia','-f',  './ms-erroresasistencia/Dockerfile','.'] 
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/presente-420701/produccion/bff-horarios:bff-horarios','-f',  './bff-horarios/Dockerfile','.'] 
 
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'us-central1-docker.pkg.dev/presente-420701/presente/ms-erroresasistencia:ms-erroresasistencia'] 
+    args: ['push', 'us-central1-docker.pkg.dev/presente-420701/produccion/bff-horarios:bff-horarios'] 
   ##############################################################################################################################
 
 
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'us-central1-docker.pkg.dev/presente-420701/presente/ms-gestoradmin:ms-gestoradmin','-f',  './ms-gestoradmin/Dockerfile','.'] 
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/presente-420701/produccion/ms-erroresasistencia:ms-erroresasistencia','-f',  './ms-erroresasistencia/Dockerfile','.'] 
 
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'us-central1-docker.pkg.dev/presente-420701/presente/ms-gestoradmin:ms-gestoradmin'] 
+    args: ['push', 'us-central1-docker.pkg.dev/presente-420701/produccion/ms-erroresasistencia:ms-erroresasistencia'] 
   ##############################################################################################################################
 
 
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'us-central1-docker.pkg.dev/presente-420701/presente/ms-gestorasistencia:ms-gestorasistencia', '-f', './ms-gestorasistencia/Dockerfile','.'] 
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/presente-420701/produccion/ms-gestoradmin:ms-gestoradmin','-f',  './ms-gestoradmin/Dockerfile','.'] 
 
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'us-central1-docker.pkg.dev/presente-420701/presente/ms-gestorasistencia:ms-gestorasistencia'] 
+    args: ['push', 'us-central1-docker.pkg.dev/presente-420701/produccion/ms-gestoradmin:ms-gestoradmin'] 
   ##############################################################################################################################
 
 
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'us-central1-docker.pkg.dev/presente-420701/presente/ms-gestordocente:ms-gestordocente', '-f', './ms-gestordocente/Dockerfile','.'] 
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/presente-420701/produccion/ms-gestorasistencia:ms-gestorasistencia', '-f', './ms-gestorasistencia/Dockerfile','.'] 
 
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'us-central1-docker.pkg.dev/presente-420701/presente/ms-gestordocente:ms-gestordocente'] 
+    args: ['push', 'us-central1-docker.pkg.dev/presente-420701/produccion/ms-gestorasistencia:ms-gestorasistencia'] 
   ##############################################################################################################################
 
 
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'us-central1-docker.pkg.dev/presente-420701/presente/ms-registroasistencia:ms-registroasistencia', '-f', './ms-registroasistencia/Dockerfile','.'] 
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/presente-420701/produccion/ms-gestordocente:ms-gestordocente', '-f', './ms-gestordocente/Dockerfile','.'] 
 
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'us-central1-docker.pkg.dev/presente-420701/presente/ms-registroasistencia:ms-registroasistencia'] 
+    args: ['push', 'us-central1-docker.pkg.dev/presente-420701/produccion/ms-gestordocente:ms-gestordocente'] 
   ##############################################################################################################################
 
 
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'us-central1-docker.pkg.dev/presente-420701/presente/ms-registrohorarios:ms-registrohorarios', '-f', './ms-registrohorarios/Dockerfile','.'] 
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/presente-420701/produccion/ms-registroasistencia:ms-registroasistencia', '-f', './ms-registroasistencia/Dockerfile','.'] 
 
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'us-central1-docker.pkg.dev/presente-420701/presente/ms-registrohorarios:ms-registrohorarios'] 
+    args: ['push', 'us-central1-docker.pkg.dev/presente-420701/produccion/ms-registroasistencia:ms-registroasistencia'] 
   ##############################################################################################################################
 
 
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'us-central1-docker.pkg.dev/presente-420701/presente/ms-validacionrol:ms-validacionrol', '-f', './ms-validacionrol/Dockerfile','.'] 
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/presente-420701/produccion/ms-registrohorarios:ms-registrohorarios', '-f', './ms-registrohorarios/Dockerfile','.'] 
 
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'us-central1-docker.pkg.dev/presente-420701/presente/ms-validacionrol:ms-validacionrol'] 
-  ##############################################################################################################################
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'us-central1-docker.pkg.dev/presente-420701/presente/ms-verificaciongps:ms-verificaciongps', '-f', './ms-verificaciongps/Dockerfile','.'] 
-
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'us-central1-docker.pkg.dev/presente-420701/presente/ms-verificaciongps:ms-verificaciongps'] 
+    args: ['push', 'us-central1-docker.pkg.dev/presente-420701/produccion/ms-registrohorarios:ms-registrohorarios'] 
   ##############################################################################################################################
 
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'us-central1-docker.pkg.dev/presente-420701/presente/api-main-admin:api-main-admin', '-f', './API-MAIN-ADMIN/Dockerfile','.'] 
 
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'us-central1-docker.pkg.dev/presente-420701/presente/api-main-admin:api-main-admin'] 
-  ##############################################################################################################################
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'us-central1-docker.pkg.dev/presente-420701/presente/api-main-docente:api-main-docente', '-f', './API-MAIN-Docente/Dockerfile','.'] 
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/presente-420701/produccion/ms-validacionrol:ms-validacionrol', '-f', './ms-validacionrol/Dockerfile','.'] 
 
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'us-central1-docker.pkg.dev/presente-420701/presente/api-main-docente:api-main-docente'] 
+    args: ['push', 'us-central1-docker.pkg.dev/presente-420701/produccion/ms-validacionrol:ms-validacionrol'] 
   ##############################################################################################################################
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'us-central1-docker.pkg.dev/presente-420701/presente/api-main-wm:api-main-wm', '-f', './API-MAIN-WM/Dockerfile','.'] 
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/presente-420701/produccion/ms-verificaciongps:ms-verificaciongps', '-f', './ms-verificaciongps/Dockerfile','.'] 
 
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'us-central1-docker.pkg.dev/presente-420701/presente/api-main-wm:api-main-wm'] 
+    args: ['push', 'us-central1-docker.pkg.dev/presente-420701/produccion/ms-verificaciongps:ms-verificaciongps'] 
   ##############################################################################################################################
-  ##############################################################################################################################
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'us-central1-docker.pkg.dev/presente-420701/presente/api-web-docente:api-web-docente', '-f', './API-WEB-Docente/Dockerfile','.'] 
 
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'us-central1-docker.pkg.dev/presente-420701/presente/api-web-docente:api-web-docente'] 
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/presente-420701/produccion/api-main-admin:api-main-admin', '-f', './API-MAIN-ADMIN/Dockerfile','.'] 
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'us-central1-docker.pkg.dev/presente-420701/produccion/api-main-admin:api-main-admin'] 
+  ##############################################################################################################################
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/presente-420701/produccion/api-main-docente:api-main-docente', '-f', './API-MAIN-Docente/Dockerfile','.'] 
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'us-central1-docker.pkg.dev/presente-420701/produccion/api-main-docente:api-main-docente'] 
+  ##############################################################################################################################
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/presente-420701/produccion/api-main-wm:api-main-wm', '-f', './API-MAIN-WM/Dockerfile','.'] 
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'us-central1-docker.pkg.dev/presente-420701/produccion/api-main-wm:api-main-wm'] 
+  ##############################################################################################################################
+  ##############################################################################################################################
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/presente-420701/produccion/api-web-docente:api-web-docente', '-f', './API-WEB-Docente/Dockerfile','.'] 
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'us-central1-docker.pkg.dev/presente-420701/produccion/api-web-docente:api-web-docente'] 
 
 
 images:
-  - us-central1-docker.pkg.dev/presente-420701/presente/bff-asistencia:bff-asistencia
-  - us-central1-docker.pkg.dev/presente-420701/presente/bff-datosadministradores:bff-datosadministradores
-  - us-central1-docker.pkg.dev/presente-420701/presente/bff-datosasistencia:bff-datosasistencia
-  - us-central1-docker.pkg.dev/presente-420701/presente/bff-datosdocente:bff-datosdocente
-  - us-central1-docker.pkg.dev/presente-420701/presente/bff-horarios:bff-horarios
-  - us-central1-docker.pkg.dev/presente-420701/presente/ms-erroresasistencia:ms-erroresasistencia
-  - us-central1-docker.pkg.dev/presente-420701/presente/ms-gestoradmin:ms-gestoradmin
-  - us-central1-docker.pkg.dev/presente-420701/presente/ms-gestorasistencia:ms-gestorasistencia
-  - us-central1-docker.pkg.dev/presente-420701/presente/ms-gestordocente:ms-gestordocente
-  - us-central1-docker.pkg.dev/presente-420701/presente/ms-registroasistencia:ms-registroasistencia
-  - us-central1-docker.pkg.dev/presente-420701/presente/ms-registrohorarios:ms-registrohorarios
-  - us-central1-docker.pkg.dev/presente-420701/presente/ms-validacionrol:ms-validacionrol
-  - us-central1-docker.pkg.dev/presente-420701/presente/ms-verificaciongps:ms-verificaciongps
-  - us-central1-docker.pkg.dev/presente-420701/presente/api-main-wm:api-main-wm
-  - us-central1-docker.pkg.dev/presente-420701/presente/api-main-docente:api-main-docente
-  - us-central1-docker.pkg.dev/presente-420701/presente/api-main-admin:api-main-admin
-  - us-central1-docker.pkg.dev/presente-420701/presente/api-web-docente:api-web-docente
-
-
-  
+  - us-central1-docker.pkg.dev/presente-420701/produccion/bff-asistencia:bff-asistencia
+  - us-central1-docker.pkg.dev/presente-420701/produccion/bff-datosadministradores:bff-datosadministradores
+  - us-central1-docker.pkg.dev/presente-420701/produccion/bff-datosasistencia:bff-datosasistencia
+  - us-central1-docker.pkg.dev/presente-420701/produccion/bff-datosdocente:bff-datosdocente
+  - us-central1-docker.pkg.dev/presente-420701/produccion/bff-horarios:bff-horarios
+  - us-central1-docker.pkg.dev/presente-420701/produccion/ms-erroresasistencia:ms-erroresasistencia
+  - us-central1-docker.pkg.dev/presente-420701/produccion/ms-gestoradmin:ms-gestoradmin
+  - us-central1-docker.pkg.dev/presente-420701/produccion/ms-gestorasistencia:ms-gestorasistencia
+  - us-central1-docker.pkg.dev/presente-420701/produccion/ms-gestordocente:ms-gestordocente
+  - us-central1-docker.pkg.dev/presente-420701/produccion/ms-registroasistencia:ms-registroasistencia
+  - us-central1-docker.pkg.dev/presente-420701/produccion/ms-registrohorarios:ms-registrohorarios
+  - us-central1-docker.pkg.dev/presente-420701/produccion/ms-validacionrol:ms-validacionrol
+  - us-central1-docker.pkg.dev/presente-420701/produccion/ms-verificaciongps:ms-verificaciongps
+  - us-central1-docker.pkg.dev/presente-420701/produccion/api-main-wm:api-main-wm
+  - us-central1-docker.pkg.dev/presente-420701/produccion/api-main-docente:api-main-docente
+  - us-central1-docker.pkg.dev/presente-420701/produccion/api-main-admin:api-main-admin
+  - us-central1-docker.pkg.dev/presente-420701/produccion/api-web-docente:api-web-docente
