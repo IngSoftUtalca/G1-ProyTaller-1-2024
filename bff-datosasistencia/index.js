@@ -7,7 +7,12 @@ const runParametrizedQuery = require('./query.js').runParametrizedQuery;
 app.use(express.json());
 const cors = require('cors');
 const moment = require('moment');
-app.use(cors({ origin: '*'}));
+const corsOptions = {
+  origin: ['http://localhost:8080', 'http://localhost:8082', require('../ENPOINTS.json').webdocente, require('../ENPOINTS.json').mainpage],
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
+
+app.use(cors(corsOptions));
 app.get('/', (req, res) => {
   res.json({ message: 'Micro servicio para datos de asistencia' });
 });
@@ -88,5 +93,26 @@ app.post ('/datoEnsemana',async (req,res) =>{
   }).catch((error) => {
     return res.status(500).json({error:'error en la base de datos1'})
   })
+})
+
+app.post ('/getClases',async (req,res) =>{
+  const { rut } = req.body;
+  const getClases = `
+    SELECT distinct Clase.Hora_Inicio, Clase.Hora_Termino, Clase.Ramo_Nombre as Curso, Clase.Dia as Fecha, Clase.Estado, COALESCE(Justificacion.Detalle, 'NULL') as Justificacion
+    FROM Clase
+           LEFT JOIN Justificacion ON Clase.Ramo_Nombre = Justificacion.Ramo_Nombre AND Clase.Dia = Justificacion.Clase_Dia
+    WHERE Clase.docente = ?;
+  `;
+  const coneccion = mysql.createConnection(dbData);
+  coneccion.connect();
+  await runParametrizedQuery(coneccion,getClases,[rut]).then(async (result) =>{
+    if (result.length === 0) {
+      return  res.status(404).json({ message: 'No se encontraron clases' });
+    }
+      return res.status(200).json({result})
+  }).catch((error) => {
+    return res.status(500).json({error:'error en la base de datos1'})
+  })
+
 
 })

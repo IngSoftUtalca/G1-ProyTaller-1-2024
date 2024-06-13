@@ -10,7 +10,6 @@
       <div class="row justify-content-center">
         <h3 class="texto"> Revisa tu horario, no se ha logrado marcar la asistencia</h3>
       </div>
-  
       <!-- Botones -->
       <div class="partebaja">
           <div class="button">
