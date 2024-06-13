@@ -2,7 +2,7 @@
     <div class="container-fluid d-flex w-90">
         <div class="container-fluid  w-95 mt-3">
             <div class="row container-fluid my-14 d-flex justify-content-end">
-                 <div class="container-fluid">
+                <div class="container-fluid">
                     <div class="row contaiter d-flex justify-content-center align-items-center primary-border h-60 r-18">
                         <div class="col container d-flex justify-content-start align-items-cente">
                             <button class="btn-primary-16 btn-size-120">
