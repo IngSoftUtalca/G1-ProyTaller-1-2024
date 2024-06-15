@@ -42,6 +42,8 @@ export default {
       botonC: false,
       valido: false,
       ramo: "",
+      errorRoute: false,
+      errorMensaje: "",
       bloque: "",
       inicio: "",
       termino: "",
@@ -93,7 +95,7 @@ export default {
     let permisogps = false
     let validaciongps = false;
     let validacionIP = false
-    let errorMensaje = ""
+
     let ipusuario = ""
 
     await fetch('https://api.ipify.org?format=json')
@@ -109,25 +111,27 @@ export default {
           permisogps = true;
           posicionG = position     
         }catch(error) {
+          this.errorRoute = true
           switch (error.code) {
             case error.PERMISSION_DENIED:
-            errorMensaje = "Permiso denegado por el usuario.";
+            this.errorMensaje = "Permiso denegado por el usuario.";
               break;
             case error.POSITION_UNAVAILABLE:
-            errorMensaje = "La información de ubicación no está disponible.";
+            this.errorMensaje = "La información de ubicación no está disponible.";
               break;
             case error.TIMEOUT:
-            errorMensaje = "La solicitud de ubicación ha caducado.";
+            this.errorMensaje = "La solicitud de ubicación ha caducado.";
               break;
             case error.UNKNOWN_ERROR:
-            errorMensaje = "Se ha producido un error desconocido.";
+            this.errorMensaje = "Se ha producido un error desconocido.";
               break;
           }
+          
         }
       
     }else {
-      errorMensaje = ""
-      //errorMensaje = "La geolocalización no es compatible con este navegador."; // comentar en desarrollo
+      this.errorMensaje = ""
+      //this.errorMensaje = "La geolocalización no es compatible con este navegador."; // comentar en desarrollo
     }
 
     try {
@@ -163,42 +167,38 @@ export default {
     }
 
     // de momento siempre sera verdadero en desarrollo
-    //permisogps = true
-    //validacionIP = true;
-    //validaciongps = true;
+    permisogps = true
+    validacionIP = true;
+    validaciongps = true;
 
     if (!(validacionIP && validaciongps) || !permisogps) {
       // si no es valido se hace
-      
-      if(permisogps){
-        if((!validacionIP && !validaciongps)){
-          errorMensaje = "Geolocalizacion e IP no valida"
-        }else if(!validacionIP){
-          errorMensaje = "IP no valida"
+      this.errorRoute = true
+
+      if((!validacionIP && !validaciongps)){
+        this.errorMensaje += "| Geolocalizacion e IP no valida"
+      }else{
+        if(!validacionIP){
+        this.errorMensaje += "| IP no valida"
         }
-        else if(!validaciongps){
-          errorMensaje = "Geolocalizacion no valida"
+        if(!validaciongps){
+          this.errorMensaje += "| Geolocalizacion no valida"
         }
+        
       }
 
-/*
-      window.location.href = ENPOINTS["webdocente"]+"/error";
-      this.$router.push({
-        name: 'ErrorAsistencia',
-        params: {
-          rut: "",
-          mensaje: errorMensaje,
-          jusificable: true,
-          ramo: this.ramo,
-          sala: this.idSala,
-          clase_dia: new Date(new Date().toLocaleString("en-US", { timeZone: "America/Santiago" })).toISOString().slice(0, 10),
-        }
-      });*/
+      
+      //window.location.href = ENPOINTS["webdocente"]+"/error";
+
     }
-    this.valido = (this.ramo != "No hay clases en la sala") && (errorMensaje == "");
-  
+    console.log(this.errorMensaje)
+    this.valido = (this.ramo != "No hay clases en la sala") 
+    this.valido = true
+
+    
     console.log("valido: " + this.valido);
 
+    
     this.loading = false;
   },
   methods: {
@@ -213,7 +213,26 @@ export default {
     },
 
     marcarAsistencia() {
-      window.location.href = ENPOINTS["login-WD"]+"/?sala="+this.idSala;
+
+      if(!this.errorRoute){
+        window.location.href = ENPOINTS["login-WD"]+"/?sala="+this.idSala;
+      }else{
+        this.$router.push({
+          name: 'ErrorAsistencia',
+          params: {
+            rut: "",
+            mensaje: this.errorMensaje,
+            jusificable: true,
+            ramo: this.ramo,
+            sala: this.idSala,
+            clase_dia: new Date(new Date().toLocaleString("en-US", { timeZone: "America/Santiago" })).toISOString().slice(0, 10),
+          }
+        });
+      }
+      
+
+
+
     },
   },
 };
