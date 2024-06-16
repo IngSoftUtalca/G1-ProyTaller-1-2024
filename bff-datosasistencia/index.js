@@ -22,13 +22,13 @@ app.listen(PORT, () => {
 
 app.post ('/datosasistenciageneral',async (req,res) =>{ // req/body.admin
   const coneccion = mysql.createConnection(dbData);
-  const query = `select Clase.docente, count(Estado) as Inasistencia, Ramo_Nombre from Clase INNER JOIN Cargo On Cargo.Docente = Clase.docente where Estado = 'Ausente' and Cargo.Administrador = ? GROUP BY Clase.docente, Ramo_Nombre,Cargo.Administrador`
+  const query = `select Clase.docente, count(Estado) as Inasistencia, Ramo_Nombre from Clase INNER JOIN Cargo On Cargo.Docente = Clase.docente where Estado = 'Ausente' and Cargo.Administrador = ? and Clase.Ramo_Periodo = (select Periodo.ID from Periodo where Periodo.Estado = "Activo") GROUP BY Clase.docente, Ramo_Nombre,Cargo.Administrador`
   coneccion.connect();
   await runParametrizedQuery(coneccion,query,[req.body.rut]).then(async (result) =>{
     if (result.length === 0) {
       res.status(404).json({ message: 'No se encontraron datos' });
     }
-    const query2 = `select Clase.docente, count(Estado) as Asistido, Ramo_Nombre from Clase INNER JOIN Cargo On Cargo.Docente = Clase.docente where Estado = 'Asistido' and Cargo.Administrador = ? GROUP BY Clase.docente, Ramo_Nombre,Cargo.Administrador`
+    const query2 = `select Clase.docente, count(Estado) as Asistido, Ramo_Nombre from Clase INNER JOIN Cargo On Cargo.Docente = Clase.docente where Estado = 'Asistido' and Cargo.Administrador = ? and Clase.Ramo_Periodo = (select Periodo.ID from Periodo where Periodo.Estado = "Activo") GROUP BY Clase.docente, Ramo_Nombre,Cargo.Administrador`
     await runParametrizedQuery(coneccion,query2,[req.body.rut]).then((resultasistencia) =>{
       if (resultasistencia.length === 0) {
         res.status(404).json({ message: 'No se encontraron datos' });
@@ -37,7 +37,45 @@ app.post ('/datosasistenciageneral',async (req,res) =>{ // req/body.admin
         asistencia: resultasistencia,
         inasistencia: result
       }
-      res.status(200).json(empaquetardatos);
+
+
+
+      const agrupados = {};
+      result.forEach(dato => {
+        const clave = dato.Ramo_Nombre;
+        
+        if (!agrupados[clave]) {
+            agrupados[clave] = [];
+            agrupados[clave].push({Ramo:dato.Ramo_Nombre,Ausente:0,Asistido:0});
+        }
+
+
+        if(dato.Estado == "Ausente"){
+          agrupados[clave][0].Ausente++ 
+        }else{
+          agrupados[clave][0].Asistido++
+        }
+
+      });
+      resultasistencia.forEach(dato => {
+        const clave = dato.Ramo_Nombre;
+        
+        if (!agrupados[clave]) {
+            agrupados[clave] = [];
+            agrupados[clave].push({Ramo:dato.Ramo_Nombre,Ausente:0,Asistido:0});
+        }
+
+
+        if(dato.Estado == "Ausente"){
+          agrupados[clave][0].Ausente++ 
+        }else{
+          agrupados[clave][0].Asistido++
+        }
+
+      });
+
+
+      res.status(200).json(agrupados);
     }).catch((error) => {
       console.log(error)
       res.status(500).json({error:'error en la base de datos2'})
@@ -49,7 +87,7 @@ app.post ('/datosasistenciageneral',async (req,res) =>{ // req/body.admin
 })
 
 app.post ('/datosasistenciasemanas',async (req,res) =>{ // req/body.admin
-  const query = `select Clase.docente, Estado, Ramo_Nombre,Dia from Clase INNER JOIN Cargo On Cargo.Docente = Clase.docente where Cargo.Administrador = ? and Ramo_Nombre = ? ;`
+  const query = `select Clase.docente, Estado, Ramo_Nombre,Dia from Clase INNER JOIN Cargo On Cargo.Docente = Clase.docente where Cargo.Administrador = ? and Ramo_Nombre = ? and Clase.Ramo_Periodo = (select Periodo.ID from Periodo where Periodo.Estado = "Activo");;`
   const coneccion = mysql.createConnection(dbData);
   coneccion.connect();
   await runParametrizedQuery(coneccion,query,[req.body.rut,req.body.ramo]).then(async (result) =>{
@@ -62,9 +100,19 @@ app.post ('/datosasistenciasemanas',async (req,res) =>{ // req/body.admin
         
         if (!agrupados[clave]) {
             agrupados[clave] = [];
+            const fechaInicioSemana = moment().year(año).isoWeek(semana).startOf('isoWeek').format('YYYY-MM-DD');
+            agrupados[clave].push({Semana:fechaInicioSemana,Ausente:0,Asistido:0});
         }
-        
-        agrupados[clave].push(dato);
+
+        console.log(dato.Estado)
+
+        if(dato.Estado == "Ausente"){
+          agrupados[clave][0].Ausente++ 
+        }else{
+          agrupados[clave][0].Asistido++
+        }
+
+        //agrupados[clave].push(dato);
     });
     return res.status(200).json(agrupados)
   }
@@ -81,7 +129,8 @@ app.post ('/datoEnsemana',async (req,res) =>{
   // Obtener el número de días en la semana
   //return res.status(200).json({fechaInicioSemana,fechaFinSemana})
   console.log(fechaInicioSemana+ " | "+fechaFinSemana)
-  const query = `select Clase.docente, Estado, Ramo_Nombre,Dia from Clase INNER JOIN Cargo On Cargo.Docente = Clase.docente where Cargo.Administrador = ? and Ramo_Nombre = ? and Dia >= ? and Dia <= ?;`
+  const query = `select Docente.Nombre, Clase.Estado, Clase.Ramo_Nombre,Dia,Justificacion.Detalle from Clase INNER JOIN Cargo On Cargo.Docente = Clase.docente INNER JOIN Docente on (Clase.docente = Docente.RUT) LEFT JOIN Justificacion on (Justificacion.RUT = Docente.RUT and Justificacion.Clase_Dia = Clase.Dia and Justificacion.Ramo_Nombre = Clase.Ramo_Nombre ) where Cargo.Administrador = ? and Clase.Ramo_Nombre = ? and Dia >= ? and Dia <= ? and Clase.Ramo_Periodo = (select Periodo.ID from Periodo where Periodo.Estado = "Activo");`
+  //const query = `select Clase.docente, Estado, Ramo_Nombre,Dia from Clase INNER JOIN Cargo On Cargo.Docente = Clase.docente where Cargo.Administrador = ? and Ramo_Nombre = ? and Dia >= ? and Dia <= ?;`
   const coneccion = mysql.createConnection(dbData);
   await runParametrizedQuery(coneccion,query,[req.body.rut,req.body.ramo,fechaInicioSemana,fechaFinSemana]).then(async (result) =>{
     if (result.length === 0) {

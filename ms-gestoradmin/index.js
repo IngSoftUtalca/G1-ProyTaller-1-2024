@@ -42,3 +42,21 @@ app.post('/quitar', async (req, res) => {
     return res.status(500).json({ message: 'Error al quitar a un administrador' });
   }
 });
+
+
+
+app.post('/crear', async (req, res) => {
+  const { rut, nombre, campus, facultad} = req.body;
+  try {
+    const connection = mysql.createConnection(dbConfig);
+    connection.connect();
+  
+    const query =  `INSERT INTO Administrador(RUT, Nombre, Campus, Facultad) VALUES (?,?,?,?)`;
+    await runParametrizedQuery(connection, query, [rut, nombre, campus, facultad]);
+    connection.end();
+    res.json({ message: 'Administrador creado correctamente' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error al crear docente' });
+  }
+
+});
