@@ -100,12 +100,17 @@ export default {
             "Content-Type": "application/json",
           },
         }
-      );
+      ).then((response) => {
+          console.log(response.data)
+        })
     } catch (error) {
       mensajeError = error.response.data.Nombre;
       routeError = true;
+      console.log(mensajeError)
     }
 
+
+    
     try {
       await axios.post(
         ENPOINTS["ms-validacionrol"] + "/validar/ramo",
@@ -118,11 +123,16 @@ export default {
             "Content-Type": "application/json",
           },
         }
-      );
+      ).then((response) => {
+          console.log(response.data)
+        })
     } catch (error) {
       mensajeError += ' | '+error.response.data.mensaje;
       routeError = true;
+      console.log(mensajeError)
     }
+
+
 
     try {
       await axios.post(
@@ -135,11 +145,22 @@ export default {
             "Content-Type": "application/json",
           },
         }
-      );
+      ).then((respuesta) => {
+          if(!respuesta.data.Valido){
+            console.log(respuesta.data)
+            routeError = true
+            mensajeError += ' | '+respuesta.data.mensaje;
+          }
+        })
     } catch (error) {
       mensajeError += ' | '+error.response.data.mensaje;
       routeError = true;
+      console.log(mensajeError)
     }
+
+
+
+
 
     let ipusuario = "";
     
@@ -185,6 +206,7 @@ export default {
         routeError = true;
         justificacion = true;
       }) : justificacion = false;
+
 
     if (routeError) {
       this.$router.push({
