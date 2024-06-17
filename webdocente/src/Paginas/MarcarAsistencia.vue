@@ -167,9 +167,9 @@ export default {
     }
 
     // de momento siempre sera verdadero en desarrollo
-    permisogps = true
-    validacionIP = true;
-    validaciongps = true;
+    //permisogps = true
+    //validacionIP = true;
+    //validaciongps = true;
 
     if (!(validacionIP && validaciongps) || !permisogps) {
       // si no es valido se hace
