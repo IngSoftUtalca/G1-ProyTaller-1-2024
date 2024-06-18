@@ -41,6 +41,7 @@ app.post ('/datosasistenciageneral',async (req,res) =>{ // req/body.admin
 
 
       const agrupados = {};
+      console.log(result)
       result.forEach(dato => {
         const clave = dato.Ramo_Nombre;
         
@@ -50,13 +51,15 @@ app.post ('/datosasistenciageneral',async (req,res) =>{ // req/body.admin
         }
 
 
-        if(dato.Estado == "Ausente"){
-          agrupados[clave][0].Ausente++ 
-        }else{
-          agrupados[clave][0].Asistido++
+        if(dato.Asistido){
+          agrupados[clave][0].Asistido = dato.Asistido
+        }
+        if(dato.Inasistencia){
+          agrupados[clave][0].Ausente = dato.Inasistencia
         }
 
       });
+      console.log(resultasistencia)
       resultasistencia.forEach(dato => {
         const clave = dato.Ramo_Nombre;
         
@@ -66,10 +69,11 @@ app.post ('/datosasistenciageneral',async (req,res) =>{ // req/body.admin
         }
 
 
-        if(dato.Estado == "Ausente"){
-          agrupados[clave][0].Ausente++ 
-        }else{
-          agrupados[clave][0].Asistido++
+        if(dato.Asistido){
+          agrupados[clave][0].Asistido = dato.Asistido
+        }
+        if(dato.Inasistencia){
+          agrupados[clave][0].Ausente = dato.Inasistencia
         }
 
       });
