@@ -5,28 +5,43 @@ const PORT = 3011;
 const mysql = require('mysql');
 const dbConfig = require('../ENPOINTS.json').DB;
 const runParametrizedQuery = require('./query.js').runParametrizedQuery;
-const cors = require('cors');
 const endpoints = require('../ENPOINTS.json');
-
 
 const allowedOrigins = [
   endpoints.webdocente,
   endpoints.mainpage
 ];
 
-const corsOptions = {
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  optionsSuccessStatus: 200
+// Middleware personalizado para verificar el origen de la solicitud
+const checkOriginMiddleware = (req, res, next) => {
+  const origin = req.headers.origin;
+  // Permitir solicitudes locales para desarrollo y pruebas
+  const allowLocalhost = origin && origin.includes('localhost');
+  if (allowLocalhost || (origin && allowedOrigins.includes(origin))) {
+    next();
+  } else {
+    res.status(403).json({ message: 'Access forbidden by server' });
+  }
 };
 
-app.use(cors(corsOptions));
+// Middleware para manejar errores de CORS y otros errores
+const handleErrorsMiddleware = (err, req, res, next) => {
+  if (err) {
+    res.status(403).json({ message: 'Access forbidden by server' });
+  } else {
+    next();
+  }
+};
+
+// Aplicar middleware para manejo de JSON, CORS y verificación de origen
 app.use(express.json());
+app.use(checkOriginMiddleware); // Asegúrate de aplicar este middleware antes de tus rutas
+app.use(handleErrorsMiddleware);
+// Rutas protegidas por verificación de origen
+app.use('/', checkOriginMiddleware);
+app.use('/horario', checkOriginMiddleware);
+app.use('/validar', checkOriginMiddleware);
+app.use('/validar/ramo', checkOriginMiddleware);
 
 app.get('/', (req, res) => {
   res.json({ message: 'Micro servicio para validacion de rol' });
@@ -41,7 +56,7 @@ app.post('/horario', async (req, res) => {
   };
 
   try {
-    connection = mysql.createConnection(dbConfig);
+    const connection = mysql.createConnection(dbConfig);
     connection.connect();
     const query = `SELECT Horario.Estado FROM Docente join Horario ON Docente.Horario = Horario.ID AND Docente.RUT = ?;`;
     await runParametrizedQuery(connection, query, [Rut])
@@ -53,14 +68,14 @@ app.post('/horario', async (req, res) => {
         } else {
           response.Horario = result;
           response.Valido = result[0].Estado === 'aprobado' ? true : false;
-          mensaje = 'Consulta exitosa';
+          response.mensaje = 'Consulta exitosa';
           res.status(200).json(response);
         }
       })
       .catch((error) => {
         response.Horario = [];
         response.Valido = false;
-        response.mensaje = 'Error de consulta: ' + error.getMessage();
+        response.mensaje = 'Error de consulta: ' + error.message;
         res.status(501).json(response);
       })
       .finally(() => {
@@ -92,7 +107,7 @@ app.post('/validar', async (req, res) => {
     return;
   }
   try {
-    connection = mysql.createConnection(dbConfig);
+    const connection = mysql.createConnection(dbConfig);
     connection.connect();
     const query = `SELECT * FROM ${rol} WHERE RUT = ?`;
     await runParametrizedQuery(connection, query, [rut])
@@ -130,7 +145,7 @@ app.post('/validar/ramo', async (req, res) => {
   };
 
   try {
-    connection = mysql.createConnection(dbConfig);
+    const connection = mysql.createConnection(dbConfig);
     connection.connect();
 
     const query = `SELECT * FROM Asignacion WHERE RUT_Docente = ? AND Nombre_Ramo = ? AND Periodo_Ramo IN (SELECT Periodo.ID as Periodo FROM Periodo WHERE Estado = 'Activo');`;
@@ -147,7 +162,7 @@ app.post('/validar/ramo', async (req, res) => {
         }
       })
       .catch((error) => {
-        response.mensaje = 'Error en la consulta: ' + error.getMessage();
+        response.mensaje = 'Error en la consulta: ' + error.message;
         res.status(501).json(response);
       })
       .finally(() => {
@@ -157,12 +172,12 @@ app.post('/validar/ramo', async (req, res) => {
       });
 
   } catch (error) {
-    response.mensaje = 'Error en la consulta: ' + error.getMessage();
+    response.mensaje = 'Error en la consulta: ' + error.message;
     res.status(500).json(response);
   }
-
 });
 
 app.listen(PORT, () => {
   console.log('Servidor corriendo en http://localhost:' + PORT);
 });
+
