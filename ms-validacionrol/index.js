@@ -6,6 +6,8 @@ const mysql = require('mysql');
 const dbConfig = require('../ENPOINTS.json').DB;
 const runParametrizedQuery = require('./query.js').runParametrizedQuery;
 const cors = require('cors');
+const endpoints = require('../ENPOINTS.json');
+
 
 const allowedOrigins = [
   endpoints.webdocente,
