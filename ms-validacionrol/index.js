@@ -7,10 +7,21 @@ const dbConfig = require('../ENPOINTS.json').DB;
 const runParametrizedQuery = require('./query.js').runParametrizedQuery;
 const cors = require('cors');
 
+const allowedOrigins = [
+  endpoints.webdocente,
+  endpoints.mainpage
+];
+
 const corsOptions = {
-  origin: ['http://localhost:8080', 'http://localhost:8082', require('../ENPOINTS.json').webdocente, require('../ENPOINTS.json').mainpage],
-  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
-}
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  optionsSuccessStatus: 200
+};
 
 app.use(cors(corsOptions));
 app.use(express.json());
