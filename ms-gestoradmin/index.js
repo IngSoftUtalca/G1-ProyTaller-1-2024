@@ -1,22 +1,47 @@
 const express = require('express');
-const mysql = require('mysql');
-const dbConfig = require('../ENPOINTS.json').DB;
-const runQuery = require('./query.js').runQuery;
-const runParametrizedQuery = require('./query.js').runParametrizedQuery;
 const app = express();
-const cors = require('cors');
-
-
 const PORT = 3006;
 
-const corsOptions = {
-  origin: ['http://localhost:8080', 'http://localhost:8082', require('../ENPOINTS.json').webdocente, require('../ENPOINTS.json').mainpage],
-  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
-}
+const mysql = require('mysql');
+const dbConfig = require('../ENPOINTS.json').DB;
+const runParametrizedQuery = require('./query.js').runParametrizedQuery;
+const endpoints = require('../ENPOINTS.json');
 
+const allowedOrigins = [
+  endpoints.webdocente,
+  endpoints.mainpage
+];
 
-app.use(cors(corsOptions));
+// Middleware personalizado para verificar el origen de la solicitud
+const checkOriginMiddleware = (req, res, next) => {
+  const origin = req.headers.origin;
+  // Permitir solicitudes locales para desarrollo y pruebas
+  const allowLocalhost = origin && origin.includes('localhost');
+  if (allowLocalhost || (origin && allowedOrigins.includes(origin))) {
+    next();
+  } else {
+    res.status(403).json({ message: 'Access forbidden by server' });
+  }
+};
+
+// Middleware para manejar errores de CORS y otros errores
+const handleErrorsMiddleware = (err, req, res, next) => {
+  if (err) {
+    res.status(403).json({ message: 'Access forbidden by server' });
+  } else {
+    next();
+  }
+};
+
+// Aplicar middleware para manejo de JSON, CORS y verificación de origen
 app.use(express.json());
+app.use(checkOriginMiddleware); // Asegúrate de aplicar este middleware antes de tus rutas
+app.use(handleErrorsMiddleware);
+
+app.use('/', checkOriginMiddleware);
+app.use('/crear', checkOriginMiddleware);
+app.use('/quitar', checkOriginMiddleware);
+
 
 app.get('/', (req, res) => {
   res.json({ message: 'Micro servicio para gestor de admin' });
