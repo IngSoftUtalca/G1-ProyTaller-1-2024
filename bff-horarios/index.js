@@ -5,6 +5,7 @@ const PORT = 3004;
 const mysql = require('mysql');
 const dbConfig = require('../ENPOINTS.json').DB;
 const runParametrizedQuery = require('./query.js').runParametrizedQuery;
+const runQuery = require('./query.js').runQuery;
 const endpoints = require('../ENPOINTS.json');
 
 const allowedOrigins = [
