@@ -4,7 +4,7 @@ const PORT = 3005;
 
 const mysql = require('mysql');
 const dbData = require('../ENPOINTS.json').DB;
-const runQuery = require('./query.js').runQuery;
+const runQuery = require('./querys.js').runQuery;
 const endpoints = require('../ENPOINTS.json');
 
 const allowedOrigins = [
@@ -37,7 +37,6 @@ const checkOriginMiddleware = (req, res, next) => {
     console.log('Ruta:', req.path);
     console.log('Método:', req.method);
     console.log('Cuerpo:', req.body);
-    console.log('Query:', req.query);
     return res.status(403).json({ message: 'Access forbidden by server' });
   }
 
