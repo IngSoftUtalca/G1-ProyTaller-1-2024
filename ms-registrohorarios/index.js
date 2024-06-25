@@ -4,6 +4,7 @@ const app = express();
 const cors = require('cors');
 const moment = require('moment');
 const ProgressBar = require('progress');
+const endpoints = require('../ENPOINTS.json');
 
 let funciones
 try {

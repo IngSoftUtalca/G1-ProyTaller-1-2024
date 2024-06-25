@@ -2,6 +2,7 @@ const express = require('express');
 const mysql = require('mysql');
 const dbData = require('../ENPOINTS.json').DB;
 const app = express();
+const endpoints = require('../ENPOINTS.json');
 app.use(express.json());
 
 const TiempoRezago = 30; // definida en minutos 

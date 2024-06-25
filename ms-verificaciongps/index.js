@@ -2,6 +2,7 @@ const express = require('express');
 const mysql = require('mysql');
 const app = express();
 const cors = require('cors');
+const endpoints = require('../ENPOINTS.json');
 const math = require("mathjs")
 const PORT = 3012;
 app.use(express.json());
