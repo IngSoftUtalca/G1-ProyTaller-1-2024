@@ -87,6 +87,8 @@
   
   <script>
   import MainFooter from '@/components/MainFooter.vue'
+  import 'bootstrap/dist/css/bootstrap.min.css'
+  import 'bootstrap'
   
   export default {
     name: 'LandingPage',
