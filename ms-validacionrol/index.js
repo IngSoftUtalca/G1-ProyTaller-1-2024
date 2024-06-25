@@ -15,13 +15,21 @@ const allowedOrigins = [
 // Middleware personalizado para verificar el origen de la solicitud
 const checkOriginMiddleware = (req, res, next) => {
   const origin = req.headers.origin;
-  // Permitir solicitudes locales para desarrollo y pruebas
   const allowLocalhost = origin && origin.includes('localhost');
-  // Verificar si el origen de la solicitud está en la lista de orígenes permitidos
   const isAllowedOrigin = allowedOrigins.some(allowedOrigin => origin.startsWith(allowedOrigin));
-  
+
+  // Configurar encabezados CORS para respuestas
   if (allowLocalhost || isAllowedOrigin) {
-    next();
+    res.header('Access-Control-Allow-Origin', origin);
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    // Si necesitas cookies o sesiones
+    // res.header('Access-Control-Allow-Credentials', 'true');
+
+    // Si la solicitud es una solicitud preflight CORS, terminar aquí
+    if (req.method === 'OPTIONS') {
+      return res.sendStatus(200);
+    }
   } else {
     console.log('Acceso no permitido por el servidor');
     console.log('Origen de la solicitud:', origin);
@@ -30,8 +38,10 @@ const checkOriginMiddleware = (req, res, next) => {
     console.log('Método:', req.method);
     console.log('Cuerpo:', req.body);
     console.log('Query:', req.query);
-    res.status(403).json({ message: 'Access forbidden by server' });
+    return res.status(403).json({ message: 'Access forbidden by server' });
   }
+
+  next();
 };
 // Middleware para manejar errores de CORS y otros errores
 const handleErrorsMiddleware = (err, req, res, next) => {
