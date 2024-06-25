@@ -15,23 +15,48 @@ const allowedOrigins = [
 // Middleware personalizado para verificar el origen de la solicitud
 const checkOriginMiddleware = (req, res, next) => {
   const origin = req.headers.origin;
-  // Permitir solicitudes locales para desarrollo y pruebas
   const allowLocalhost = origin && origin.includes('localhost');
-  if (allowLocalhost || (origin && allowedOrigins.includes(origin))) {
-    next();
-  } else {
-    res.status(403).json({ message: 'Access forbidden by server' });
-  }
-};
+  const isAllowedOrigin = allowedOrigins.some(allowedOrigin => origin.startsWith(allowedOrigin));
 
+  // Configurar encabezados CORS para respuestas
+  if (allowLocalhost || isAllowedOrigin) {
+    res.header('Access-Control-Allow-Origin', origin);
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    // Si necesitas cookies o sesiones
+    // res.header('Access-Control-Allow-Credentials', 'true');
+
+    // Si la solicitud es una solicitud preflight CORS, terminar aquí
+    if (req.method === 'OPTIONS') {
+      return res.sendStatus(200);
+    }
+  } else {
+    console.log('Acceso no permitido por el servidor');
+    console.log('Origen de la solicitud:', origin);
+    console.log('Orígenes permitidos:', allowedOrigins);
+    console.log('Ruta:', req.path);
+    console.log('Método:', req.method);
+    console.log('Cuerpo:', req.body);
+    console.log('Query:', req.query);
+    return res.status(403).json({ message: 'Access forbidden by server' });
+  }
+
+  next();
+};
 // Middleware para manejar errores de CORS y otros errores
 const handleErrorsMiddleware = (err, req, res, next) => {
   if (err) {
+    console.error('Error:', err);
+    console.log('Ruta:', req.path);
+    console.log('Método:', req.method);
+    console.log('Cuerpo:', req.body);
+    console.log('Query:', req.query);
     res.status(403).json({ message: 'Access forbidden by server' });
   } else {
     next();
   }
 };
+
 
 // Aplicar middleware para manejo de JSON, CORS y verificación de origen
 app.use(express.json());
