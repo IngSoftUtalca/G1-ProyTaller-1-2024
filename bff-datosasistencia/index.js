@@ -52,10 +52,10 @@ app.post ('/datosasistenciageneral',async (req,res) =>{ // req/body.admin
 
 
         if(dato.Asistido){
-          agrupados[clave][0].Asistido = dato.Asistido
+          agrupados[clave][0].Asistido += dato.Asistido
         }
         if(dato.Inasistencia){
-          agrupados[clave][0].Ausente = dato.Inasistencia
+          agrupados[clave][0].Ausente += dato.Inasistencia
         }
 
       });

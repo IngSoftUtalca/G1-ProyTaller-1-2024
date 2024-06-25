@@ -1,8 +1,9 @@
 <template>
     <!-- Header -->
     <div class="row container-fluid" v-if="!loading">
-        <div class="row px-5 rt-50 h-55 font-20 bold primary-bg d-flex align-items-center">
-            <div class="col-2 text-center">
+        <div class="row px-5 rt-50 h-55 font-20 bold primary-bg d-flex align-items-center" v-if="!verdocente">
+
+            <div class="col-2 text-center" >
                 Ramo
             </div>
             <div class="col-2 text-center">
@@ -17,83 +18,69 @@
             <div class="col-2 text-center">
                 Detalle
             </div>
+
         </div>
-        <div class="row h-100 px-5 secondary-bg text-center bold d-flex align-items-center">
+        <div class="row px-5 rt-50 h-55 font-20 bold primary-bg d-flex align-items-center" v-if="verdocente">
             <div class="col-2 text-center">
-                Taller de Software
+                Docente
             </div>
             <div class="col-2 text-center">
-                50
+                fecha
             </div>
             <div class="col-2 text-center">
-                10
+                estado
             </div>
             <div class="col">
-            </div>
-            <div class="col-2 d-flex justify-content-center align-items-center">
-                <button class="btn-light-50 bold btn-size-150" >
-                    Ver
-                </button>
-            </div>
-        </div>
 
-
-
-        <div class="row h-100 px-5 secondary-bg text-center bold d-flex align-items-center">
-            <div class="col-2 text-center">
-                Modelos discretos
             </div>
             <div class="col-2 text-center">
-                10
-            </div>
-            <div class="col-2 text-center">
-                30
-            </div>
-            <div class="col">
-            </div>
-            <div class="col-2 d-flex justify-content-center align-items-center">
-                <button class="btn-light-50 bold btn-size-150" >
-                    Ver
-                </button>
+                Justificativo
             </div>
         </div>
 
-        <div class="row h-100 px-5 secondary-bg text-center bold d-flex align-items-center">
-            <div class="col-2 text-center">
-                Construccion de Software
-            </div>
-            <div class="col-2 text-center">
-                30
-            </div>
-            <div class="col-2 text-center">
-                20
-            </div>
-            <div class="col">
-            </div>
-            <div class="col-2 d-flex justify-content-center align-items-center">
-                <button class="btn-light-50 bold btn-size-150" >
-                    Ver
-                </button>
+
+
+
+
+        <div v-if="!verdocente">
+            <div class="row h-100 px-5 secondary-bg text-center bold d-flex align-items-center"  v-for="[key, value] of Object.entries(this.ramo2)" :key="key" >
+                <div class="col-2 text-center">
+                    {{value[0].Ramo || value[0].Semana}}
+                </div>
+                <div class="col-2 text-center" >
+                    {{ (value[0].Asistido) }}
+                </div>
+                <div class="col-2 text-center">
+                    {{ value[0].Ausente}}
+                </div>
+                <div class="col">
+                </div>
+                <div class="col-2 d-flex justify-content-center align-items-center">
+
+                    <button class="btn-light-50 bold btn-size-150"  @click="getDatosAsistenciaSemanas(value[0].Ramo )" v-show="!versemana">
+                        Ver
+                    </button>
+                    <button class="btn-light-50 bold btn-size-150"  @click="getDatosAsistenciaUnaSemana(ramoselect, key)" v-show="versemana">
+                        Ver
+                    </button>
+                </div>
             </div>
         </div>
+        <div v-if="verdocente">
+            <div class="row h-100 px-5 secondary-bg text-center bold d-flex align-items-center" v-for="[key, value] of Object.entries(this.ramo2)" :key="key" >
+                <div class="col-2 text-center">
+                    {{value.Nombre}}
+                </div>
+                <div class="col-2 text-center" >
+                    {{ (value.Dia) }}
+                </div>
+                <div class="col-2 text-center">
+                    {{value.Estado}}
+                </div>
+                <div class="col">
+                </div>
+            </div>
 
-        <div class="row h-100 px-5 secondary-bg text-center bold d-flex align-items-center">
-            <div class="col-2 text-center">
-                Taller de Software
-            </div>
-            <div class="col-2 text-center">
-                50
-            </div>
-            <div class="col-2 text-center">
-                10
-            </div>
-            <div class="col">
-            </div>
-            <div class="col-2 d-flex justify-content-center align-items-center">
-                <button class="btn-light-50 bold btn-size-150" >
-                    Ver
-                </button>
-            </div>
         </div>
 
     
@@ -115,13 +102,86 @@ export default {
             loading: true,
             ramos: null,
             OverlayAgregar: false,
-            ramo: null
+            ramo: null,
+            ramo2: null ,
+            ramoselect: null,
+            verdocente: false,
+            versemana: false
+
         }
     },
-    mounted() {
-        this.getRamos();
+    async mounted() {
+        await this.getDatosAsistencia();
+        //this.getRamos();
+        this.loading = false;
     },
     methods: {
+
+
+        async getDatosAsistencia(){
+            try {
+                const response = await axios.post(ENDPOINTS['bff-datosasistencia'] + '/datosasistenciageneral',{
+                    rut:"20509736"
+                },
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                    }
+                })
+                this.ramo2  = response.data
+            }catch (error) {
+                console.log(error)
+            }
+        },
+
+        async getDatosAsistenciaSemanas(ramo){
+            this.ramoselect = ramo 
+            this.versemana = true
+            this.verdocente = false
+            console.log(ramo)
+            try {
+                const response = await axios.post(ENDPOINTS['bff-datosasistencia'] + '/datosasistenciasemanas',{
+                    rut:"20509736",
+                    ramo: ramo
+                },
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                    }
+                })
+                this.ramo2  = response.data
+            }catch (error) {
+                console.log(error)
+            }
+        },
+
+        async getDatosAsistenciaUnaSemana(ramo,fecha){
+            this.versemana = false
+            this.verdocente = true
+            var losta = fecha.split("-")
+            
+            var Nano = losta[0]
+            var Nsemana = losta[1]
+            console.log(Nsemana+" | "+Nano)
+            try {
+                const response = await axios.post(ENDPOINTS['bff-datosasistencia'] + '/datoEnsemana',{
+                    rut:"20509736",
+                    ramo: ramo,
+                    Nano: parseInt(Nano),
+                    NSemana: parseInt(Nsemana)
+                },
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                    }
+                })
+                this.ramo2  = response.data.result
+                console.log(this.ramo2)
+            }catch (error) {
+                console.log(error)
+            }
+        },
+
         async getRamos() {
             try {
                 const response = await axios.get(ENDPOINTS['bff-horarios'] + '/ramos');
