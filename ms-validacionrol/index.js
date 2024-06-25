@@ -36,6 +36,11 @@ const checkOriginMiddleware = (req, res, next) => {
 // Middleware para manejar errores de CORS y otros errores
 const handleErrorsMiddleware = (err, req, res, next) => {
   if (err) {
+    console.error('Error:', err);
+    console.log('Ruta:', req.path);
+    console.log('Método:', req.method);
+    console.log('Cuerpo:', req.body);
+    console.log('Query:', req.query);
     res.status(403).json({ message: 'Access forbidden by server' });
   } else {
     next();
