@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "site": "web-docente-dev",
+    "site": "web-docente",
     "public": "dist",
     "ignore": [
       "firebase.json",
