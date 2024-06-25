@@ -6,14 +6,43 @@ app.use(express.json());
 
 const TiempoRezago = 30; // definida en minutos 
 let procesandoClases = false;
-const cors = require('cors');
 
-const corsOptions = {
-    origin: ['http://localhost:8080', 'http://localhost:8082', require('../ENPOINTS.json').webdocente, require('../ENPOINTS.json').mainpage],
-    optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+const allowedOrigins = [
+  endpoints.webdocente,
+  endpoints.mainpage
+];
+
+// Middleware personalizado para verificar el origen de la solicitud
+const checkOriginMiddleware = (req, res, next) => {
+  const origin = req.headers.origin;
+  // Permitir solicitudes locales para desarrollo y pruebas
+  const allowLocalhost = origin && origin.includes('localhost');
+  if (allowLocalhost || (origin && allowedOrigins.includes(origin))) {
+    next();
+  } else {
+    res.status(403).json({ message: 'Access forbidden by server' });
   }
-  
-app.use(cors({ origin: corsOptions }));
+};
+
+// Middleware para manejar errores de CORS y otros errores
+const handleErrorsMiddleware = (err, req, res, next) => {
+  if (err) {
+    res.status(403).json({ message: 'Access forbidden by server' });
+  } else {
+    next();
+  }
+};
+
+// Aplicar middleware para manejo de JSON, CORS y verificación de origen
+app.use(express.json());
+app.use(checkOriginMiddleware); // Asegúrate de aplicar este middleware antes de tus rutas
+app.use(handleErrorsMiddleware);
+
+app.use('/', checkOriginMiddleware);
+app.use('/consultarhorario', checkOriginMiddleware);
+app.use('/registrarinicio', checkOriginMiddleware);
+app.use('/registrarfinal', checkOriginMiddleware);
+app.use('/RevisarEstadoClases', checkOriginMiddleware);
 
 const consultas = require('./verificaciones.js');
 

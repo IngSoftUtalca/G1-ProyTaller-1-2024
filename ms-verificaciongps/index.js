@@ -7,12 +7,41 @@ const PORT = 3012;
 app.use(express.json());
 const dbData = require('../ENPOINTS.json').DB;
 
-const corsOptions = {
-  origin: ['http://localhost:8080', 'http://localhost:8082', require('../ENPOINTS.json').webdocente, require('../ENPOINTS.json').mainpage],
-  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
-}
+const allowedOrigins = [
+  endpoints.webdocente,
+  endpoints.mainpage
+];
 
-app.use(cors(corsOptions));
+// Middleware personalizado para verificar el origen de la solicitud
+const checkOriginMiddleware = (req, res, next) => {
+  const origin = req.headers.origin;
+  // Permitir solicitudes locales para desarrollo y pruebas
+  const allowLocalhost = origin && origin.includes('localhost');
+  if (allowLocalhost || (origin && allowedOrigins.includes(origin))) {
+    next();
+  } else {
+    res.status(403).json({ message: 'Access forbidden by server' });
+  }
+};
+
+// Middleware para manejar errores de CORS y otros errores
+const handleErrorsMiddleware = (err, req, res, next) => {
+  if (err) {
+    res.status(403).json({ message: 'Access forbidden by server' });
+  } else {
+    next();
+  }
+};
+
+// Aplicar middleware para manejo de JSON, CORS y verificación de origen
+app.use(express.json());
+app.use(checkOriginMiddleware); // Asegúrate de aplicar este middleware antes de tus rutas
+app.use(handleErrorsMiddleware);
+
+app.use('/', checkOriginMiddleware);
+app.use('/verificar', checkOriginMiddleware);
+app.use('/verificarIP', checkOriginMiddleware);
+
 
 // la ip de la utalca
 const ipValida = ['190.110.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)']

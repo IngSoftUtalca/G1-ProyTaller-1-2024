@@ -1,7 +1,7 @@
 {
   "hosting": {
     "public": "dist",
-    "site": "presente-utalca-dev",
+    "site": "presente-utalca",
     "ignore": [
       "firebase.json",
       "**/.*",
