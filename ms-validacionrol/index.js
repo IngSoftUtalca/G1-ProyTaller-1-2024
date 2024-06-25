@@ -17,13 +17,22 @@ const checkOriginMiddleware = (req, res, next) => {
   const origin = req.headers.origin;
   // Permitir solicitudes locales para desarrollo y pruebas
   const allowLocalhost = origin && origin.includes('localhost');
-  if (allowLocalhost || (origin && allowedOrigins.includes(origin))) {
+  // Verificar si el origen de la solicitud está en la lista de orígenes permitidos
+  const isAllowedOrigin = allowedOrigins.some(allowedOrigin => origin.startsWith(allowedOrigin));
+  
+  if (allowLocalhost || isAllowedOrigin) {
     next();
   } else {
+    console.log('Acceso no permitido por el servidor');
+    console.log('Origen de la solicitud:', origin);
+    console.log('Orígenes permitidos:', allowedOrigins);
+    console.log('Ruta:', req.path);
+    console.log('Método:', req.method);
+    console.log('Cuerpo:', req.body);
+    console.log('Query:', req.query);
     res.status(403).json({ message: 'Access forbidden by server' });
   }
 };
-
 // Middleware para manejar errores de CORS y otros errores
 const handleErrorsMiddleware = (err, req, res, next) => {
   if (err) {
