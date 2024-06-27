@@ -6,7 +6,7 @@ import FakeLogin from './pages/FakeLogin.vue'
 const routes = [
   { path: '/', name: 'landing', component: LandingPage, props: true },
   { path: '/:userType/:rut', name: 'HomePage', component: HomePage, props: true, meta: { requiresAuth: true } },
-  { path: '/login/:userType', component: FakeLogin, meta: { requiresAuth: true } },
+  { path: '/login/:userType', component: FakeLogin},
   { path: '/:pathMatch(.*)*', redirect: '/' }
 ]
 
