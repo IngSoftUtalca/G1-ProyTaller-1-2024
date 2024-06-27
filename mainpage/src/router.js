@@ -20,14 +20,7 @@ router.beforeEach((to, from, next) => {
   const isAuthenticated = document.cookie.split(';').some((item) => item.trim().startsWith('session='));
 
   if (requiresAuth && !isAuthenticated) {
-    const ID = document.cookie.split(';').find((c) => c.trim().startsWith('id=')).split('=')[1];
-    const userType = to.params.userType;
-    const rut = to.params.rut;
-    console.log(ID, userType, rut);
-    if (ID === rut) {
-      next();
-    }
-    router.push({ name: 'landing', params: { userType: 'no-autenticado' } });
+    router.push({ name: 'landing' });
   } else {
     next();
   }
