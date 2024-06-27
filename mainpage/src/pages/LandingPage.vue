@@ -77,7 +77,7 @@
           <vue-cal
             class="calendar"
             default-view="month"
-            :disable-views="['week', 'day']"
+            :disable-views="['week', 'day','years','year']"
           />
         </div>
       </div>
@@ -116,6 +116,13 @@ export default {
 <style scoped>
 .logo {
   font-size: 24px;
+}
+.calendar {
+    
+    background-color: #630808;
+    border: 1px solid #cccccc;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(1, 1, 183, 0.1);
 }
 
 nav ul {
