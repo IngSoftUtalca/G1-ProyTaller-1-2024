@@ -1,7 +1,7 @@
 const mysql = require('mysql');
 process.env.TZ = 'America/Santiago'; 
 const dbData = require('../ENPOINTS.json').DB;
-
+const moment = require('moment-timezone');
 let semestreActual;
 
 
@@ -41,12 +41,14 @@ function CalcularSemestre(){
 
 
 function GetFechaHoy(){
-    const fechaActual = new Date();
+    const enChile = moment.tz("America/Santiago");
+    return enChile.format('YYYY-MM-DD')
     return fechaActual.getFullYear()+"-"+(fechaActual.getMonth()+1)+"-"+fechaActual.getUTCDate();
 }
 
 
 function GetHoraActual(){
+    process.env.TZ = 'America/Santiago'; // se define la zona horaria en chile
     const tiempoActual = new Date();
     return tiempoActual.getHours()+":"+tiempoActual.getMinutes()+":"+tiempoActual.getSeconds();
     

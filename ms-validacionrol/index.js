@@ -89,7 +89,7 @@ app.post('/validar', async (req, res) => {
           res.status(400).json(response);
         } else {
           response.Nombre = result[0].Nombre;
-          response.Valido = true;
+          response.Valido = rol === 'Docente' ? result[0].Estado === 'activo' : true;
           res.status(200).json(response);
         }
       })

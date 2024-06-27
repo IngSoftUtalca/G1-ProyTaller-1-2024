@@ -2,9 +2,9 @@
   <div class="container-fluid d-flex w-90">
     <div class="col d-flex justify-content-end">
       <table
-        class="w-90 mx-4 mt-3 text-center gray-border"
+        class="w-90 mt-3 mx-4text-center gray-border"
         v-if="!loading"
-        :key="count"
+        :key="counter"
       >
         <thead class="primary-bg h-40">
           <tr>
@@ -26,17 +26,9 @@
             >
               <button
                 class="btn-gray btn-size-85 bold font-12"
-                @click="deshabilitar(index)"
-                v-if="docente.Estado === 'activo'"
+                @click="borrar(index)"
               >
-                Deshabilitar
-              </button>
-              <button
-                class="btn-gray btn-size-85 bold font-12"
-                @click="habilitar(index)"
-                v-if="docente.Estado === 'inactivo'"
-              >
-                Habilitar
+                Quitar
               </button>
             </td>
           </tr>
@@ -44,7 +36,7 @@
       </table>
     </div>
     <div
-      class="col-1 container-fluid mt-24 d-flex justify-content-end"
+      class="col-1 ms-4 container-fluid mt-24 d-flex justify-content-end"
       v-if="!loading"
     >
       <button class="btn-primary-16 btn-size-120" @click.prevent="add">
@@ -53,7 +45,7 @@
       </button>
     </div>
     <div class="underlay" v-if="OverlayAgregar" @click="close">
-      <AgregarDocente
+      <AgregarDocenteCargo
         class="overlay"
         v-if="OverlayAgregar"
         @click.stop
@@ -62,10 +54,7 @@
     </div>
   </div>
   <!-- loading-->
-  <div
-    class="container d-flex justify-content-start align-items-center h-450"
-    v-if="loading"
-  >
+  <div class="container d-flex start align-items-center h-450" v-if="loading">
     <div class="spinner-grow primary-normal div-size-72" role="status">
       <span class="visually-hidden">Loading...</span>
     </div>
@@ -73,7 +62,7 @@
 </template>
 
 <script>
-import AgregarDocente from "@/components/AgregarDocente.vue";
+import AgregarDocenteCargo from "@/components/AgregarDocenteCargo.vue";
 import ENDPOINTS from "../../../ENPOINTS.json";
 import axios from "axios";
 export default {
@@ -83,7 +72,7 @@ export default {
       OverlayAgregar: false,
       docentes: null,
       loading: true,
-      count: 0,
+      counter: 0,
     };
   },
   async mounted() {
@@ -93,7 +82,9 @@ export default {
   methods: {
     async getDocentes() {
       await axios
-        .get(ENDPOINTS["bff-datosdocentes"] + "/all-docentes")
+        .get(
+          ENDPOINTS["bff-datosdocentes"] + "/cargo/" + this.$route.params.rut
+        )
         .then((response) => {
           this.docentes = response.data;
         })
@@ -120,15 +111,16 @@ export default {
     },
     async close() {
       await this.getDocentes();
+      this.counter += 1;
       this.OverlayAgregar = false;
-      this.count += 1;
     },
-    async habilitar(i) {
+    async borrar(i) {
       this.loading = true;
       await axios.post(
-        ENDPOINTS["ms-gestordocente"] + "/habilitar",
+        ENDPOINTS["ms-gestordocente"] + "/desasignar",
         {
-          rut: this.docentes[i].RUT,
+          adminRut: this.$route.params.rut,
+          docenteRut: this.docentes[i].RUT,
         },
         {
           headers: {
@@ -138,28 +130,11 @@ export default {
       );
       await this.getDocentes();
       this.loading = false;
-      this.count += 1;
-    },
-    async deshabilitar(i) {
-      this.loading = true;
-      await axios.post(
-        ENDPOINTS["ms-gestordocente"] + "/deshabilitar",
-        {
-          rut: this.docentes[i].RUT,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      await this.getDocentes();
-      this.loading = false;
-      this.count += 1;
+      this.counter += 1;
     },
   },
   components: {
-    AgregarDocente,
+    AgregarDocenteCargo,
   },
 };
 </script>

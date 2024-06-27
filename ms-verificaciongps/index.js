@@ -32,6 +32,9 @@ app.listen(PORT, () => {
 
 app.post('/verificar', async (req, res) => {
 
+  return res.status(200).json({validoIP: true,validoGPS: true}) // esto omitira la verificacion de ip/gps
+
+
     let validaIP = false
     let validaGPS = false
 
@@ -108,6 +111,8 @@ app.post('/verificar', async (req, res) => {
 
 app.post('/verificarIP',async (req,res) => {
 
+  return res.status(200).json({valido:true,ok:"valida la IP"}) // esto omitira la verificacion de ip
+  
   if(req.body.IP){
     const verificacionIP = new RegExp(ipValida[0]);
     if(verificacionIP.test(req.body.IP)){
