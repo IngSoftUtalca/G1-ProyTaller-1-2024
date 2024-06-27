@@ -27,13 +27,13 @@
       <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">
           <div class="carousel-item active">
-            <img src="https://www.utalca.cl/content/uploads/2019/04/CAMPUS.jpg" class="d-block w-100" alt="...">
+            <img src="https://uchile.cl/dam/jcr:9d779d75-0c94-4d19-89b1-482f212af63c/foto-fachada-%20U-de-talca.jpg" class="d-block w-100" alt="...">
           </div>
           <div class="carousel-item">
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ36yItMYeOAspghICHdd-xOjS_h7SfAaC6dg&s" class="d-block w-100" alt="...">
+            <img src="https://s3.ingenieriautalca.cl/n9o3ax6f24dffce3nn5nhpcf9dydee/_MG_5122.JPG" class="d-block w-100" alt="...">
           </div>
           <div class="carousel-item">
-            <img src="https://www.utalca.cl/content/uploads/2019/04/CAMPUS.jpg" class="d-block w-100" alt="...">
+            <img src="https://icc.utalca.cl/imagenes/slider/3.png" class="d-block w-100" alt="...">
           </div>
         </div>
         <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
