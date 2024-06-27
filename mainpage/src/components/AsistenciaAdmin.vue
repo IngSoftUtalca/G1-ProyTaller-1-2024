@@ -79,6 +79,15 @@
                 </div>
                 <div class="col">
                 </div>
+                <div class="col-2 d-flex justify-content-center align-items-center">
+                    <div class="text-center" v-if="value.Detalle == null">
+                    No justificado
+                </div>
+
+                <div class="text-center" v-if="value.Detalle != null">
+                   {{ value.Detalle }}
+                </div>
+                </div>
             </div>
 
         </div>
