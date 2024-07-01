@@ -1,7 +1,17 @@
 <template>
-    <!-- Header -->
-    <div class="row container-fluid" v-if="!loading">
-        <div class="row px-5 rt-50 h-55 font-20 bold primary-bg d-flex align-items-center" v-if="!verdocente">
+
+    <div class="container-fluid w-95 mx-0 mt-3" v-if="!loading">
+        <div class="container-fluid">
+            <div class="container-fluid">
+                <div class="row contaiter d-flex justify-content-center align-items-center primary-border h-60 r-18">
+                    <div class="col d-flex justify-content-center align-items-center">
+                        <p class="m-0 align-middle bold font-22">Semestre {{ semestre }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row px-5 rt-50 h-55 mt-3 font-20 bold primary-bg d-flex align-items-center" v-if="!verdocente">
 
             <div class="col-2 text-center" >
                 Ramo
@@ -105,6 +115,7 @@
     
 
 export default {
+    props: ["rut"],
     name: 'VerRamos',
     data() {
         return {
@@ -123,6 +134,7 @@ export default {
         await this.getDatosAsistencia();
         //this.getRamos();
         this.loading = false;
+        console.log()
     },
     methods: {
 
@@ -130,7 +142,7 @@ export default {
         async getDatosAsistencia(){
             try {
                 const response = await axios.post(ENDPOINTS['bff-datosasistencia'] + '/datosasistenciageneral',{
-                    rut:"20509736"
+                    rut:this.rut
                 },
                 {
                     headers: {
@@ -150,7 +162,7 @@ export default {
             console.log(ramo)
             try {
                 const response = await axios.post(ENDPOINTS['bff-datosasistencia'] + '/datosasistenciasemanas',{
-                    rut:"20509736",
+                    rut:this.rut,
                     ramo: ramo
                 },
                 {
@@ -174,7 +186,7 @@ export default {
             console.log(Nsemana+" | "+Nano)
             try {
                 const response = await axios.post(ENDPOINTS['bff-datosasistencia'] + '/datoEnsemana',{
-                    rut:"20509736",
+                    rut:this.rut,
                     ramo: ramo,
                     Nano: parseInt(Nano),
                     NSemana: parseInt(Nsemana)

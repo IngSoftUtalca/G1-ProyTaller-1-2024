@@ -26,12 +26,12 @@ app.post ('/datosasistenciageneral',async (req,res) =>{ // req/body.admin
   coneccion.connect();
   await runParametrizedQuery(coneccion,query,[req.body.rut]).then(async (result) =>{
     if (result.length === 0) {
-      res.status(404).json({ message: 'No se encontraron datos' });
+      //res.status(404).json({ message: 'No se encontraron datos' });
     }
     const query2 = `select Clase.docente, count(Estado) as Asistido, Ramo_Nombre from Clase INNER JOIN Cargo On Cargo.Docente = Clase.docente where Estado = 'Asistido' and Cargo.Administrador = ? and Clase.Ramo_Periodo = (select Periodo.ID from Periodo where Periodo.Estado = "Activo") GROUP BY Clase.docente, Ramo_Nombre,Cargo.Administrador`
     await runParametrizedQuery(coneccion,query2,[req.body.rut]).then((resultasistencia) =>{
       if (resultasistencia.length === 0) {
-        res.status(404).json({ message: 'No se encontraron datos' });
+        //res.status(404).json({ message: 'No se encontraron datos' });
       }
       const empaquetardatos = {
         asistencia: resultasistencia,

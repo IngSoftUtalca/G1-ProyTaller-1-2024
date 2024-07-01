@@ -102,7 +102,7 @@
         @refresh="refresh"
       />
       <AsistenciaDocente v-if="asistencia && userType == 'docente'" />
-      <AsistenciaAdmin v-if="asistencia && userType == 'administrador'" />
+      <AsistenciaAdmin v-if="asistencia && userType == 'administrador'" :rut="this.$route.params.rut"/>
     </div>
     <MainFooter />
   </div>
