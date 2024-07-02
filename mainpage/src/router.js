@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import LandingPage from './pages/LandingPage.vue'
 import HomePage from './pages/HomePage.vue'
 import FakeLogin from './pages/FakeLogin.vue'
+import ENDPOINTS from '../../ENPOINTS.json'
 
 const routes = [
   { path: '/', name: 'landing', component: LandingPage, props: true },
@@ -16,11 +17,28 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
+
+  const allowedEndpoints = [
+    ENDPOINTS.login-docente,
+    ENDPOINTS.login-WM,
+    ENDPOINTS.login-admin,
+    ENDPOINTS.mainpage
+  ];
+
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
   const isAuthenticated = document.cookie.split(';').some((item) => item.trim().startsWith('session='));
+  
+  const isFromAllowed = allowedEndpoints.includes(from.path);
 
-  if (requiresAuth && !isAuthenticated) {
-    router.push({ name: 'landing' });
+  console.log('cookie', document.cookie);
+  console.log('to', to);
+  console.log('from', from);
+  console.log('requiresAuth', requiresAuth);
+  console.log('isAuthenticated', isAuthenticated);
+  console.log('isFromAllowed', isFromAllowed);
+
+  if ((!isAuthenticated || !isFromAllowed) && requiresAuth) {
+    next({ name: 'landing' }); 
   } else {
     next();
   }
