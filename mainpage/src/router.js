@@ -4,6 +4,7 @@ import HomePage from './pages/HomePage.vue'
 import FakeLogin from './pages/FakeLogin.vue'
 import ENDPOINTS from '../../ENPOINTS.json'
 
+
 const routes = [
   { path: '/', name: 'landing', component: LandingPage, props: true },
   { path: '/:userType/:rut', name: 'HomePage', component: HomePage, props: true, meta: { requiresAuth: true } },
@@ -19,10 +20,10 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
 
   const allowedEndpoints = [
-    ENDPOINTS.login-docente,
-    ENDPOINTS.login-WM,
-    ENDPOINTS.login-admin,
-    ENDPOINTS.mainpage
+    ENDPOINTS['login-docente'],
+    ENDPOINTS['login-WM'],
+    ENDPOINTS['login-admin'],
+    ENDPOINTS['mainpage']
   ];
 
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
