@@ -31,15 +31,19 @@ router.beforeEach((to, from, next) => {
   
   const isFromAllowed = allowedEndpoints.includes(from.path);
 
-  console.log('cookie', document.cookie);
-  console.log('to', to);
-  console.log('from', from);
-  console.log('requiresAuth', requiresAuth);
-  console.log('isAuthenticated', isAuthenticated);
-  console.log('isFromAllowed', isFromAllowed);
-
-  if ((!isAuthenticated || !isFromAllowed) && requiresAuth) {
-    next({ name: 'landing' }); 
+  if (requiresAuth && !isAuthenticated) {
+    const cookie = document.cookie.split(';').find((c) => c.trim().startsWith('id='));
+    if (cookie) {
+      const ID = cookie.split('=')[1];
+      const userType = to.params.userType;
+      const rut = to.params.rut;
+      console.log(ID, userType, rut);
+      if (ID === rut) {
+        next();
+        return; // Ensure that the next middleware or navigation guard is not called after this
+      }
+    }
+    router.push({ name: 'landing', params: { userType: 'no-autenticado' } });
   } else {
     next();
   }
