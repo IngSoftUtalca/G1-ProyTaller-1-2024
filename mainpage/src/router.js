@@ -2,7 +2,6 @@ import { createRouter, createWebHistory } from 'vue-router'
 import LandingPage from './pages/LandingPage.vue'
 import HomePage from './pages/HomePage.vue'
 import FakeLogin from './pages/FakeLogin.vue'
-import ENDPOINTS from '../../ENPOINTS.json'
 
 
 const routes = [
