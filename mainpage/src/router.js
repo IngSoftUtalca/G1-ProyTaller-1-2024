@@ -15,23 +15,35 @@ const router = createRouter({
   routes
 })
 
-router.beforeEach((to, from, next) => {
-  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
-  const isAuthenticated = document.cookie.split(';').some((item) => item.trim().startsWith('session='));
+router.beforeEach(async (to, from, next) => {
+  const query = to.query;
+  const encryptedFlag = query.flag;
+  const iv = query.iv ? atob(query.iv) : null;
+  const tag = query.tag ? atob(query.tag) : null;
 
-  if (requiresAuth && !isAuthenticated) {
-    const cookie = document.cookie.split(';').find((c) => c.trim().startsWith('id='));
-    if (cookie) {
-      const ID = cookie.split('=')[1];
-      const userType = to.params.userType;
-      const rut = to.params.rut;
-      console.log(ID, userType, rut);
-      if (ID === rut) {
+  const FLAG = process.env.FLAG;
+  const KEY = process.env.KEY;
+
+  if (encryptedFlag && iv && tag && KEY) {
+    const keyBuffer = await crypto.subtle.importKey("raw", new TextEncoder().encode(KEY), { name: "AES-GCM" }, false, ["decrypt"]);
+    try {
+      const decryptedFlag = await crypto.subtle.decrypt({ name: "AES-GCM", iv: new Uint8Array(iv.split('').map(char => char.charCodeAt(0))), tagLength: 128, additionalData: new Uint8Array(tag.split('').map(char => char.charCodeAt(0))) }, keyBuffer, new Uint8Array(atob(encryptedFlag).split('').map(char => char.charCodeAt(0))));
+
+      const decoder = new TextDecoder();
+      const decryptedFlagText = decoder.decode(decryptedFlag);
+
+      console.log("Flag desencriptada:", decryptedFlagText);
+      console.log("Flag esperada:", FLAG);
+
+      if (decryptedFlagText === FLAG) {
         next();
-        return; // Ensure that the next middleware or navigation guard is not called after this
+      } else {
+        next({ name: 'landing' });
       }
+    } catch (e) {
+      console.error("Error al desencriptar la flag", e);
+      next({ name: 'landing' });
     }
-    router.push({ name: 'landing', params: { userType: 'no-autenticado' } });
   } else {
     next();
   }
