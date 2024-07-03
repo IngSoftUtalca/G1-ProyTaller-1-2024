@@ -6,5 +6,7 @@ if (!isset($_SESSION['sso'])) {
     session_destroy();
     // Ubicación de archivo -> inter.php.
     Header("Location: inter.php");
+}else{
+    header("Location: inter.php?id=".$_SESSION['id']."&v=1");
 }
 ?>

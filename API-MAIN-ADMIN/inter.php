@@ -56,14 +56,28 @@
         $options = 0;
 
         $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length($cipher));
+        $tag = "";
+        $tagLength = 16;
 
         $FLAG = getenv('FLAG');
         $KEY = getenv('KEY');
 
-        $encryptedFlag = openssl_encrypt($FLAG, $cipher, $KEY, $options, $iv);
+        if (empty($FLAG) || empty($KEY)) {
+            error_log("No se han definido las variables de entorno FLAG o KEY");
+        }
 
-        $mainpage .= "?flag=".$encryptedFlag."&iv=".base64_encode($iv);
+        $encryptedFlag = openssl_encrypt($FLAG, $cipher, $KEY, $options, $iv, $tag, "", $tagLength);
 
+        if ($encryptedFlag === false) {
+            error_log("Error al encriptar la bandera");
+        }
+
+        $encodedTag = base64_encode($tag);
+        $encodedIv = base64_encode($iv);
+
+        $mainpage .= "?flag=" . $encryptedFlag . "&iv=" . $encodedIv . "&tag=" . $encodedTag;
+
+        error_log("Redireccion: ".$mainpage);
 
         /*-------------------------*/ 
         /* Link de página de inicio sistema a loguear - Modificable*/
