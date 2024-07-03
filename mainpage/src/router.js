@@ -17,6 +17,11 @@ const router = createRouter({
 })
 
 router.beforeEach(async (to, from, next) => {
+
+  if(!to.matched.some(record => record.meta.requiresAuth)) {
+   next();
+  }
+
   const query = to.query;
   const encryptedFlag = query.flag;
   const iv = query.iv ? atob(query.iv) : null;
@@ -46,7 +51,7 @@ router.beforeEach(async (to, from, next) => {
       next({ name: 'landing' });
     }
   } else {
-    next();
+    next('landing');
   }
 });
 
