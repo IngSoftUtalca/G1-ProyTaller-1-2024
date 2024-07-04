@@ -82,7 +82,7 @@
                     {{value.Nombre}}
                 </div>
                 <div class="col-2 text-center" >
-                    {{ (value.Dia).slice(0, 5) }}
+                    {{ (value.Dia).slice(0, 10) }}
                 </div>
                 <div class="col-2 text-center">
                     {{value.Estado}}
