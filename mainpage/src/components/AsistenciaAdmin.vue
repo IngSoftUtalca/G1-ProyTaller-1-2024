@@ -5,7 +5,7 @@
             <div class="container-fluid">
                 <div class="row contaiter d-flex justify-content-center align-items-center primary-border h-60 r-18">
                     <div class="col d-flex justify-content-center align-items-center">
-                        <p class="m-0 align-middle bold font-22">Semestre {{ semestre }}</p>
+                        <p class="m-0 align-middle bold font-22">{{ semestre }}</p>
                     </div>
                 </div>
             </div>
@@ -82,7 +82,7 @@
                     {{value.Nombre}}
                 </div>
                 <div class="col-2 text-center" >
-                    {{ (value.Dia) }}
+                    {{ (value.Dia).slice(0, 5) }}
                 </div>
                 <div class="col-2 text-center">
                     {{value.Estado}}
@@ -126,11 +126,31 @@ export default {
             ramo2: null ,
             ramoselect: null,
             verdocente: false,
-            versemana: false
+            versemana: false,
+            semestre: ""
 
         }
     },
     async mounted() {
+
+        try {
+            await axios.get(
+                ENDPOINTS["bff-horarios"] + "/semestre/activo",
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
+            ).then((response) => {
+                this.semestre = response.data[0].ID;
+                let parts = this.semestre.split('.');
+                let yearAndSemester = parts[1].split('-');
+                this.semestre = `${yearAndSemester[1]} | semestre ${yearAndSemester[0]}`;
+            })
+        } catch (error) {
+            console.log(error);
+        }
+
         await this.getDatosAsistencia();
         //this.getRamos();
         this.loading = false;
