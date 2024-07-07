@@ -1,6 +1,6 @@
 <template>    
     <div class="w-95 mt-5">
-        <div class="container" v-if="!loading">
+        <div class="container-fluid" v-if="!loading">
             <div class="row px-5 rt-50 h-55 font-20 bold primary-bg d-flex align-items-center">
                 <div class="col-2 text-center">Curso</div>
                 <div class="col-2 text-center">Fecha</div>
@@ -11,7 +11,7 @@
             </div>
         </div>
 
-        <div class="row h-100 px-5 secondary-bg text-center bold d-flex align-items-center" v-for="asistencia in asistencias" :key="asistencia.Fecha">
+        <div class="row h-100 mx-0 secondary-bg text-center bold d-flex align-items-center" v-for="asistencia in asistencias" :key="asistencia.Fecha">
             <div class="col-2 text-center">{{ asistencia.Curso }}</div>
             <div class="col-2 text-center">{{ asistencia.Fecha }}</div>
             <div class="col-2 text-center">{{ asistencia.Hora_Inicio }} - {{ asistencia.Hora_Termino }}</div>            
@@ -60,7 +60,7 @@
                 const rut = this.$route.params.rut;
                 await axios.post(ENDPOINTS["bff-datosasistencia"] + "/getClases", { rut: rut }, { headers: { "Content-Type": "application/json" } })
                     .then((response) => {
-                        this.asistencias = response.data;
+                        this.asistencias = response.data.result;
                     });
                     console.log(this.asistencias);
             },
