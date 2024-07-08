@@ -11,6 +11,17 @@
             </div>
         </div>
         
+        <div class="row px-5 rt-50 h-55 mt-3 font-20 align-items-center">
+            <div class="col-1 text-center" >
+                filtro
+            </div>
+            <div class="col-3">
+                <input type="text" v-model="filtro" class="text-center text-input">
+            </div>
+        </div>
+
+        
+        
         <div class="row px-5 rt-50 h-55 mt-3 font-20 bold primary-bg d-flex align-items-center" v-if="!verdocente">
 
             <div class="col-2 text-center" >
@@ -53,7 +64,7 @@
 
 
         <div v-if="!verdocente">
-            <div class="row h-100 px-5 secondary-bg text-center bold d-flex align-items-center"  v-for="[key, value] of Object.entries(this.ramo2)" :key="key" >
+            <div class="row h-100 px-5 secondary-bg text-center bold d-flex align-items-center"  v-for="[key, value] of FiltroLista" :key="key" >
                 <div class="col-2 text-center">
                     {{value[0].Ramo || value[0].Semana}}
                 </div>
@@ -77,12 +88,12 @@
             </div>
         </div>
         <div v-if="verdocente">
-            <div class="row h-100 px-5 secondary-bg text-center bold d-flex align-items-center" v-for="[key, value] of Object.entries(this.ramo2)" :key="key" >
+            <div class="row h-100 px-5 secondary-bg text-center bold d-flex align-items-center" v-for="[key, value] of FiltroLista" :key="key" >
                 <div class="col-2 text-center">
                     {{value.Nombre}}
                 </div>
                 <div class="col-2 text-center" >
-                    {{ (value.Dia).slice(0, 10) }}
+                    {{ (value.Dia) }}
                 </div>
                 <div class="col-2 text-center">
                     {{value.Estado}}
@@ -127,7 +138,9 @@ export default {
             ramoselect: null,
             verdocente: false,
             versemana: false,
-            semestre: ""
+            semestre: "",
+            filtro: "",
+            
 
         }
     },
@@ -154,12 +167,25 @@ export default {
         await this.getDatosAsistencia();
         //this.getRamos();
         this.loading = false;
-        console.log()
+        Object.entries(this.ramo2).forEach(newfiltro =>{
+            
+            console.log(newfiltro)
+          })
     },
+    computed:{
+        FiltroLista(){
+        return Object.entries(this.ramo2).filter(newfiltro =>{
+            
+          return (newfiltro[1].Nombre || newfiltro[1][0].Semana ||newfiltro[0]).toLowerCase().trim().match(this.filtro.toLowerCase().trim());
+        })
+      }
+    },
+    
     methods: {
 
 
         async getDatosAsistencia(){
+            this.filtro = ""
             try {
                 const response = await axios.post(ENDPOINTS['bff-datosasistencia'] + '/datosasistenciageneral',{
                     rut:this.rut
@@ -170,12 +196,14 @@ export default {
                     }
                 })
                 this.ramo2  = response.data
+                console.log(Object.entries(this.ramo2))
             }catch (error) {
                 console.log(error)
             }
         },
 
         async getDatosAsistenciaSemanas(ramo){
+            this.filtro = ""
             this.ramoselect = ramo 
             this.versemana = true
             this.verdocente = false
@@ -191,12 +219,18 @@ export default {
                     }
                 })
                 this.ramo2  = response.data
+                Object.entries(this.ramo2).forEach(newfiltro =>{
+            
+            console.log(newfiltro[1][0].Semana)
+          })
             }catch (error) {
                 console.log(error)
             }
         },
 
         async getDatosAsistenciaUnaSemana(ramo,fecha){
+            this.filtro = ""
+            console.log(ramo+" | "+fecha)
             this.versemana = false
             this.verdocente = true
             var losta = fecha.split("-")
@@ -217,6 +251,10 @@ export default {
                     }
                 })
                 this.ramo2  = response.data.result
+                Object.entries(this.ramo2).forEach(newfiltro =>{
+            
+            console.log(newfiltro)
+          })
                 console.log(this.ramo2)
             }catch (error) {
                 console.log(error)

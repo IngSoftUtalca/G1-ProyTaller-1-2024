@@ -141,6 +141,10 @@ app.post ('/datoEnsemana',async (req,res) =>{
       return  res.status(404).json({ message: 'No se encontraron datos' });
     }
 
+    result.forEach(dato => {
+      dato.Dia = moment(dato.Dia).format('YYYY-MM-DD');
+    })
+
     return res.status(200).json({result})
     
   }).catch((error) => {
