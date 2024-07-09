@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="page-container">
     <header class="header container-fluid">
       <div class="row h-100">
         <div class="col-3 d-flex justify-content-end">
@@ -23,7 +23,7 @@
       </div>
     </header>
     <main>
-      <h1>Plataforma de Gestión de asistencia docente</h1>
+      
       <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">
           <div class="carousel-item active">
@@ -31,9 +31,6 @@
           </div>
           <div class="carousel-item">
             <img src="https://s3.ingenieriautalca.cl/n9o3ax6f24dffce3nn5nhpcf9dydee/_MG_5122.JPG" class="d-block w-100" alt="...">
-          </div>
-          <div class="carousel-item">
-            <img src="https://icc.utalca.cl/imagenes/slider/3.png" class="d-block w-100" alt="...">
           </div>
         </div>
         <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
@@ -47,33 +44,31 @@
       </div>
       <div class="content">
         <div class="section news">
-          <h2>Noticias de la plataforma</h2>
-          <div class="photo">Foto</div>
-          <p>Texto</p>
-        </div>
-        <div class="section multimedia">
-          <h2>Multimedia</h2>
-          <div class="photo-list">
-            <div class="photo-item">
-              <div class="photo">Foto</div>
-              <a href="#">Enlaces</a>
+          <div class="news-item">
+            <div class="photo">
+              <img src="https://www.utalca.cl/content/uploads/2024/07/Diseno-sin-titulo-5.jpg" alt="">
+              <span class="category">Vinculación</span>
             </div>
-            <div class="photo-item">
-              <div class="photo">Foto</div>
-              <a href="#">Enlaces</a>
+            <p><a href="https://www.utalca.cl/noticias/parque-de-las-esculturas-sumara-obra-inmersiva/">Parque de las Esculturas sumará obra inmersiva</a></p>
+          </div>
+          <div class="news-item">
+            <div class="photo">
+              <img src="https://www.utalca.cl/content/uploads/2024/07/Diseno-sin-titulo-1.png" alt="">
+              <span class="category">Vinculación</span>
             </div>
-            <div class="photo-item">
-              <div class="photo">Foto</div>
-              <a href="#">Enlaces</a>
+            <p><a href="https://www.utalca.cl/noticias/clinica-tributaria-atendio-a-mas-de-800-contribuyentes-del-maule/">Clínica Tributaria atendió a más de 800 contribuyentes del Maule</a></p>
+          </div>
+          <div class="news-item">
+            <div class="photo">
+              <img src="https://www.utalca.cl/content/uploads/2024/07/Diseno-sin-titulo-4.jpg" alt="">
+              <span class="category">Academia e Innovación</span>
             </div>
-            <div class="photo-item">
-              <div class="photo">Foto</div>
-              <a href="#">Enlaces</a>
-            </div>
+            <p><a href="https://www.utalca.cl/noticias/expertos-analizan-desafios-sobre-el-buen-trato-hacia-las-personas-mayores/">Expertos analizan desafíos sobre el buen trato hacia las personas mayores</a></p>
           </div>
         </div>
+        
         <div class="section dates">
-          <h2>Fechas</h2>
+         
           <vue-cal
             class="calendar"
             default-view="month"
@@ -86,10 +81,6 @@
   </div>
 </template>
 
-
-
-
-  
 <script>
 import MainFooter from '@/components/MainFooter.vue'
 import VueCal from 'vue-cal'
@@ -109,20 +100,43 @@ export default {
 }
 </script>
 
-
-
-
-  
 <style scoped>
+.page-container {
+  position: relative;
+  min-height: 100vh;
+
+  background-size: cover;
+  background-position: center;
+}
+
+.page-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.5);
+  filter: grayscale(100%);
+  z-index: 1;
+}
+
+.header,
+main,
+MainFooter {
+  position: relative;
+  z-index: 2;
+}
+
 .logo {
   font-size: 24px;
 }
+
 .calendar {
-    
-    background-color: #630808;
-    border: 1px solid #cccccc;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(1, 1, 183, 0.1);
+  background-color: #630808;
+  border: 1px solid #cccccc;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(1, 1, 183, 0.1);
 }
 
 nav ul {
@@ -165,17 +179,55 @@ nav ul li a {
 
 .content {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  align-items: center;
   padding: 20px;
 }
 
 .section {
-  width: 30%;
+  width: 100%;
+  margin-bottom: 20px;
 }
 
-.news .photo {
+.news {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.news-item {
+  width: 30%;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.news .photo img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.news .category {
+  position: absolute;
+  top: 10px;
+  left: 10px;
   background-color: orange;
-  height: 150px;
+  color: white;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.news-item p {
+  margin-top: 10px;
+}
+
+.news-item a {
+  color: #000;
+  text-decoration: none;
+}
+
+.news-item a:hover {
+  text-decoration: underline;
 }
 
 .multimedia .photo-list {
