@@ -14,7 +14,7 @@
         <div class="row h-100 mx-0 secondary-bg text-center bold d-flex align-items-center" v-for="asistencia in asistencias" :key="asistencia.Fecha">
             <div class="col-2 text-center">{{ asistencia.Curso }}</div>
             <div class="col-2 text-center">{{ formatFecha(asistencia.Fecha) }}</div>
-            <div class="col-2 text-center">{{ asistencia.Hora_Inicio }} - {{ asistencia.Hora_Termino }}</div>            
+            <div class="col-2 text-center">{{ formatHora(asistencia.Hora_Inicio) }} - {{ formatHora(asistencia.Hora_Termino) }}</div>            
             <div class="col-2 d-flex justify-content-center align-items-center">
                 <div :class="getStatusClass(asistencia.Estado)" v-if="asistencia.Estado">
                     {{ asistencia.Estado }}
@@ -87,6 +87,10 @@
             },
             formatFecha(fecha) {
                 return moment(fecha).format('DD MMMM YYYY');
+            },
+            formatHora(hora) {
+                const [horas, minutos] = hora.split(':');
+                return `${horas}:${minutos}`;
             }
         },
         components: {

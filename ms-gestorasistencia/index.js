@@ -50,7 +50,34 @@ app.post('/', (req, res) => {
 app.listen(PORT, () => {
 });
 
+app.post('/justificar', async (req, res) => {
+    const { rut, ramo, dia, justificacion } = req.body;
+    const fecha = new Date();
+    const hora = fecha.getHours() + ":" + fecha.getMinutes() + ":" + fecha.getSeconds();
+    try {
+        connection = mysql.createConnection(dbConfig);
+        connection.connect();
+        const query = `
+        INSERT INTO Justificacion (Fecha, Hora, RUT, Detalle, Clase_Dia, Ramo_Nombre, Ramo_Periodo)
+        VALUES (?, ?, ?, ?, '?, ?, (SELECT Periodo.ID as Periodo FROM Periodo WHERE Estado = 'Activo'));
+        `;
 
+        await runParametrizedQuery(connection, query, [fecha, hora, rut, justificacion, dia, ramo])
+            .then((result) => {
+                res.status(200).json({ message: 'Justificación registrada' });
+            })
+            .catch((error) => {
+                res.status(501).json({ message: 'Error de consulta' });
+            })
+            .finally(() => {
+                if (connection && connection.state !== 'disconnected') {
+                    connection.end();
+                }
+            });
+      } catch (error) {
+        res.status(500).json({ message: 'Error en el servidor' });
+      }
+});
 app.post('/RevisarEstadoClases', async (req, res) => { 
 
     //const libre = await EsDiaLibre()
