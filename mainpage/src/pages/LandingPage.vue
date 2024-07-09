@@ -1,105 +1,214 @@
 <template>
+  <div>
     <header class="header container-fluid">
-        <div class="row h-100 ">
-            <div class="col-3 d-flex justify-content-end">
-                <img src="@/assets/utalca-blanco.svg" alt="logo" class="logo" />
-            </div>
-            <div class="col ms-3 container row d-flex align-items-end mb-0">
-                <div class="col text-center">
-                    <a href="https://www.utalca.cl/" class="pb-1">UTalca</a>
-                </div>
-                <div class="col text-center">
-                    <a href="/login/docente" class="pb-1">Docentes</a>
-                </div>
-                <div class="col text-center">
-                    <a href="/login/administrador" class="pb-1">Directores Escuela</a>
-                </div>
-                <div class="col text-center">
-                    <a href="/login/webmaster" class="pb-1">Decanos</a>
-                </div>
-            </div>
-            <div class="col-3"></div>
+      <div class="row h-100">
+        <div class="col-3 d-flex justify-content-end">
+          <img src="@/assets/utalca-blanco.svg" alt="logo" class="logo" />
         </div>
+        <div class="col ms-3 container row d-flex align-items-end mb-0">
+          <div class="col text-center">
+            <a href="https://www.utalca.cl/" class="pb-1">UTalca</a>
+          </div>
+          <div class="col text-center">
+            <a href="/login/docente" class="pb-1">Docentes</a>
+          </div>
+          <div class="col text-center">
+            <a href="/login/administrador" class="pb-1">Directores Escuela</a>
+          </div>
+          <div class="col text-center">
+            <a href="/login/webmaster" class="pb-1">Decanos</a>
+          </div>
+        </div>
+        <div class="col-3"></div>
+      </div>
     </header>
-    <section class="container-fluid">
-        <div class="row">
-            <div class="col ms-5 mt-3 d-flex jusify-content-center align-items-start">
-                <div class="w-75 mx-auto">
-                    <h1 class="text-center">
-                    Plataforma de Gestión de asistencia docente
-                    </h1>
-                    <p>
-                        Nos complace presentar nuestro innovador sistema de registro de asistencia universitaria, cuidadosamente diseñado para ofrecer una gestión eficiente y segura de la asistencia de docentes. Esta solución digital se integra a la perfección con la red universitaria, proporcionando herramientas avanzadas y amigables que facilitan la experiencia de nuestros usuarios.
-                    </p>
-                    <p>
-                        Los accesos administrativos están meticulosamente estructurados en diferentes niveles, ofreciendo una gestión organizada y eficaz. Los reportes de asistencia son detallados y versátiles, permitiendo generar informes semanales y semestrales, así como un reporte global con opción detallada por curso. Estos informes contienen datos esenciales como horarios, nombres de cursos, carreras, número de estudiantes y nombres de profesores, ofreciendo una visión completa y precisa de la asistencia.
-                    </p>
-                    <p>
-                        Para garantizar la integridad y seguridad en el registro de asistencias, hemos implementado múltiples mecanismos de validación, que incluyen QRs en las salas, verificación de geolocalización y una funcionalidad de verificación de red. Los docentes son responsables de registrar su asistencia al inicio y final de cada clase, con la flexibilidad de poder actualizarla dentro de un rango de 2 horas en caso de olvido.
-                    </p>
-                    <p>
-                        En situaciones excepcionales, como fallos de red o problemas con los QR, mantenemos un método tradicional de firma en la dirección de escuela como respaldo. Además, se registra y detalla si la clase fue en línea, añadiendo un comentario específico para una mayor claridad.
-                    </p>
-                    <p>
-                        En resumen, nuestro sistema representa una solución integral y moderna para la gestión de la asistencia universitaria, adaptada a las necesidades específicas de nuestra comunidad educativa. Esta iniciativa surge con el objetivo primordial de simplificar y optimizar la gestión de los datos actualmente registrados en papel, reemplazándolos por una solución digital que mejora la disponibilidad y precisión de la información.
-                    </p>
-                    <p>
-                        Este proyecto se alinea con la visión de la Universidad de Talca de ser reconocida como una universidad pública por excelencia y un referente en educación. Se busca modernizar y mejorar la gestión de la asistencia del docente, superando el método actual de firma física en la dirección de escuela, que carece de vigilancia y precisión.
-                    </p>
-                    <p>
-                        Con este proyecto, aspiramos a optimizar el proceso de documentación de asistencias, ofreciendo una solución técnica que sea fácil de usar para todos los usuarios involucrados. Además, nos comprometemos con el cuidado del medio ambiente al sustituir el documento en papel por un formato digital, y facilitamos a los profesores el registro de su asistencia desde las mismas aulas en las que imparten clases, eliminando desplazamientos innecesarios y agilizando el proceso.
-                    </p>
-                    <p>
-                        Invitamos a nuestra comunidad educativa a ser parte de esta transformación digital, que busca mejorar continuamente y adaptarse a las necesidades cambiantes de nuestra universidad.
-                    </p>
-                </div>
-                
-            </div>
-            <div class="col-4 d-flex justify-content-end m-0 p-0">
-                <div class="limited-width-column secondary-bg">
-                    <div class="d-flex justify-content-center align-items-center p-5 h-50">
-                    <div class="row image-container">
-                        <img src="@/assets/cont1.svg" alt="gato" />
-                    </div>
-                    </div>
-                    <div class="d-flex justify-content-center align-items-center p-5 h-50">
-                        <div class="row image-container">
-                            <img src="@/assets/cont2.svg" alt="huasa" />
-                        </div>
-                    </div>
-                </div>
-               
-            </div>
+    <main>
+      <h1>Plataforma de Gestión de asistencia docente</h1>
+      <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <img src="https://uchile.cl/dam/jcr:9d779d75-0c94-4d19-89b1-482f212af63c/foto-fachada-%20U-de-talca.jpg" class="d-block w-100" alt="...">
+          </div>
+          <div class="carousel-item">
+            <img src="https://s3.ingenieriautalca.cl/n9o3ax6f24dffce3nn5nhpcf9dydee/_MG_5122.JPG" class="d-block w-100" alt="...">
+          </div>
+          <div class="carousel-item">
+            <img src="https://icc.utalca.cl/imagenes/slider/3.png" class="d-block w-100" alt="...">
+          </div>
         </div>
-    </section>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+      <div class="content">
+        <div class="section news">
+          <h2>Noticias de la plataforma</h2>
+          <div class="photo">Foto</div>
+          <p>Texto</p>
+        </div>
+        <div class="section multimedia">
+          <h2>Multimedia</h2>
+          <div class="photo-list">
+            <div class="photo-item">
+              <div class="photo">Foto</div>
+              <a href="#">Enlaces</a>
+            </div>
+            <div class="photo-item">
+              <div class="photo">Foto</div>
+              <a href="#">Enlaces</a>
+            </div>
+            <div class="photo-item">
+              <div class="photo">Foto</div>
+              <a href="#">Enlaces</a>
+            </div>
+            <div class="photo-item">
+              <div class="photo">Foto</div>
+              <a href="#">Enlaces</a>
+            </div>
+          </div>
+        </div>
+        <div class="section dates">
+          <h2>Fechas</h2>
+          <vue-cal
+            class="calendar"
+            default-view="month"
+            :disable-views="['week', 'day','years','year']"
+          />
+        </div>
+      </div>
+    </main>
     <MainFooter />
-</template> 
+  </div>
+</template>
 
+
+
+
+  
 <script>
-    import MainFooter from '@/components/MainFooter.vue'
+import MainFooter from '@/components/MainFooter.vue'
+import VueCal from 'vue-cal'
+import 'vue-cal/dist/vuecal.css'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap'
 
-    export default {
-        name: 'LandingPage',
-        mounted() {
-            document.title = 'UTalca | Asistencia Docente'
-        },
-        components: {
-            MainFooter
-        }
-    }
+export default {
+  name: 'LandingPage',
+  components: {
+    MainFooter,
+    VueCal
+  },
+  mounted() {
+    document.title = 'UTalca | Asistencia Docente'
+  }
+}
 </script>
 
-<style>
-    .image-container {
-        max-width: 450px;
-        width: 100%;
-    }
-    .image-container img {
-        width: 100%;
-        height: auto;
-    }
-    .limited-width-column {
-        max-width: 500px;
-        width: 100%;
-    }
+
+
+
+  
+<style scoped>
+.logo {
+  font-size: 24px;
+}
+.calendar {
+    
+    background-color: #630808;
+    border: 1px solid #cccccc;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(1, 1, 183, 0.1);
+}
+
+nav ul {
+  display: flex;
+  list-style: none;
+}
+
+nav ul li {
+  margin-right: 20px;
+}
+
+nav ul li a {
+  color: white;
+  text-decoration: none;
+}
+
+.carousel {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.carousel .slide {
+  position: relative;
+}
+
+.carousel img {
+  width: 100%;
+  max-height: 300px;
+  object-fit: cover;
+}
+
+.carousel .caption {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  padding: 10px;
+}
+
+.content {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+}
+
+.section {
+  width: 30%;
+}
+
+.news .photo {
+  background-color: orange;
+  height: 150px;
+}
+
+.multimedia .photo-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.multimedia .photo-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.multimedia .photo {
+  background-color: orange;
+  height: 50px;
+  width: 50px;
+  margin-right: 10px;
+}
+
+.dates .calendar {
+  background-color: white;
+  height: auto;
+}
+
+.dates ul {
+  list-style: none;
+  padding: 0;
+}
+
+/* Additional styles to hide the navigation bar in vue-cal */
+.vuecal__header,
+.vuecal__header div {
+  display: none !important;
+}
 </style>
