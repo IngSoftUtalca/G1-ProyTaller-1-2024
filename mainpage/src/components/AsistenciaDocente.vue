@@ -13,7 +13,7 @@
 
         <div class="row h-100 mx-0 secondary-bg text-center bold d-flex align-items-center" v-for="asistencia in asistencias" :key="asistencia.Fecha">
             <div class="col-2 text-center">{{ asistencia.Curso }}</div>
-            <div class="col-2 text-center">{{ asistencia.Fecha }}</div>
+            <div class="col-2 text-center">{{ formatFecha(asistencia.Fecha) }}</div>
             <div class="col-2 text-center">{{ asistencia.Hora_Inicio }} - {{ asistencia.Hora_Termino }}</div>            
             <div class="col-2 d-flex justify-content-center align-items-center">
                 <div :class="getStatusClass(asistencia.Estado)" v-if="asistencia.Estado">
@@ -25,10 +25,9 @@
                     {{ asistencia.Justificacion != "NULL"? asistencia.Justificacion : "No justificado"}}
                 </div>
             </div>
-            <div class="col" v-if="asistencia.Justificacion == null">
+            <div class="col" v-if="asistencia.Justificacion == NULL">
                 <button class="btn-primary-16 btn-size-120" @click.prevent="add">
-                    <span class="bold">Agregar</span>
-                    <img src="@/assets/plus.svg" alt="Agregar">
+                    <span class="bold">Justificar</span>
                 </button>
             </div>
         </div>
@@ -41,7 +40,12 @@
 <script>    
     import JustificarInasistencia from '@/components/JustificarInasistencia.vue';
     import axios from 'axios';
+    import moment from 'moment';
     import ENDPOINTS from '../../../ENPOINTS.json';   
+    import 'moment/locale/es'
+
+    moment.locale('es');
+
     export default {
         name: 'AsistenciaDocente',
         data() {
@@ -49,6 +53,7 @@
                 loading: true,
                 asistencias: [],
                 OverlayJustificar: false,
+                NULL: "NULL"
             }
         },
         async mounted() {
@@ -62,7 +67,6 @@
                     .then((response) => {
                         this.asistencias = response.data.result;
                     });
-                    console.log(this.asistencias);
             },
             add() {
                 this.OverlayJustificar = true;
@@ -80,6 +84,9 @@
                 return {
                     '': justification == null || justification != null,
                 };
+            },
+            formatFecha(fecha) {
+                return moment(fecha).format('DD MMMM YYYY');
             }
         },
         components: {
