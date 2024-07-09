@@ -111,7 +111,7 @@ export default {
           permisogps = true;
           posicionG = position     
         }catch(error) {
-          this.errorRoute = true
+          //this.errorRoute = true
           switch (error.code) {
             case error.PERMISSION_DENIED:
             this.errorMensaje = "Permiso denegado por el usuario.";
@@ -167,9 +167,9 @@ export default {
     }
 
     // de momento siempre sera verdadero en desarrollo
-    //permisogps = true
-    //validacionIP = true;
-    //validaciongps = true;
+    permisogps = true
+    validacionIP = true;
+    validaciongps = true;
 
     if (!(validacionIP && validaciongps) || !permisogps) {
       // si no es valido se hace
