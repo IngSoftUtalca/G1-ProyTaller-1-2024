@@ -8,14 +8,14 @@ const cors = require('cors');
 const PORT = 3001;
 
 
-
-app.use(cors(corsOptions));
-app.use(express.json());
-
 const corsOptions = {
   origin: ['http://localhost:8080', 'http://localhost:8082', require('../ENPOINTS.json').webdocente, require('../ENPOINTS.json').mainpage],
   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }
+app.use(cors(corsOptions));
+app.use(express.json());
+
+
 
 
 
