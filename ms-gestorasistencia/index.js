@@ -1,7 +1,9 @@
 const express = require('express');
 const mysql = require('mysql');
+const dbConfig = require('../ENPOINTS.json').DB;
 const dbData = require('../ENPOINTS.json').DB;
 const app = express();
+const runParametrizedQuery = require('./query.js').runParametrizedQuery;
 app.use(express.json());
 
 const TiempoRezago = 30; // definida en minutos 
@@ -48,6 +50,7 @@ app.post('/', (req, res) => {
   });
 
 app.listen(PORT, () => {
+    console.log(`Microservicio de registro de asistencia escuchando en http://localhost:${PORT}`);
 });
 
 app.post('/justificar', async (req, res) => {
@@ -59,7 +62,7 @@ app.post('/justificar', async (req, res) => {
         connection.connect();
         const query = `
         INSERT INTO Justificacion (Fecha, Hora, RUT, Detalle, Clase_Dia, Ramo_Nombre, Ramo_Periodo)
-        VALUES (?, ?, ?, ?, '?, ?, (SELECT Periodo.ID as Periodo FROM Periodo WHERE Estado = 'Activo'));
+        VALUES (?, ?, ?, ?, ?, ?, (SELECT Periodo.ID FROM Periodo WHERE Estado = 'Activo'));
         `;
 
         await runParametrizedQuery(connection, query, [fecha, hora, rut, justificacion, dia, ramo])
@@ -67,17 +70,18 @@ app.post('/justificar', async (req, res) => {
                 res.status(200).json({ message: 'Justificación registrada' });
             })
             .catch((error) => {
-                res.status(501).json({ message: 'Error de consulta' });
+                res.status(501).json({ message: 'Error de consulta', error: error.message });
             })
             .finally(() => {
                 if (connection && connection.state !== 'disconnected') {
                     connection.end();
                 }
             });
-      } catch (error) {
-        res.status(500).json({ message: 'Error en el servidor' });
-      }
+    } catch (error) {
+        res.status(500).json({ message: 'Error en el servidor', error: error.message });
+    }
 });
+
 app.post('/RevisarEstadoClases', async (req, res) => { 
 
     //const libre = await EsDiaLibre()
