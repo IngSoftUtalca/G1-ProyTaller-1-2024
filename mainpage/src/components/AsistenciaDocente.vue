@@ -22,7 +22,7 @@
             </div>
             <div class="col-2 text-center">
                 <div :class="getJustificationClass(asistencia.Justificacion)">
-                    {{ asistencia.Justificacion || 'No justificado' }}
+                    {{ asistencia.Justificacion != "NULL"? asistencia.Justificacion : "No justificado"}}
                 </div>
             </div>
             <div class="col" v-if="asistencia.Justificacion == null">
@@ -78,7 +78,7 @@
             },
             getJustificationClass(justification) {
                 return {
-                    'pill-yellow': justification == null || justification != null,
+                    '': justification == null || justification != null,
                 };
             }
         },

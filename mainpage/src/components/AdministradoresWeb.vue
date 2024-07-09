@@ -1,6 +1,42 @@
 <template>
-    <div>
-        <div class="col w-120">
+    <div class="container-fluid d-flex w-90">
+      <div class="col d-flex justify-content-end">
+        <table
+          class="w-90 mx-4 mt-3 text-center gray-border"
+          v-if="!loading"
+          :key="count"
+        >
+          <thead class="primary-bg h-40">
+            <tr>
+              <th>R.U.T</th>
+              <th>Nombre</th>
+              <th>Facultad</th>
+              <th>Campus</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody class="secondary-bg">
+            <tr class="h-36" v-for="(admin, index) in administradores" :key="index">
+              <td class="gray-border">{{ admin.RUT }}</td>
+              <td class="gray-border text-start px-3">{{ admin.Nombre }}</td>
+              <td class="gray-border">{{ admin.Facultad }}</td>
+              <td class="gray-border">{{ admin.Campus }}</td>
+              <td
+                class="gray-border h-36 px-3 d-flex justify-content-end align-items-center"
+              >
+                <button
+                  class="btn-gray btn-size-85 bold font-12"
+                  @click="deleteAdmin(admin.RUT)">
+                 
+    
+                  Eliminar
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col w-120">
             <button class="btn-primary-16 btn-size-120" @click.prevent="add">
                 <span class="bold">Agregar</span>
                 <img src="@/assets/plus.svg" alt="Agregar">
@@ -9,35 +45,20 @@
         <div class="underlay" v-if="OverlayAgregar" @click="close">
             <AgregarAdministrador class="overlay" v-if="OverlayAgregar" @click.stop @close="close"/>
         </div>
-        <div class="container d-flex justify-content-center align-items-center h-450" v-if="loading">
-            <div class="spinner-grow primary-normal div-size-72" role="status">
-                <span class="visually-hidden">Loading...</span>
-            </div>
-        </div>
-        <div class="row container-fluid" v-if="!loading">
-            <div class="row px-5 rt-50 h-55 font-20 bold primary-bg d-flex align-items-center">
-                <div class="col-2 text-center">R.U.T</div>
-                <div class="col-2 text-center">Nombre</div>
-                <div class="col-2 text-center">Facultad</div>
-                <div class="col-2 text-center">Campus</div>
-                <div class="col-2 text-center"></div>
-            </div>
-            <div class="row h-100 px-5 secondary-bg text-center bold d-flex align-items-center"
-                 v-for="(admin, index) in administradores" :key="index">
-                <div class="col-2 text-center">{{ admin.rut }}</div>
-                <div class="col-2 text-center">{{ admin.nombre }}</div>
-                <div class="col-2 text-center">{{ admin.facultad }}</div>
-                <div class="col-2 text-center">{{ admin.campus }}</div>
-                <div class="col">
-                    <button class="btn-light-50 bold btn-size-150" @click="add">
-                        Modificar
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-</template>
+      
 
+    </div>
+    <!-- loading-->
+    <div
+      class="container d-flex justify-content-start align-items-center h-450"
+      v-if="loading"
+    >
+      <div class="spinner-grow primary-normal div-size-72" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+  </template>
+  
 <script>
 import AgregarAdministrador from '@/components/AgregarAdministrador.vue';
 import axios from 'axios';
@@ -49,7 +70,7 @@ export default {
         return {
             OverlayAgregar: false,
             administradores: [],
-            loading: true
+            loading: false
         }
     },
     methods: {
@@ -58,6 +79,24 @@ export default {
     },
     close() {
         this.OverlayAgregar = false;
+    },
+    async deleteAdmin(RUT) {
+     
+        
+      await axios.post(
+        ENDPOINTS["ms-gestoradmin"] + "/quitar",
+        {
+          rut: RUT,
+      
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      this.loading = false;
+      this.$emit("close");
     },
     async getAdmins() {
       await axios
